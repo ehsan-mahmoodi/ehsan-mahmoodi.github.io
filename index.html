@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ehsan Mahmoodi | AI & Optimization Researcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.7; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 16px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 960px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    nav .logo { font-weight: 700; font-size: 1.1rem; color: #58a6ff; text-decoration: none; }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul a { color: #8b949e; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    nav ul a:hover { color: #e6edf3; }
+
+    /* SECTIONS */
+    section { max-width: 960px; margin: 0 auto; padding: 80px 24px; }
+    section + section { border-top: 1px solid #21262d; }
+
+    /* HERO */
+    .hero { padding-top: 100px; padding-bottom: 80px; }
+    .hero-tag {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.78rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .hero h1 { font-size: 2.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
+    .hero h1 span { color: #58a6ff; }
+    .hero .subtitle { font-size: 1.1rem; color: #8b949e; margin-bottom: 28px; max-width: 600px; }
+    .hero p { color: #c9d1d9; font-size: 1rem; max-width: 680px; margin-bottom: 36px; }
+    .hero-links { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 22px; border-radius: 8px; font-size: 0.9rem;
+      font-weight: 500; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { background: #238636; color: #fff; border: 1px solid #2ea043; }
+    .btn-primary:hover { background: #2ea043; }
+    .btn-secondary { background: transparent; color: #58a6ff; border: 1px solid #30363d; }
+    .btn-secondary:hover { border-color: #58a6ff; background: #161b22; }
+
+    /* SECTION TITLES */
+    .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+    .section-subtitle { color: #8b949e; font-size: 0.95rem; margin-bottom: 40px; }
+
+    /* SKILLS */
+    .skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .skill-tag {
+      background: #161b22; border: 1px solid #30363d; color: #c9d1d9;
+      padding: 6px 14px; border-radius: 6px; font-size: 0.85rem;
+    }
+
+    /* PROJECTS */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .project-card {
+      background: #161b22; border: 1px solid #30363d; border-radius: 12px;
+      padding: 24px; transition: border-color 0.2s, transform 0.2s;
+    }
+    .project-card:hover { border-color: #58a6ff; transform: translateY(-3px); }
+    .project-card .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .project-card h3 { font-size: 1rem; font-weight: 600; color: #e6edf3; }
+    .project-card .card-icon { font-size: 1.4rem; }
+    .project-card p { color: #8b949e; font-size: 0.88rem; margin-bottom: 16px; line-height: 1.6; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .card-tag {
+      background: #0d1117; border: 1px solid #21262d; color: #58a6ff;
+      font-size: 0.75rem; padding: 3px 9px; border-radius: 4px;
+    }
+    .card-link { color: #58a6ff; text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+    .card-link:hover { text-decoration: underline; }
+    .wip-badge {
+      background: #1f2937; border: 1px solid #374151; color: #9ca3af;
+      font-size: 0.75rem; padding: 3px 9px; border-radius: 4px; display: inline-block; margin-bottom: 10px;
+    }
+
+    /* CONTACT */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .contact-card {
+      background: #161b22; border: 1px solid #30363d; border-radius: 10px;
+      padding: 18px 20px; display: flex; align-items: center; gap: 14px;
+      text-decoration: none; transition: border-color 0.2s;
+    }
+    .contact-card:hover { border-color: #58a6ff; }
+    .contact-card .icon { font-size: 1.4rem; }
+    .contact-card .label { font-size: 0.75rem; color: #8b949e; }
+    .contact-card .value { font-size: 0.88rem; color: #e6edf3; font-weight: 500; }
+
+    /* FOOTER */
+    footer {
+      text-align: center; padding: 30px 24px;
+      border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">Ehsan Mahmoodi</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="hero-tag">Open to Opportunities</div>
+  <h1>Hi, I'm <span>Ehsan (Ethan)</span><br/>Mahmoodi</h1>
+  <p class="subtitle">AI Researcher · Optimization Specialist · Simulation Engineer</p>
+  <p>
+    I am a PhD researcher and industrial engineer specializing in AI-driven optimization, 
+    discrete-event simulation, and supply chain systems. With a background spanning machine 
+    learning, multi-objective optimization, and operations research, I design intelligent 
+    solutions that bridge academic rigour with real-world industrial impact. Currently based 
+    in Auckland, New Zealand, I am open to research, data science, and consulting opportunities 
+    across academia and industry.
+  </p>
+  <div class="hero-links">
+    <a href="https://www.linkedin.com/in/ehsan-mahmoodi-2a4aa346/" target="_blank" class="btn btn-primary">💼 LinkedIn</a>
+    <a href="mailto:ethan.mhm86@gmail.com" class="btn btn-secondary">📧 Get in Touch</a>
+    <a href="#projects" class="btn btn-secondary">🔬 View Projects</a>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-title">Skills & Tools</div>
+  <div class="section-subtitle">Technologies and methods I work with</div>
+  <div class="skills-grid">
+    <span class="skill-tag">Python</span>
+    <span class="skill-tag">Julia</span>
+    <span class="skill-tag">C/C++</span>
+    <span class="skill-tag">Multi-Objective Optimization</span>
+    <span class="skill-tag">Variable Neighborhood Search (VNS)</span>
+    <span class="skill-tag">Discrete-Event Simulation</span>
+    <span class="skill-tag">Arena Simulation</span>
+    <span class="skill-tag">Machine Learning</span>
+    <span class="skill-tag">XGBoost</span>
+    <span class="skill-tag">TensorFlow / YOLO</span>
+    <span class="skill-tag">Streamlit</span>
+    <span class="skill-tag">Azure OpenAI</span>
+    <span class="skill-tag">Semantic Kernel</span>
+    <span class="skill-tag">FastAPI</span>
+    <span class="skill-tag">Docker</span>
+    <span class="skill-tag">Supply Chain Management</span>
+    <span class="skill-tag">LaTeX</span>
+    <span class="skill-tag">Git / GitHub</span>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-title">Projects</div>
+  <div class="section-subtitle">A selection of research and applied industry work</div>
+  <div class="projects-grid">
+
+    <!-- Husqvarna -->
+    <div class="project-card">
+      <div class="card-header">
+        <h3>Sustainable Heat Treatment Optimization</h3>
+        <span class="card-icon">🔩</span>
+      </div>
+      <p>
+        AI-powered platform developed for Husqvarna AB to optimize austempering process 
+        parameters for ductile iron components, replacing physical experiments with ML predictions 
+        and GPT-4 driven analysis.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Python</span>
+        <span class="card-tag">Streamlit</span>
+        <span class="card-tag">XGBoost</span>
+        <span class="card-tag">Azure OpenAI</span>
+        <span class="card-tag">Semantic Kernel</span>
+      </div>
+      <a href="https://github.com/ehsan-mahmoodi/husqvarna-heat-treatment" target="_blank" class="card-link">→ View Project</a>
+    </div>
+
+    <!-- Placeholder 2 -->
+    <div class="project-card">
+      <div class="card-header">
+        <h3>More Projects Coming Soon</h3>
+        <span class="card-icon">🚀</span>
+      </div>
+      <span class="wip-badge">⏳ In Progress</span>
+      <p>
+        Additional projects in simulation, supply chain optimization, and multi-objective 
+        metaheuristics will be added here shortly.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Arena</span>
+        <span class="card-tag">VNS</span>
+        <span class="card-tag">Operations Research</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-title">Get in Touch</div>
+  <div class="section-subtitle">Feel free to reach out for collaborations, opportunities, or research discussions</div>
+  <div class="contact-grid">
+    <a href="mailto:ethan.mhm86@gmail.com" class="contact-card">
+      <span class="icon">📧</span>
+      <div><div class="label">Personal Email</div><div class="value">ethan.mhm86@gmail.com</div></div>
+    </a>
+    <a href="mailto:ehsan.mahmoodi@his.se" class="contact-card">
+      <span class="icon">🎓</span>
+      <div><div class="label">University of Skövde</div><div class="value">ehsan.mahmoodi@his.se</div></div>
+    </a>
+    <a href="mailto:emah396@aucklanduni.ac.nz" class="contact-card">
+      <span class="icon">🌿</span>
+      <div><div class="label">University of Auckland</div><div class="value">emah396@aucklanduni.ac.nz</div></div>
+    </a>
+    <a href="https://www.linkedin.com/in/ehsan-mahmoodi-2a4aa346/" target="_blank" class="contact-card">
+      <span class="icon">💼</span>
+      <div><div class="label">LinkedIn</div><div class="value">ehsan-mahmoodi</div></div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Ehsan Mahmoodi · Built with GitHub Pages · Auckland, New Zealand</p>
+</footer>
+
+</body>
+</html>
