@@ -109,6 +109,59 @@
     margin-bottom: 16px;
     border: 1px solid #30363d;
     }
+
+    /* --- AUTOMATIC LIGHT THEME --- */
+    @media (prefers-color-scheme: light) {
+        body {
+            background: #ffffff;
+            color: #24292f;
+        }
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid #d0d7de;
+        }
+        nav .logo, .hero h1 span, .btn-secondary, .card-link, .project-card:hover {
+            color: #0969da;
+            border-color: #0969da;
+        }
+        nav ul a, .hero .subtitle, .project-card p, .section-subtitle, .contact-card .label {
+            color: #57606a;
+        }
+        section {
+            border-top: 1px solid #d0d7de;
+        }
+        .hero-tag, .skill-tag, .project-card, .contact-card {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            color: #24292f;
+        }
+        .hero p {
+            color: #24292f;
+        }
+        .btn-secondary {
+            background: transparent;
+        }
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+        .card-tag {
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            color: #0969da;
+        }
+        .project-card h3, .contact-card .value {
+            color: #24292f;
+        }
+        .wip-badge {
+            background: #fff8c5;
+            border: 1px solid #d4a72c;
+            color: #9a6700;
+        }
+        footer {
+            border-top: 1px solid #d0d7de;
+            color: #57606a;
+        }
+    }
   </style>
 </head>
 <body>
