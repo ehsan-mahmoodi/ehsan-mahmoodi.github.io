@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Offshore supply vessel fleet sizing and routing">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Offshore Supply Vessels &#8212; fleet sizing and routing, Kharg</text>
+<circle cx="52" cy="80" r="16" class="bxa"/>
+<text x="52" y="78" class="a" font-size="7" text-anchor="middle" font-weight="600">BASE</text>
+<text x="52" y="87" class="m" font-size="6" text-anchor="middle">Kharg</text>
+<g font-size="6.5">
+<circle cx="150" cy="46" r="9" class="bx"/><text x="150" y="49" class="m" text-anchor="middle">P1</text>
+<circle cx="224" cy="38" r="9" class="bx"/><text x="224" y="41" class="m" text-anchor="middle">P2</text>
+<circle cx="300" cy="58" r="9" class="bx"/><text x="300" y="61" class="m" text-anchor="middle">P3</text>
+<circle cx="168" cy="106" r="9" class="bx"/><text x="168" y="109" class="m" text-anchor="middle">P4</text>
+<circle cx="246" cy="118" r="9" class="bx"/><text x="246" y="121" class="m" text-anchor="middle">P5</text>
+<circle cx="322" cy="104" r="9" class="bx"/><text x="322" y="107" class="m" text-anchor="middle">P6</text>
+</g>
+<path class="fl" d="M67 73 Q105 52 141 46"/>
+<path class="fl" d="M159 44 Q192 36 215 38"/>
+<path class="fl" d="M233 40 Q270 44 292 55"/>
+<path class="fm" d="M64 89 Q116 104 159 106"/>
+<path class="fm" d="M177 109 Q210 118 237 118"/>
+<path class="fm" d="M255 117 Q292 112 313 106"/>
+<text x="196" y="26" class="a" font-size="6.5">route A &#183; weekly</text>
+<text x="196" y="140" class="m" font-size="6.5">route B &#183; on demand</text>
+<line x1="12" y1="150" x2="388" y2="150" stroke="var(--line)"/>
+<text x="12" y="164" class="m" font-size="7.5">Stochastic demand and weather downtime &#8212; simulation-based multi-objective optimisation trades</text>
+<text x="12" y="175" class="m" font-size="7.5">fleet size against service level. MSc thesis 2012 &#8594; IJIEPR 2014 &#183; Maritime Economics &amp; Logistics 2016</text>
+</svg>

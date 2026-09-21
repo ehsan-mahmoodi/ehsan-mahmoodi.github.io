@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Assembly line balancing and sequencing">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Assembly Line &#8212; balancing and model sequencing</text>
+<g font-size="7">
+<rect class="bx" x="14" y="40" width="46" height="40" rx="4"/><text x="37" y="52" class="m" text-anchor="middle">ST 1</text>
+<rect class="bx" x="72" y="40" width="46" height="40" rx="4"/><text x="95" y="52" class="m" text-anchor="middle">ST 2</text>
+<rect class="bxa" x="130" y="40" width="46" height="40" rx="4"/><text x="153" y="52" class="a" text-anchor="middle" font-weight="600">ST 3</text>
+<rect class="bx" x="188" y="40" width="46" height="40" rx="4"/><text x="211" y="52" class="m" text-anchor="middle">ST 4</text>
+<rect class="bx" x="246" y="40" width="46" height="40" rx="4"/><text x="269" y="52" class="m" text-anchor="middle">ST 5</text>
+</g>
+<rect x="18" y="64" width="38" height="12" fill="var(--acc)" opacity="0.35"/>
+<rect x="76" y="60" width="38" height="16" fill="var(--acc)" opacity="0.45"/>
+<rect x="134" y="56" width="38" height="20" fill="var(--amb)" opacity="0.8"/>
+<rect x="192" y="62" width="38" height="14" fill="var(--acc)" opacity="0.4"/>
+<rect x="250" y="66" width="38" height="10" fill="var(--acc)" opacity="0.3"/>
+<line x1="14" y1="56" x2="292" y2="56" stroke="var(--red)" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="296" y="59" class="w" font-size="7">cycle time</text>
+<text x="153" y="92" class="w" font-size="7" text-anchor="middle">overload</text>
+<g font-size="7">
+<rect class="bx" x="312" y="40" width="74" height="40" rx="4"/>
+<text x="349" y="53" class="m" text-anchor="middle">Mixed-model</text>
+<text x="349" y="64" class="m" text-anchor="middle">sequence</text>
+<text x="349" y="75" class="a" text-anchor="middle">A&#183;B&#183;A&#183;C&#183;A&#183;B</text>
+</g>
+<line x1="12" y1="106" x2="388" y2="106" stroke="var(--line)"/>
+<text x="12" y="122" class="m" font-size="7.5">Two coupled decisions: assign tasks to stations under precedence and cycle-time limits,</text>
+<text x="12" y="134" class="m" font-size="7.5">then sequence product variants so station load stays smooth and the line never stops.</text>
+<text x="12" y="154" class="a" font-size="8" font-weight="600">Arena DES + optimisation &#183; animated line model &#183; 2016</text>
+<text x="12" y="170" class="m" font-size="7.5">Related: genetic algorithm for human-robot collaborative line balancing, Procedia CIRP 2022</text>
+</svg>

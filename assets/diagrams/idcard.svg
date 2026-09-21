@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="National ID card production line simulation">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">ID Card Production &#8212; line simulation and capacity study</text>
+<g font-size="6.5">
+<rect class="bx" x="12" y="44" width="52" height="28" rx="4"/><text x="38" y="56" class="m" text-anchor="middle">Enrolment</text><text x="38" y="66" class="m" text-anchor="middle">data intake</text>
+<rect class="bx" x="76" y="44" width="52" height="28" rx="4"/><text x="102" y="56" class="m" text-anchor="middle">Verify</text><text x="102" y="66" class="m" text-anchor="middle">biometrics</text>
+<rect class="bxa" x="140" y="44" width="52" height="28" rx="4"/><text x="166" y="56" class="a" text-anchor="middle" font-weight="600">Personal-</text><text x="166" y="66" class="a" text-anchor="middle">isation</text>
+<rect class="bx" x="204" y="44" width="52" height="28" rx="4"/><text x="230" y="56" class="m" text-anchor="middle">Quality</text><text x="230" y="66" class="m" text-anchor="middle">check</text>
+<rect class="bx" x="268" y="44" width="52" height="28" rx="4"/><text x="294" y="60" class="m" text-anchor="middle">Package</text>
+<rect class="bx" x="332" y="44" width="56" height="28" rx="4"/><text x="360" y="60" class="m" text-anchor="middle">Dispatch</text>
+</g>
+<path class="fl" d="M64 58h12M128 58h12M192 58h12M256 58h12M320 58h12"/>
+<path class="fm" d="M230 72v16h-64v-16"/>
+<text x="198" y="98" class="w" font-size="6.5" text-anchor="middle">rework loop on failed cards</text>
+<g font-size="6.5">
+<rect class="bx" x="60" y="106" width="130" height="26" rx="4"/>
+<text x="125" y="118" class="m" text-anchor="middle" font-weight="600">Throughput vs WIP</text>
+<text x="125" y="128" class="m" text-anchor="middle">cards per shift under demand surge</text>
+<rect class="bx" x="210" y="106" width="130" height="26" rx="4"/>
+<text x="275" y="118" class="m" text-anchor="middle" font-weight="600">Yield sensitivity</text>
+<text x="275" y="128" class="m" text-anchor="middle">reject rate drives rework load</text>
+</g>
+<line x1="12" y1="146" x2="388" y2="146" stroke="var(--line)"/>
+<text x="12" y="161" class="m" font-size="7.5">Arena model of a secure-document line: where does a national-scale rollout actually jam?</text>
+<text x="12" y="173" class="m" font-size="7.5">2013</text>
+</svg>

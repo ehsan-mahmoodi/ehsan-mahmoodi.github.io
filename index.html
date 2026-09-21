@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ehsan Mahmoodi | AI & Optimization Researcher</title>
+  <title>Ehsan Mahmoodi | Industrial Engineer &amp; Optimization Developer</title>
+  <meta name="description" content="Ehsan (Ethan) Mahmoodi - industrial and manufacturing engineer and optimisation developer. Simulation, multi-objective optimisation and applied AI for production, energy and healthcare systems."/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,20 +17,20 @@
       padding: 16px 0; backdrop-filter: blur(8px);
     }
     nav .nav-inner {
-      max-width: 960px; margin: 0 auto; padding: 0 24px;
-      display: flex; justify-content: space-between; align-items: center;
+      max-width: 1040px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
     }
-    nav .logo { font-weight: 700; font-size: 1.1rem; color: #58a6ff; text-decoration: none; }
-    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav .logo { font-weight: 700; font-size: 1.1rem; color: #58a6ff; text-decoration: none; white-space: nowrap; }
+    nav ul { list-style: none; display: flex; gap: 24px; flex-wrap: wrap; }
     nav ul a { color: #8b949e; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
     nav ul a:hover { color: #e6edf3; }
 
     /* SECTIONS */
-    section { max-width: 960px; margin: 0 auto; padding: 80px 24px; }
+    section { max-width: 1040px; margin: 0 auto; padding: 72px 24px; }
     section + section { border-top: 1px solid #21262d; }
 
     /* HERO */
-    .hero { padding-top: 100px; padding-bottom: 80px; }
+    .hero { padding-top: 88px; padding-bottom: 72px; }
     .hero-tag {
       display: inline-block; background: #161b22; border: 1px solid #30363d;
       color: #58a6ff; font-size: 0.78rem; padding: 4px 12px; border-radius: 20px;
@@ -37,12 +38,13 @@
     }
     .hero h1 { font-size: 2.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
     .hero h1 span { color: #58a6ff; }
-    .hero .subtitle { font-size: 1.1rem; color: #8b949e; margin-bottom: 28px; max-width: 600px; }
-    .hero p { color: #c9d1d9; font-size: 1rem; max-width: 680px; margin-bottom: 36px; }
+    .hero .subtitle { font-size: 1.1rem; color: #8b949e; margin-bottom: 24px; max-width: 640px; }
+    .hero p { color: #c9d1d9; font-size: 1rem; max-width: 700px; margin-bottom: 28px; }
     .hero-links { display: flex; gap: 14px; flex-wrap: wrap; }
     .btn {
       padding: 10px 22px; border-radius: 8px; font-size: 0.9rem;
-      font-weight: 500; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+      font-weight: 500; text-decoration: none; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
     }
     .btn-primary { background: #238636; color: #fff; border: 1px solid #2ea043; }
     .btn-primary:hover { background: #2ea043; }
@@ -51,37 +53,106 @@
 
     /* SECTION TITLES */
     .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
-    .section-subtitle { color: #8b949e; font-size: 0.95rem; margin-bottom: 40px; }
+    .section-subtitle { color: #8b949e; font-size: 0.95rem; margin-bottom: 36px; max-width: 760px; }
+
+    /* TWO ROLES */
+    .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .role-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 26px; }
+    .role-card .role-eyebrow {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px;
+      color: #58a6ff; margin-bottom: 8px;
+    }
+    .role-card h3 { font-size: 1.12rem; margin-bottom: 12px; }
+    .role-card p { color: #8b949e; font-size: 0.88rem; margin-bottom: 16px; }
+    .role-card ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .role-card li { color: #c9d1d9; font-size: 0.84rem; padding-left: 18px; position: relative; }
+    .role-card li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
 
     /* SKILLS */
+    .skills-block { margin-bottom: 26px; }
+    .skills-label {
+      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px;
+      color: #8b949e; margin-bottom: 10px;
+    }
     .skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
     .skill-tag {
       background: #161b22; border: 1px solid #30363d; color: #c9d1d9;
       padding: 6px 14px; border-radius: 6px; font-size: 0.85rem;
     }
 
+    /* GROUP HEADINGS */
+    .group-head {
+      grid-column: 1 / -1; margin-top: 20px; font-size: 1.05rem; font-weight: 600;
+      color: #58a6ff; border-left: 3px solid #58a6ff; padding-left: 12px; margin-bottom: 6px;
+    }
+    .group-note {
+      grid-column: 1 / -1; color: #8b949e; font-size: 0.85rem;
+      margin-bottom: 20px; padding-left: 15px; max-width: 780px;
+    }
+
     /* PROJECTS */
     .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
     .project-card {
       background: #161b22; border: 1px solid #30363d; border-radius: 12px;
-      padding: 24px; transition: border-color 0.2s, transform 0.2s;
+      padding: 22px; transition: border-color 0.2s, transform 0.2s;
+      display: flex; flex-direction: column;
     }
     .project-card:hover { border-color: #58a6ff; transform: translateY(-3px); }
-    .project-card .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .project-card h3 { font-size: 1rem; font-weight: 600; color: #e6edf3; }
-    .project-card .card-icon { font-size: 1.4rem; }
-    .project-card p { color: #8b949e; font-size: 0.88rem; margin-bottom: 16px; line-height: 1.6; }
-    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .project-card .card-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 6px; gap: 10px;
+    }
+    .project-card h3 { font-size: 0.98rem; font-weight: 600; color: #e6edf3; }
+    .project-card .card-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .project-card p { color: #8b949e; font-size: 0.86rem; margin-bottom: 14px; line-height: 1.6; }
+    .card-meta { font-size: 0.78rem; color: #58a6ff; margin-bottom: 10px; }
+    .card-fund { font-size: 0.76rem; color: #3fb950; margin-bottom: 10px; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
     .card-tag {
       background: #0d1117; border: 1px solid #21262d; color: #58a6ff;
-      font-size: 0.75rem; padding: 3px 9px; border-radius: 4px;
+      font-size: 0.74rem; padding: 3px 9px; border-radius: 4px;
     }
-    .card-link { color: #58a6ff; text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+    .card-links { display: flex; gap: 14px; flex-wrap: wrap; margin-top: auto; }
+    .card-link { color: #58a6ff; text-decoration: none; font-size: 0.84rem; font-weight: 500; }
     .card-link:hover { text-decoration: underline; }
-    .wip-badge {
-      background: #1f2937; border: 1px solid #374151; color: #9ca3af;
-      font-size: 0.75rem; padding: 3px 9px; border-radius: 4px; display: inline-block; margin-bottom: 10px;
+    .project-card-image {
+      width: 100%; height: 180px; object-fit: contain; background: #0d1117;
+      border-radius: 8px; margin-bottom: 14px; border: 1px solid #30363d;
     }
+    .media-note {
+      font-size: 0.74rem; color: #8b949e; border: 1px dashed #30363d;
+      border-radius: 6px; padding: 6px 10px; margin-bottom: 12px;
+    }
+
+    /* FEATURE CARD */
+    .feature-card {
+      grid-column: 1 / -1; background: #161b22; border: 1px solid #30363d;
+      border-radius: 12px; padding: 26px;
+      display: grid; grid-template-columns: 400px 1fr; gap: 26px; align-items: center;
+    }
+    .feature-card img {
+      width: 100%; border-radius: 8px; border: 1px solid #30363d; background: #0d1117;
+    }
+    .feature-card h3 { font-size: 1.15rem; margin-bottom: 10px; }
+    .feature-card p { color: #8b949e; font-size: 0.88rem; margin-bottom: 14px; }
+
+    /* PUBLICATIONS */
+    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .metric { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px 18px; }
+    .metric .val { font-size: 1.6rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .metric .lbl { font-size: 0.78rem; color: #8b949e; }
+    .pub-list { display: flex; flex-direction: column; gap: 2px; }
+    .pub-item {
+      display: grid; grid-template-columns: 54px 1fr auto; gap: 16px; align-items: baseline;
+      padding: 13px 14px; border-radius: 8px; border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .pub-item:hover { background: #161b22; border-color: #30363d; }
+    .pub-year { font-size: 0.8rem; color: #8b949e; font-variant-numeric: tabular-nums; }
+    .pub-title { font-size: 0.9rem; color: #e6edf3; font-weight: 500; }
+    .pub-venue { font-size: 0.8rem; color: #8b949e; margin-top: 2px; }
+    .pub-cites { font-size: 0.76rem; color: #3fb950; white-space: nowrap; }
+    .pub-cites.none { color: #8b949e; }
 
     /* CONTACT */
     .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
@@ -95,72 +166,48 @@
     .contact-card .label { font-size: 0.75rem; color: #8b949e; }
     .contact-card .value { font-size: 0.88rem; color: #e6edf3; font-weight: 500; }
 
-    /* FOOTER */
     footer {
       text-align: center; padding: 30px 24px;
       border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem;
     }
 
-    .project-card-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    border: 1px solid #30363d;
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .projects-grid, .role-grid { grid-template-columns: 1fr; }
+      .feature-card { grid-template-columns: 1fr; }
+      .metrics-row { grid-template-columns: repeat(2, 1fr); }
+      .hero h1 { font-size: 2.1rem; }
+      nav .nav-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+      nav ul { gap: 16px; }
+      .pub-item { grid-template-columns: 44px 1fr; }
+      .pub-cites { grid-column: 2; }
     }
 
-    /* --- AUTOMATIC LIGHT THEME --- */
+    /* LIGHT THEME */
     @media (prefers-color-scheme: light) {
-        body {
-            background: #ffffff;
-            color: #24292f;
-        }
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid #d0d7de;
-        }
-        nav .logo, .hero h1 span, .btn-secondary, .card-link, .project-card:hover {
-            color: #0969da;
-            border-color: #0969da;
-        }
-        nav ul a, .hero .subtitle, .project-card p, .section-subtitle, .contact-card .label {
-            color: #57606a;
-        }
-        section {
-            border-top: 1px solid #d0d7de;
-        }
-        .hero-tag, .skill-tag, .project-card, .contact-card {
-            background: #f6f8fa;
-            border: 1px solid #d0d7de;
-            color: #24292f;
-        }
-        .hero p {
-            color: #24292f;
-        }
-        .btn-secondary {
-            background: transparent;
-        }
-        .btn-secondary:hover {
-            background: #f3f4f6;
-        }
-        .card-tag {
-            background: #ffffff;
-            border: 1px solid #d0d7de;
-            color: #0969da;
-        }
-        .project-card h3, .contact-card .value {
-            color: #24292f;
-        }
-        .wip-badge {
-            background: #fff8c5;
-            border: 1px solid #d4a72c;
-            color: #9a6700;
-        }
-        footer {
-            border-top: 1px solid #d0d7de;
-            color: #57606a;
-        }
+      body { background: #ffffff; color: #24292f; }
+      nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+      nav .logo, .hero h1 span, .card-link, .group-head, .metric .val { color: #0969da; }
+      .group-head { border-left-color: #0969da; }
+      nav ul a, .hero .subtitle, .project-card p, .section-subtitle, .contact-card .label,
+      .role-card p, .skills-label, .pub-year, .pub-venue, .metric .lbl, .group-note,
+      .feature-card p, .media-note, .pub-cites.none { color: #57606a; }
+      section { border-top: 1px solid #d0d7de; }
+      .hero-tag, .skill-tag, .project-card, .contact-card, .role-card, .metric, .feature-card {
+        background: #f6f8fa; border: 1px solid #d0d7de; color: #24292f;
+      }
+      .hero p, .role-card li { color: #24292f; }
+      .btn-secondary { background: transparent; color: #0969da; border-color: #d0d7de; }
+      .btn-secondary:hover { background: #f3f4f6; border-color: #0969da; }
+      .card-tag { background: #ffffff; border: 1px solid #d0d7de; color: #0969da; }
+      .project-card h3, .contact-card .value, .pub-title { color: #24292f; }
+      .project-card-image, .feature-card img { background: #ffffff; border-color: #d0d7de; }
+      .card-meta { color: #0969da; }
+      .card-fund, .pub-cites { color: #1a7f37; }
+      .role-card li::before { color: #0969da; }
+      .pub-item:hover { background: #f6f8fa; border-color: #d0d7de; }
+      .media-note { border-color: #d0d7de; }
+      footer { border-top: 1px solid #d0d7de; color: #57606a; }
     }
   </style>
 </head>
@@ -172,8 +219,9 @@
     <a href="#" class="logo">Ehsan Mahmoodi</a>
     <ul>
       <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
+      <li><a href="#expertise">Expertise</a></li>
       <li><a href="#projects">Projects</a></li>
+      <li><a href="#publications">Publications</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
@@ -183,212 +231,853 @@
 <section class="hero" id="about">
   <div class="hero-tag">Open to Opportunities</div>
   <h1>Hi, I'm <span>Ehsan (Ethan)</span><br/>Mahmoodi</h1>
-  <p class="subtitle">AI Researcher · Optimization Specialist · Simulation Engineer</p>
+  <p class="subtitle">Manufacturing &amp; Industrial Engineer · Optimization and Simulation Developer</p>
   <p>
-    I am a PhD researcher and industrial engineer specializing in AI-driven optimization, 
-    discrete-event simulation, and supply chain systems. With a background spanning machine 
-    learning, multi-objective optimization, and operations research, I design intelligent 
-    solutions that bridge academic rigour with real-world industrial impact. Currently based 
-    in Auckland, New Zealand, I am open to research, data science, and consulting opportunities 
-    across academia and industry.
+    I work at the point where a production system meets the software that runs it. On one side I am
+    an industrial engineer: I model factories, hospitals, plants and fleets, find where they actually
+    lose time and money, and redesign them. On the other side I am a developer: I build the
+    simulation models, optimisation algorithms and AI tools that make those decisions
+    reproducible instead of one-off consulting slides.
+  </p>
+  <p>
+    Sixteen years of this, across Iran, Sweden and New Zealand &mdash; a sulfuric acid plant, two
+    hospitals, an offshore supply fleet, a 10 MW solar farm, assembly lines at Volvo Penta and
+    Husqvarna &mdash; and sixteen peer-reviewed publications along the way.
   </p>
   <div class="hero-links">
-    <a href="https://www.linkedin.com/in/ehsan-mahmoodi-2a4aa346/" target="_blank" class="btn btn-primary">💼 LinkedIn</a>
-    <a href="mailto:ethan.mhm86@gmail.com" class="btn btn-secondary">📧 Get in Touch</a>
-    <a href="#projects" class="btn btn-secondary">🔬 View Projects</a>
+    <a href="https://www.linkedin.com/in/ehsan-mahmoodi-2a4aa346/" target="_blank" rel="noopener" class="btn btn-primary">LinkedIn</a>
+    <a href="#projects" class="btn btn-secondary">View Projects</a>
+    <a href="#publications" class="btn btn-secondary">Publications</a>
+    <a href="mailto:ethan.mhm86@gmail.com" class="btn btn-secondary">Get in Touch</a>
   </div>
 </section>
 
-<!-- SKILLS -->
-<section id="skills">
-  <div class="section-title">Skills & Tools</div>
-  <div class="section-subtitle">Technologies and methods I work with</div>
-  <div class="skills-grid">
-    <span class="skill-tag">Python</span>
-    <span class="skill-tag">Julia</span>
-    <span class="skill-tag">C/C++</span>
-    <span class="skill-tag">Multi-Objective Optimization</span>
-    <span class="skill-tag">Variable Neighborhood Search (VNS)</span>
-    <span class="skill-tag">Discrete-Event Simulation</span>
-    <span class="skill-tag">Arena Simulation</span>
-    <span class="skill-tag">Machine Learning</span>
-    <span class="skill-tag">XGBoost</span>
-    <span class="skill-tag">TensorFlow / YOLO</span>
-    <span class="skill-tag">Streamlit</span>
-    <span class="skill-tag">Azure OpenAI</span>
-    <span class="skill-tag">Semantic Kernel</span>
-    <span class="skill-tag">FastAPI</span>
-    <span class="skill-tag">Docker</span>
-    <span class="skill-tag">Supply Chain Management</span>
-    <span class="skill-tag">LaTeX</span>
-    <span class="skill-tag">Git / GitHub</span>
+<!-- TWO ROLES -->
+<section id="expertise">
+  <div class="section-title">Two Roles, One Problem</div>
+  <div class="section-subtitle">
+    Most people who can model a factory cannot ship the software, and most people who can ship the
+    software have never stood on a shop floor. The projects below are deliberately split to show both.
+  </div>
+  <div class="role-grid">
+
+    <div class="role-card">
+      <div class="role-eyebrow">Role One</div>
+      <h3>Manufacturing &amp; Industrial Engineering</h3>
+      <p>
+        Diagnosing real systems: where the bottleneck is, what a stockout actually costs, whether
+        a maintenance policy pays for itself, how many vessels a field really needs.
+      </p>
+      <ul>
+        <li>Discrete-event simulation of production, healthcare and logistics systems</li>
+        <li>Throughput and bottleneck analysis, including shifting bottlenecks</li>
+        <li>Maintenance strategy design &mdash; breakdown, preventive, predictive</li>
+        <li>Assembly line balancing and mixed-model sequencing</li>
+        <li>Capacity, layout and staffing studies before capital is committed</li>
+        <li>Techno-economic feasibility: NPV, IRR, payback on plant investments</li>
+        <li>Multi-criteria decision analysis (TOPSIS, AHP, ANP, DEA)</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <div class="role-eyebrow">Role Two</div>
+      <h3>Optimization &amp; Software Development</h3>
+      <p>
+        Building the tools rather than buying them: solvers, metaheuristics, simulation engines,
+        dashboards and AI assistants that put a decision in someone's hands.
+      </p>
+      <ul>
+        <li>Multi-objective optimisation &mdash; NSGA-II, MOVNS, constraint programming</li>
+        <li>Metaheuristics and matheuristics for scheduling and routing</li>
+        <li>Machine learning surrogates that replace expensive simulation runs</li>
+        <li>Python, Julia, C/C++ &mdash; from research prototype to packaged application</li>
+        <li>Simulation engines in Python (SimPy, Salabim, custom DES) and Arena</li>
+        <li>LLM and agent systems: Azure OpenAI, Semantic Kernel, multi-agent frameworks</li>
+        <li>Streamlit, FastAPI, Docker, Azure deployment</li>
+      </ul>
+    </div>
+
   </div>
 </section>
 
 <!-- PROJECTS -->
 <section id="projects">
   <div class="section-title">Projects</div>
-  <div class="section-subtitle">A selection of research and applied industry work</div>
+  <div class="section-subtitle">
+    Grouped by what they are, not by when they happened: funded research, software I built, and
+    industrial work delivered for real clients. Simulation model files are not published &mdash; each
+    project is described with the problem, the approach and a diagram of how it works.
+  </div>
   <div class="projects-grid">
 
-    <!-- Husqvarna -->
-    <div class="project-card">
-        <!-- ADD YOUR IMAGE HERE -->
-        <img src="/assets/01-Dashboard.png" alt="Heat Treatment Optimization Dashboard" class="project-card-image">
-        <div class="card-header">
-            <h3>Sustainable Heat Treatment Optimization</h3>
-            <span class="card-icon">⚙️</span>
-        </div>
-        <p>AI-powered platform developed for Husqvarna AB to optimize austempering process parameters for ductile iron components, replacing physical experiments with ML predictions and GPT-4 driven analysis.</p>
-        <div class="card-tags">
-            <span class="card-tag">Python</span>
-            <span class="card-tag">Streamlit</span>
-            <span class="card-tag">XGBoost</span>
-            <span class="card-tag">Azure OpenAI</span>
-            <span class="card-tag">Semantic Kernel</span>
-        </div>
-        <a href="https://github.com/ehsan-mahmoodi/AI-Driven-Sustainable-Material-Design" target="_blank" class="card-link">↗ View Project</a>
+    <div class="group-head">Funded Research Programmes</div>
+    <div class="group-note">
+      Multi-partner programmes with Swedish manufacturers, where my work sits inside a larger
+      consortium.
     </div>
 
-        <!-- Twin Crane -->
     <div class="project-card">
-      <img src="/assets/02-TwinCrane.gif" alt="Twin Crane simulation with animated crane movement" class="project-card-image">
-      <div class="card-header">
-        <h3>Twin Crane Simulation</h3>
-        <span class="card-icon">🏗️</span>
-      </div>
-      <p>Discrete-event twin crane simulation for shared-rail coordination with animated visualization, collision avoidance, spatial reservation logic, and deadlock recovery for opposing loaded moves.</p>
-      <div class="card-tags">
-        <span class="card-tag">Python</span>
-        <span class="card-tag">Simulation</span>
-        <span class="card-tag">Discrete-Event</span>
-        <span class="card-tag">Pygame</span>
-        <span class="card-tag">Operations Research</span>
-      </div>
-      <a href="https://github.com/ehsan-mahmoodi/Twin-Crane" target="_blank" class="card-link">↗ View Project</a>
-    </div>
-
-
-    <!-- Acid Production Unit Maintenance Planning -->
-    <div class="project-card">
-      <img src="/assets/03-simulation-demo.gif"  alt="Arena Simulation – Predictive Maintenance" class="project-card-image">
-      <div class="card-header">
-        <h3>Maintenance Scheduling Optimisation via Discrete-Event Simulation</h3>
-        <span class="card-icon">🏭</span>
-      </div>
-      <p>
-        Simulation-based evaluation of three maintenance strategies (Breakdown, Preventive, Predictive)
-        for a 24/7 sulfuric acid plant using Rockwell Arena and OptQuest. TOPSIS multi-criteria ranking
-        across 18 scenarios achieved a <strong>96.6% reduction in annual downtime</strong> and
-        <strong>91.5% cut in monthly maintenance cost</strong>.
-      </p>
-      <div class="card-tags">
-        <span class="card-tag">Arena Simulation</span>
-        <span class="card-tag">Discrete-Event Simulation</span>
-        <span class="card-tag">OptQuest</span>
-        <span class="card-tag">TOPSIS</span>
-        <span class="card-tag">Predictive Maintenance</span>
-        <span class="card-tag">MSc Thesis</span>
-      </div>
-      <a href="https://github.com/ehsan-mahmoodi/Acid-Production-Unit-Maintenance-Planning" target="_blank" class="card-link">↗ View Project</a>
-    </div>
-
-    <!-- ── Industry-Funded Research Projects ── -->
-    <div style="grid-column: 1 / -1; margin-top: 16px;">
-      <div style="font-size:1.05rem; font-weight:600; color:#58a6ff; border-left:3px solid #58a6ff; padding-left:12px; margin-bottom:24px;">
-        🏭 Industry-Funded Research Projects
-      </div>
-    </div>
-
-    <!-- SMART -->
-    <div class="project-card">
+      <img src="assets/diagrams/resilience.svg" alt="Resilience curve comparing a brittle and a resilient production system" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Resilience-Driven Manufacturing (SMART)</h3>
-        <span class="card-icon">🏭</span>
+        <span class="card-icon">&#127981;</span>
       </div>
-      <p style="font-size:0.8rem; color:#58a6ff; margin-bottom:8px;">Nov 2025 – Present · University of Skövde</p>
-      <p style="font-size:0.78rem; color:#3fb950; margin-bottom:10px;">💰 Funded by KK-stiftelsen · Synergy Programme (SEK 11,000,000)</p>
-      <p>Collaborative initiative with Volvo Penta, ABB, Daloc, and Xylem to build resilient, sustainable, and human-centric factory systems aligned with Industry 5.0. Developing multi-objective optimization algorithms for operational and energy resilience, including smart scheduling driven by real-time energy prices and renewable availability.</p>
+      <div class="card-meta">Nov 2025 &ndash; Present &middot; University of Sk&ouml;vde</div>
+      <div class="card-fund">KK-stiftelsen Synergy Programme &middot; SEK 11,000,000</div>
+      <p>
+        With Volvo Penta, ABB, Daloc and Xylem. A resilient factory is not one that never gets hit
+        &mdash; it is one whose output dips shallowly and recovers fast. I build the multi-objective
+        scheduling that keeps that true when energy prices and renewable availability move
+        hour to hour.
+      </p>
       <div class="card-tags">
-        <span class="card-tag">Resiliency</span>
-        <span class="card-tag">Manufacturing</span>
-        <span class="card-tag">Discrete Event Simulation</span>
-        <span class="card-tag">Applied AI</span>
-        <span class="card-tag">Data-driven Decision Making</span>
+        <span class="card-tag">Resilience</span><span class="card-tag">Energy-aware scheduling</span>
+        <span class="card-tag">DES</span><span class="card-tag">Industry 5.0</span>
       </div>
-      <a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/future-proof-factories-the-smart-way-to-resilient-production/" target="_blank" class="card-link">↗ View Project</a>
+      <div class="card-links">
+        <a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/future-proof-factories-the-smart-way-to-resilient-production/" target="_blank" rel="noopener" class="card-link">Project page</a>
+      </div>
     </div>
 
-    <!-- AI-COMPETE -->
     <div class="project-card">
+      <img src="assets/diagrams/aicompete.svg" alt="Multi-agent architecture with a coordinator agent negotiating between scheduling, energy, twin and carbon agents" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Multi-Agent AI for Sustainable Manufacturing (AI-COMPETE)</h3>
-        <span class="card-icon">🤖</span>
+        <span class="card-icon">&#129302;</span>
       </div>
-      <p style="font-size:0.8rem; color:#58a6ff; margin-bottom:8px;">Sep 2025 – Present · University of Skövde &amp; Uppsala University</p>
-      <p style="font-size:0.78rem; color:#3fb950; margin-bottom:10px;">💰 Funded by Vinnova · SEK 6,493,400</p>
-      <p>Collaborative project with Volvo Penta, Scania, and Daloc to build an AI-powered decision support system helping Swedish manufacturers boost productivity while cutting their carbon footprint. Developing green production scheduling algorithms, a coordinated multi-agent AI framework, and digital twin-enabled optimization to balance productivity and sustainability.</p>
+      <div class="card-meta">Sep 2025 &ndash; Present &middot; Sk&ouml;vde &amp; Uppsala</div>
+      <div class="card-fund">Vinnova &middot; SEK 6,493,400</div>
+      <p>
+        With Volvo Penta, Scania and Daloc. Productivity and carbon footprint pull against each
+        other, so the system is built as agents that negotiate rather than one objective
+        function that quietly sacrifices the other.
+      </p>
       <div class="card-tags">
-        <span class="card-tag">Agentic AI</span>
-        <span class="card-tag">Optimization</span>
-        <span class="card-tag">Digital Twin</span>
-        <span class="card-tag">Multi-Agent Systems</span>
+        <span class="card-tag">Agentic AI</span><span class="card-tag">Digital Twin</span>
+        <span class="card-tag">Green scheduling</span><span class="card-tag">Multi-agent</span>
       </div>
-      <a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/next-generation-factories-the-ai-way-to-sustainable-production/" target="_blank" class="card-link">↗ View Project</a>
+      <div class="card-links">
+        <a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/next-generation-factories-the-ai-way-to-sustainable-production/" target="_blank" rel="noopener" class="card-link">Project page</a>
+      </div>
     </div>
 
-    <!-- ACCURATE 4.0 -->
     <div class="project-card">
+      <img src="assets/diagrams/accurate.svg" alt="Digital twin loop between physical line, synchronised model and optimiser" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Agile Manufacturing in Industry 4.0 (ACCURATE 4.0)</h3>
-        <span class="card-icon">🔩</span>
+        <span class="card-icon">&#128296;</span>
       </div>
-      <p style="font-size:0.8rem; color:#58a6ff; margin-bottom:8px;">Sep 2021 – Dec 2025 · University of Skövde</p>
-      <p style="font-size:0.78rem; color:#3fb950; margin-bottom:10px;">💰 Funded by KK-stiftelsen (Knowledge Foundation)· SEK 24,000,000 </p>
-      <p>Research integrating optimization-enabled Digital Twins, Augmented Reality, and advanced sensing to drive agile manufacturing. Sub-projects cover Line Balancing Optimization (human-robot collaboration), Dynamic Bottleneck Analysis (shop-floor flow), and User-Centered Technological Innovation (AR assistance &amp; collision avoidance).</p>
+      <div class="card-meta">Sep 2021 &ndash; Dec 2025 &middot; University of Sk&ouml;vde</div>
+      <div class="card-fund">KK-stiftelsen &middot; SEK 24,000,000</div>
+      <p>
+        The programme my doctoral work sat inside. Optimisation-enabled digital twins, augmented
+        reality and advanced sensing, across three strands: line balancing with human-robot
+        collaboration, dynamic bottleneck analysis, and AR-assisted collision avoidance.
+      </p>
       <div class="card-tags">
-        <span class="card-tag">Applied AI</span>
-        <span class="card-tag">Discrete Event Simulation</span>
-        <span class="card-tag">Optimization</span>
-        <span class="card-tag">Digital Twin</span>
-        <span class="card-tag">Augmented Reality</span>
+        <span class="card-tag">Digital Twin</span><span class="card-tag">Bottleneck analysis</span>
+        <span class="card-tag">Line balancing</span><span class="card-tag">AR</span>
       </div>
-      <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center;">
-        <a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/agile-manufacturing-in-the-era-of-industry-4.0/" target="_blank" class="card-link">↗ View Project</a>
-        <a href="https://www.linkedin.com/posts/h-gskolan-i-sk-vde_hur-g%C3%A5r-vi-fr%C3%A5n-forskning-till-praktisk-verklighet-activity-7402323846755700736-LHor/" target="_blank" class="card-link">↗ University Post &amp; Video</a>
+      <div class="card-links">
+        <a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/agile-manufacturing-in-the-era-of-industry-4.0/" target="_blank" rel="noopener" class="card-link">Project page</a>
+        <a href="https://www.linkedin.com/posts/h-gskolan-i-sk-vde_hur-g%C3%A5r-vi-fr%C3%A5n-forskning-till-praktisk-verklighet-activity-7402323846755700736-LHor/" target="_blank" rel="noopener" class="card-link">University video</a>
       </div>
     </div>
 
+    <div class="project-card">
+      <img src="assets/diagrams/bottleneck.svg" alt="Shifting bottleneck detection across machines using cloud cyber-physical sensing" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Throughput Bottleneck Analysis in Industry 4.0</h3>
+        <span class="card-icon">&#128202;</span>
+      </div>
+      <div class="card-meta">Doctoral research strand &middot; most-cited work</div>
+      <p>
+        The bottleneck in a real line is not a fixed machine &mdash; it migrates as the shift wears on.
+        This strand built cloud cyber-physical sensing to detect the shift as it happens and
+        reallocate resources against it, rather than optimising yesterday's constraint.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">CPS</span><span class="card-tag">Data-driven DSS</span>
+        <span class="card-tag">Shifting bottleneck</span><span class="card-tag">181 citations</span>
+      </div>
+      <div class="card-links">
+        <a href="#publications" class="card-link">See publications</a>
+      </div>
+    </div>
+
+    <div class="group-head">Software &amp; Applied AI</div>
+    <div class="group-note">
+      Things I built and shipped: solvers, simulation engines, prediction tools and interfaces.
+      Source is on GitHub where the work is mine to publish.
+    </div>
+
+    <div class="project-card">
+      <img src="assets/01-Dashboard.png" alt="Heat treatment optimisation dashboard" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Sustainable Heat Treatment Optimization</h3>
+        <span class="card-icon">&#9881;&#65039;</span>
+      </div>
+      <div class="card-meta">Husqvarna AB</div>
+      <p>
+        Austempering parameters for ductile iron used to be found by running physical experiments.
+        This platform predicts the outcome instead &mdash; gradient-boosted models over the process
+        window, with a GPT-4 layer that explains why a given setting works to the engineers
+        who have to trust it.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Python</span><span class="card-tag">Streamlit</span><span class="card-tag">XGBoost</span>
+        <span class="card-tag">Azure OpenAI</span><span class="card-tag">Semantic Kernel</span>
+      </div>
+      <div class="card-links">
+        <a href="https://github.com/ehsan-mahmoodi/AI-Driven-Sustainable-Material-Design" target="_blank" rel="noopener" class="card-link">Repository</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/energy.svg" alt="Batch schedule aligned to spot price and on-site solar output" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Energy-Aware Batch Scheduling</h3>
+        <span class="card-icon">&#9889;</span>
+      </div>
+      <div class="card-meta">Applied Energy, 2026</div>
+      <p>
+        Batch production, spot electricity pricing and on-site renewable generation in one model.
+        Jobs are pulled into cheap, solar-rich hours and flexible maintenance is used to fill the
+        expensive gaps instead of blocking the line. Solved with MOVNS and NSGA-II against
+        constraint-programming bounds.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">MOVNS</span><span class="card-tag">NSGA-II</span>
+        <span class="card-tag">Constraint programming</span><span class="card-tag">Julia / Python</span>
+      </div>
+      <div class="card-links">
+        <a href="#publications" class="card-link">See publication</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/02-TwinCrane.gif" alt="Animated twin crane simulation" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Twin Crane Simulation</h3>
+        <span class="card-icon">&#127959;&#65039;</span>
+      </div>
+      <div class="card-meta">2013 Visio study &rarr; 2026 Python rebuild</div>
+      <p>
+        Two cranes on one rail that cannot pass each other. The interesting part is not scheduling
+        them but recovering when both are loaded and facing each other. Spatial reservation of
+        track segments, collision avoidance, and forced-yield deadlock recovery, across thirteen
+        iterations.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Python</span><span class="card-tag">Discrete-event</span>
+        <span class="card-tag">Pygame</span><span class="card-tag">Deadlock recovery</span>
+      </div>
+      <div class="card-links">
+        <a href="https://github.com/ehsan-mahmoodi/Twin-Crane" target="_blank" rel="noopener" class="card-link">Repository</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/alloy.svg" alt="Ensemble models predicting alloy properties feeding an NSGA-II design search" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Alloy Property Forecasting</h3>
+        <span class="card-icon">&#129516;</span>
+      </div>
+      <p>
+        Predict hardness, tensile and yield strength from composition and heat treatment, then
+        search the composition space for alloys that hit several property targets at once. Stacked
+        ensembles with an explicit overfitting index, so strategies are compared honestly rather
+        than on a lucky split.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">scikit-learn</span><span class="card-tag">XGBoost</span>
+        <span class="card-tag">DEAP</span><span class="card-tag">NSGA-II</span><span class="card-tag">Streamlit</span>
+      </div>
+      <div class="card-links">
+        <a href="#contact" class="card-link">Available on request</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/navigator.svg" alt="Public data sources feeding a guided report engine producing operator-level outputs" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>SME Data Navigator</h3>
+        <span class="card-icon">&#129517;</span>
+      </div>
+      <p>
+        A small operator cannot read a national statistics release and do anything with it. This
+        turns published cost-pressure figures into what it means for this business, this month
+        &mdash; a health check, a fair-rate index and a tender check. Four design iterations.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Python</span><span class="card-tag">Azure</span>
+        <span class="card-tag">Open data</span><span class="card-tag">Reporting</span>
+      </div>
+      <div class="card-links">
+        <a href="https://github.com/ehsan-mahmoodi/SME-data-navigator" target="_blank" rel="noopener" class="card-link">Repository</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/acid.svg" alt="Comparison of breakdown, preventive and predictive maintenance downtime" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Maintenance Optimisation, Sulfuric Acid Plant</h3>
+        <span class="card-icon">&#127981;</span>
+      </div>
+      <div class="card-meta">Bafgh acid unit &middot; MSc thesis, later rebuilt in Python</div>
+      <p>
+        Three maintenance strategies compared over eighteen scenarios on a 24/7 plant, ranked by
+        TOPSIS across downtime, cost, crew utilisation and spares. Predictive maintenance cut
+        annual downtime by 96.6% and monthly maintenance cost by 91.5%. Later rebuilt as a
+        Python NSGA-II model for crew sizing.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Arena</span><span class="card-tag">OptQuest</span>
+        <span class="card-tag">TOPSIS</span><span class="card-tag">NSGA-II</span><span class="card-tag">Pygame DES</span>
+      </div>
+      <div class="card-links">
+        <a href="https://github.com/ehsan-mahmoodi/Acid-Production-Unit-Maintenance-Planning" target="_blank" rel="noopener" class="card-link">Repository</a>
+      </div>
+    </div>
+
+    <div class="group-head">Industrial &amp; Consulting Work</div>
+    <div class="group-note">
+      Delivered for real clients across energy, healthcare, manufacturing and logistics. The model
+      files stay with the clients; what is shown here is the problem, the method and the result.
+    </div>
+
+    <div class="feature-card">
+      <img src="assets/diagrams/biodiesel.svg" alt="SME biodiesel transesterification process train with mass balance and economics" loading="lazy">
+      <div>
+        <div class="card-meta">Featured design case study</div>
+        <h3>SME-Scale Biodiesel Production for Northern Iran</h3>
+        <p>
+          My 2009 bachelor project was a study of transesterification chemistry &mdash; acid and base
+          catalysis, supercritical methanol, enzymatic routes. Useful, but it stopped at the
+          chemistry. This is the project it should have been: a 3,000 t/yr plant sized for a
+          cooperative in Gilan or Mazandaran, running on used cooking oil and regional rapeseed.
+        </p>
+        <p>
+          Feedstock availability, process train, mass and energy balance, capital and operating
+          cost, glycerol as a second revenue line, and the payback period that decides whether
+          any of it happens. Engineering only becomes a project when the numbers close.
+        </p>
+        <div class="card-tags">
+          <span class="card-tag">Process design</span><span class="card-tag">Techno-economic analysis</span>
+          <span class="card-tag">Feedstock logistics</span><span class="card-tag">Renewable energy</span>
+        </div>
+        <div class="card-links">
+          <a href="projects/biodiesel.html" class="card-link">Read the full case study &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/solar.svg" alt="10 MW photovoltaic plant layout with inverters, substation and financial metrics" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>10 MW Photovoltaic Plant, Nir</h3>
+        <span class="card-icon">&#9728;&#65039;</span>
+      </div>
+      <div class="card-meta">2016 &ndash; 2019 &middot; R&amp;D Expert, Kish Solar Trading Co.</div>
+      <p>
+        On-grid solar plant in Yazd province: 36,432 modules, nine SMA central inverters, 20,465
+        MWh in year one at an 87% performance ratio. I authored the project profile and the
+        financial model &mdash; &euro;11.79 M investment, &euro;25.8 M NPV, 27% IRR &mdash; through to
+        signed PPA, land, permits and international due diligence.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Feasibility study</span><span class="card-tag">Financial modelling</span>
+        <span class="card-tag">PV design</span><span class="card-tag">Project profile</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/cathlab.svg" alt="Cardiac catheterisation lab patient flow with single procedure table" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Cardiac Cath Lab Flow, Moheb-e-Mehr Hospital</h3>
+        <span class="card-icon">&#129505;</span>
+      </div>
+      <div class="card-meta">2014 &middot; Tehran</div>
+      <p>
+        One procedure table, three procedure types and no fixed admission schedule &mdash; patients
+        are called when their cardiologist happens to be in the lab. I modelled the whole path from
+        7:30 clinic arrival to discharge, including the monitored-bed constraint that forces
+        transfers when an angiography becomes an angioplasty mid-procedure.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Arena</span><span class="card-tag">Healthcare DES</span>
+        <span class="card-tag">Priority rules</span><span class="card-tag">Bed capacity</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/basir.svg" alt="Eye clinic patient flow from information desk through to surgery admission" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Eye Surgery Clinic Simulation, Basir</h3>
+        <span class="card-icon">&#128065;&#65039;</span>
+      </div>
+      <div class="card-meta">2014</div>
+      <p>
+        New patients and post-operative reviews share the same corridor, and the doctor is the
+        bottleneck for both. Built in Arena with distributions fitted in Input Analyzer, scored on
+        two measures held in tension &mdash; mean queue time and the opportunity cost of that queue
+        &mdash; so that tripling staff to halve the wait had to justify itself. Scenarios ranked by
+        TOPSIS and AHP.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Arena</span><span class="card-tag">Input Analyzer</span>
+        <span class="card-tag">Bottleneck analysis</span><span class="card-tag">TOPSIS / AHP</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/alb.svg" alt="Assembly line station loads against cycle time with mixed-model sequence" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Assembly Line Balancing &amp; Sequencing</h3>
+        <span class="card-icon">&#128668;</span>
+      </div>
+      <div class="card-meta">2016</div>
+      <p>
+        Two decisions that cannot be taken separately: assign tasks to stations under precedence
+        and cycle-time limits, then sequence the product variants so no station is repeatedly
+        overloaded. Built as an animated Arena model so the line stoppage could be seen, not
+        just tabulated.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Line balancing</span><span class="card-tag">Mixed-model sequencing</span>
+        <span class="card-tag">Arena</span><span class="card-tag">Optimisation</span>
+      </div>
+      <div class="media-note">Simulation recording available &mdash; video link to be added.</div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/osv.svg" alt="Offshore supply vessel routes from Kharg base to six platforms" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Offshore Supply Vessel Fleet Sizing &amp; Routing</h3>
+        <span class="card-icon">&#128674;</span>
+      </div>
+      <div class="card-meta">2012 MSc thesis &middot; Kharg region, Persian Gulf</div>
+      <p>
+        How many vessels does an offshore field actually need, and on what routes, when demand is
+        stochastic and weather takes vessels out of service unpredictably? Simulation-based
+        multi-objective optimisation trading fleet size against service level. The work behind
+        two journal papers.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Fleet sizing</span><span class="card-tag">Maritime logistics</span>
+        <span class="card-tag">Sim-opt</span><span class="card-tag">Stochastic demand</span>
+      </div>
+      <div class="card-links"><a href="#publications" class="card-link">See publications</a></div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/airport.svg" alt="Airport terminal passenger flow with queue length and utilisation panels" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Airport Terminal 3D Model</h3>
+        <span class="card-icon">&#9992;&#65039;</span>
+      </div>
+      <div class="card-meta">2015</div>
+      <p>
+        Passenger flow from curbside to gate, built as a 3D Arena model with a live dashboard.
+        The point of the 3D was not decoration &mdash; a terminal layout and its staffing plan are
+        much easier to argue about when stakeholders can watch the queue form.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Arena 3D</span><span class="card-tag">Passenger flow</span>
+        <span class="card-tag">Dashboard</span><span class="card-tag">Layout study</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/idcard.svg" alt="ID card production line with rework loop and capacity panels" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>National ID Card Production Line</h3>
+        <span class="card-icon">&#129534;</span>
+      </div>
+      <div class="card-meta">2013</div>
+      <p>
+        A secure-document line where personalisation is the constraint and every rejected card
+        loops back through it. Modelled throughput against WIP under demand surge, and how
+        sensitive the whole rollout is to the reject rate.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Arena</span><span class="card-tag">Throughput analysis</span>
+        <span class="card-tag">Rework loops</span><span class="card-tag">Capacity planning</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/hospitalsc.svg" alt="Hospital supply chain with DEA efficiency frontier" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Hospital Supply Chain Efficiency</h3>
+        <span class="card-icon">&#127973;</span>
+      </div>
+      <div class="card-meta">2016</div>
+      <p>
+        Benchmarking hospital logistics units with data envelopment analysis, where the normal
+        inventory trade-off breaks down: a stockout of a critical item is not a cost line, it is a
+        clinical event. Service level and holding cost had to be weighed on those terms.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">DEA</span><span class="card-tag">Inventory policy</span>
+        <span class="card-tag">Healthcare logistics</span><span class="card-tag">Benchmarking</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/anp.svg" alt="Analytic network process clusters with feedback loops" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Productivity Measurement with ANP</h3>
+        <span class="card-icon">&#128200;</span>
+      </div>
+      <div class="card-meta">2015</div>
+      <p>
+        Productivity criteria influence each other &mdash; capital investment changes labour
+        requirements, which changes process design. A plain AHP hierarchy cannot express that, so
+        this was built as an analytic network process in SuperDecisions across eight revisions,
+        with supermatrix convergence analysis.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">ANP</span><span class="card-tag">SuperDecisions</span>
+        <span class="card-tag">MCDM</span><span class="card-tag">Productivity</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/mto.svg" alt="Make-to-order supply chain with delayed demand information feedback" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Information Flow in MTO Supply Chains</h3>
+        <span class="card-icon">&#128257;</span>
+      </div>
+      <div class="card-meta">2010 &middot; published research</div>
+      <p>
+        A system-dynamics model of what happens when demand information reaches upstream partners
+        late and distorted. Order swings amplify along the chain; sharing information damps them.
+        Built in Vensim with policy scenario runs.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">System dynamics</span><span class="card-tag">Vensim</span>
+        <span class="card-tag">Bullwhip effect</span><span class="card-tag">Make-to-order</span>
+      </div>
+      <div class="card-links"><a href="#publications" class="card-link">See publication</a></div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/simopt.svg" alt="Benchmark comparison of OptQuest and Witness Optimizer" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Benchmarking Commercial Sim-Opt Packages</h3>
+        <span class="card-icon">&#9878;&#65039;</span>
+      </div>
+      <div class="card-meta">2011 &middot; Winter Simulation Conference</div>
+      <p>
+        Practitioners were choosing between OptQuest and Witness Optimizer on vendor claims
+        because nobody had tested them side by side. We did &mdash; same problems, same budgets
+        &mdash; on solution quality, convergence speed and robustness to simulation noise.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Benchmarking</span><span class="card-tag">OptQuest</span>
+        <span class="card-tag">Witness</span><span class="card-tag">63 citations</span>
+      </div>
+      <div class="card-links"><a href="#publications" class="card-link">See publication</a></div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/kpi.svg" alt="KPIs linked to strategic goals across business functions" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>KPI to Strategy Modelling, Asiatech</h3>
+        <span class="card-icon">&#127919;</span>
+      </div>
+      <div class="card-meta">2019 &middot; telecom operator</div>
+      <p>
+        Sales, R&amp;D, service quality and operations each had their own dashboards, and none of
+        them explained whether the company was getting closer to its strategic goals. The work was
+        building the cause-and-effect structure: which measures actually move a goal, and which
+        are just being counted.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Strategy modelling</span><span class="card-tag">KPI design</span>
+        <span class="card-tag">Cause-effect analysis</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="assets/diagrams/netmaint.svg" alt="Mixed wired and wireless network with maintenance planning" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Wired &amp; Wireless Network Maintenance</h3>
+        <span class="card-icon">&#128225;</span>
+      </div>
+      <div class="card-meta">2020</div>
+      <p>
+        Two failure modes in one estate: a wired run fails outright, a wireless hop degrades
+        gradually. Preventive and corrective policies had to be set differently for each, with crew
+        routing and spares held against how critical each link is.
+      </p>
+      <div class="card-tags">
+        <span class="card-tag">Maintenance planning</span><span class="card-tag">Network reliability</span>
+        <span class="card-tag">Crew routing</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <div class="section-title">Publications</div>
+  <div class="section-subtitle">
+    Sixteen peer-reviewed papers, mostly where simulation meets optimisation: bottleneck analysis,
+    energy-aware scheduling, resilient production and maritime logistics. Several grew directly out
+    of the industrial projects above.
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric"><div class="val">343</div><div class="lbl">Citations</div></div>
+    <div class="metric"><div class="val">7</div><div class="lbl">h-index</div></div>
+    <div class="metric"><div class="val">7</div><div class="lbl">i10-index</div></div>
+    <div class="metric"><div class="val">16</div><div class="lbl">Publications</div></div>
+  </div>
+
+  <div class="pub-list">
+
+    <div class="pub-item">
+      <div class="pub-year">2026</div>
+      <div>
+        <div class="pub-title">Energy-aware batch scheduling with flexible maintenance under spot electricity pricing and onsite renewable generation</div>
+        <div class="pub-venue">Applied Energy &middot; Beldar, Mahmoodi, Kermani, Mardaneh, Ansaripoor</div>
+      </div>
+      <div class="pub-cites none">in press</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-title">Predictive model-based multi-objective optimization with life-long meta-learning for designing unreliable production systems</div>
+        <div class="pub-venue">Computers and Operations Research &middot; Mahmoodi, Fathi, Ng, Dolgui</div>
+      </div>
+      <div class="pub-cites">6 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-title">Analyzing resilient performance of workers with multiple disturbances in production systems</div>
+        <div class="pub-venue">Applied Ergonomics &middot; Yasue, Mahmoodi, Z&uacute;&ntilde;iga, Fathi</div>
+      </div>
+      <div class="pub-cites">19 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-title">Simulation-Based Knowledge-Driven Optimization for Efficient Production Sequencing in Hybrid Flow Shops</div>
+        <div class="pub-venue">Procedia Computer Science &middot; Mahmoodi, Fathi, Ng, Nourmohammadi</div>
+      </div>
+      <div class="pub-cites none">&mdash;</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2025</div>
+      <div>
+        <div class="pub-title">Pathways to Industry 5.0 and Society 5.0: Socio-Technical Systems Modelling through FRAM and Discrete-Event Simulation</div>
+        <div class="pub-venue">Navigating the FRAM &middot; Z&uacute;&ntilde;iga, Mahmoodi, Yasue</div>
+      </div>
+      <div class="pub-cites none">&mdash;</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2024</div>
+      <div>
+        <div class="pub-title">Data-driven simulation-based decision support system for resource allocation in industry 4.0 and smart manufacturing</div>
+        <div class="pub-venue">Journal of Manufacturing Systems &middot; Mahmoodi, Fathi, Tavana, Ghobakhloo, Ng</div>
+      </div>
+      <div class="pub-cites">81 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2024</div>
+      <div>
+        <div class="pub-title">A framework for throughput bottleneck analysis using cloud-based cyber-physical systems in Industry 4.0 and smart manufacturing</div>
+        <div class="pub-venue">Procedia Computer Science &middot; Mahmoodi, Fathi, Ghobakhloo, Ng</div>
+      </div>
+      <div class="pub-cites">13 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2024</div>
+      <div>
+        <div class="pub-title">Balancing and scheduling of sustainable flexible transfer lines</div>
+        <div class="pub-venue">IFAC-PapersOnLine &middot; Nourmohammadi, Beldar, Fathi, Mahmoodi</div>
+      </div>
+      <div class="pub-cites">3 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2024</div>
+      <div>
+        <div class="pub-title">Policy Making to Encourage Platform Thinking in Manufacturing: A System Dynamics-based Multi-Objective Optimization Approach</div>
+        <div class="pub-venue">Procedia CIRP &middot; Mahmoodi, Fathi</div>
+      </div>
+      <div class="pub-cites">1 citation</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2024</div>
+      <div>
+        <div class="pub-title">Buffer Allocation in Remanufacturing Systems and its Applications in MRO Industries</div>
+        <div class="pub-venue">EURO 33rd European Conference on Operational Research &middot; Mahmoodi, Fathi, Ng</div>
+      </div>
+      <div class="pub-cites none">&mdash;</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2022</div>
+      <div>
+        <div class="pub-title">The impact of Industry 4.0 on bottleneck analysis in production and manufacturing: Current trends and future perspectives</div>
+        <div class="pub-venue">Computers &amp; Industrial Engineering &middot; Mahmoodi, Fathi, Ghobakhloo</div>
+      </div>
+      <div class="pub-cites">100 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2022</div>
+      <div>
+        <div class="pub-title">A genetic algorithm for heterogenous human-robot collaboration assembly line balancing problems</div>
+        <div class="pub-venue">Procedia CIRP &middot; Nourmohammadi, Fathi, Ng, Mahmoodi</div>
+      </div>
+      <div class="pub-cites">27 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2016</div>
+      <div>
+        <div class="pub-title">A simulation-based multi-objective optimization study of the fleet sizing problem in the offshore industry</div>
+        <div class="pub-venue">Maritime Economics &amp; Logistics &middot; Eskandari, Mahmoodi</div>
+      </div>
+      <div class="pub-cites">25 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2014</div>
+      <div>
+        <div class="pub-title">Routing of Offshore Supply Vessels: Kharg Region</div>
+        <div class="pub-venue">International Journal of Industrial Engineering &amp; Production Research &middot; Eskandari, Mahmoodi</div>
+      </div>
+      <div class="pub-cites none">&mdash;</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2011</div>
+      <div>
+        <div class="pub-title">Performance analysis of commercial simulation-based optimization packages: OptQuest and Witness Optimizer</div>
+        <div class="pub-venue">Winter Simulation Conference &middot; Eskandari, Mahmoodi, Fallah, Geiger</div>
+      </div>
+      <div class="pub-cites">63 citations</div>
+    </div>
+
+    <div class="pub-item">
+      <div class="pub-year">2010</div>
+      <div>
+        <div class="pub-title">Impact of information system flow on make-to-order manufacturer supply chain network: systems dynamics approach</div>
+        <div class="pub-venue">Journal of Modeling in Engineering &middot; Mahmoodi, Naimi Sadigh, Chaharsooghi, Eskandari</div>
+      </div>
+      <div class="pub-cites">5 citations</div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:28px;">
+    <a href="https://scholar.google.com/citations?user=apq8bbkAAAAJ&amp;hl=en" target="_blank" rel="noopener" class="btn btn-secondary">Full profile on Google Scholar</a>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <div class="section-title">Tools &amp; Methods</div>
+  <div class="section-subtitle">What I actually reach for, grouped by what it is for.</div>
+
+  <div class="skills-block">
+    <div class="skills-label">Languages &amp; Engineering</div>
+    <div class="skills-grid">
+      <span class="skill-tag">Python</span><span class="skill-tag">Julia</span><span class="skill-tag">C / C++</span>
+      <span class="skill-tag">R</span><span class="skill-tag">MATLAB</span><span class="skill-tag">SQL</span>
+      <span class="skill-tag">Git / GitHub</span><span class="skill-tag">Docker</span>
+      <span class="skill-tag">FastAPI</span><span class="skill-tag">Streamlit</span><span class="skill-tag">LaTeX</span>
+    </div>
+  </div>
+
+  <div class="skills-block">
+    <div class="skills-label">Simulation</div>
+    <div class="skills-grid">
+      <span class="skill-tag">Rockwell Arena</span><span class="skill-tag">SimPy</span><span class="skill-tag">Salabim</span>
+      <span class="skill-tag">Plant Simulation</span><span class="skill-tag">FlexSim</span><span class="skill-tag">Vensim</span>
+      <span class="skill-tag">JaamSim</span><span class="skill-tag">Custom DES engines</span><span class="skill-tag">Digital twins</span>
+    </div>
+  </div>
+
+  <div class="skills-block">
+    <div class="skills-label">Optimisation</div>
+    <div class="skills-grid">
+      <span class="skill-tag">NSGA-II / NSGA-III</span><span class="skill-tag">MOVNS</span><span class="skill-tag">Constraint programming</span>
+      <span class="skill-tag">Gurobi</span><span class="skill-tag">CPLEX</span><span class="skill-tag">Pyomo</span>
+      <span class="skill-tag">pymoo</span><span class="skill-tag">DEAP</span><span class="skill-tag">OptQuest</span>
+      <span class="skill-tag">Matheuristics</span>
+    </div>
+  </div>
+
+  <div class="skills-block">
+    <div class="skills-label">Machine Learning &amp; AI</div>
+    <div class="skills-grid">
+      <span class="skill-tag">scikit-learn</span><span class="skill-tag">XGBoost</span><span class="skill-tag">TensorFlow</span>
+      <span class="skill-tag">YOLO</span><span class="skill-tag">Surrogate modelling</span><span class="skill-tag">Meta-learning</span>
+      <span class="skill-tag">Azure OpenAI</span><span class="skill-tag">Semantic Kernel</span><span class="skill-tag">Multi-agent systems</span>
+    </div>
+  </div>
+
+  <div class="skills-block">
+    <div class="skills-label">Industrial Engineering</div>
+    <div class="skills-grid">
+      <span class="skill-tag">Bottleneck analysis</span><span class="skill-tag">Line balancing</span>
+      <span class="skill-tag">Maintenance strategy</span><span class="skill-tag">Capacity planning</span>
+      <span class="skill-tag">TOPSIS</span><span class="skill-tag">AHP / ANP</span><span class="skill-tag">DEA</span>
+      <span class="skill-tag">Techno-economic analysis</span><span class="skill-tag">Supply chain design</span>
+    </div>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-title">Get in Touch</div>
-  <div class="section-subtitle">Feel free to reach out for collaborations, opportunities, or research discussions</div>
+  <div class="section-subtitle">Open to research, engineering and consulting work in production systems, optimisation and applied AI.</div>
   <div class="contact-grid">
     <a href="mailto:ethan.mhm86@gmail.com" class="contact-card">
-      <span class="icon">📧</span>
+      <span class="icon">&#128231;</span>
       <div><div class="label">Personal Email</div><div class="value">ethan.mhm86@gmail.com</div></div>
     </a>
     <a href="mailto:ehsan.mahmoodi@his.se" class="contact-card">
-      <span class="icon">🎓</span>
-      <div><div class="label">University of Skövde</div><div class="value">ehsan.mahmoodi@his.se</div></div>
+      <span class="icon">&#127891;</span>
+      <div><div class="label">University of Sk&ouml;vde</div><div class="value">ehsan.mahmoodi@his.se</div></div>
     </a>
     <a href="mailto:emah396@aucklanduni.ac.nz" class="contact-card">
-      <span class="icon">🌿</span>
+      <span class="icon">&#127807;</span>
       <div><div class="label">University of Auckland</div><div class="value">emah396@aucklanduni.ac.nz</div></div>
     </a>
-    <a href="https://www.linkedin.com/in/ehsan-mahmoodi-2a4aa346/" target="_blank" class="contact-card">
-      <span class="icon">💼</span>
+    <a href="https://www.linkedin.com/in/ehsan-mahmoodi-2a4aa346/" target="_blank" rel="noopener" class="contact-card">
+      <span class="icon">&#128188;</span>
       <div><div class="label">LinkedIn</div><div class="value">ehsan-mahmoodi</div></div>
+    </a>
+    <a href="https://scholar.google.com/citations?user=apq8bbkAAAAJ&amp;hl=en" target="_blank" rel="noopener" class="contact-card">
+      <span class="icon">&#128218;</span>
+      <div><div class="label">Google Scholar</div><div class="value">343 citations &middot; h-index 7</div></div>
+    </a>
+    <a href="https://github.com/ehsan-mahmoodi" target="_blank" rel="noopener" class="contact-card">
+      <span class="icon">&#128187;</span>
+      <div><div class="label">GitHub</div><div class="value">ehsan-mahmoodi</div></div>
     </a>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <p>© 2026 Ehsan Mahmoodi · Built with GitHub Pages · Auckland, New Zealand</p>
+  <p>&copy; 2026 Ehsan Mahmoodi &middot; Built with GitHub Pages &middot; Auckland, New Zealand</p>
 </footer>
 
 </body>

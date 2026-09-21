@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Eye surgery clinic discrete-event simulation">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Eye Clinic — arrival-to-discharge flow &amp; bottleneck scan</text>
+<g font-size="7.5">
+<rect class="bx" x="12" y="34" width="46" height="24" rx="4"/><text x="35" y="49" class="m" text-anchor="middle">Info desk</text>
+<rect class="bx" x="70" y="34" width="46" height="24" rx="4"/><text x="93" y="49" class="m" text-anchor="middle">Reception</text>
+</g>
+<path class="fl" d="M58 46h12"/>
+<path class="fl" d="M116 46h14v-8h18"/><path class="fl" d="M116 46h14v18h18"/>
+<g font-size="7">
+<text x="152" y="32" class="g">new patient</text>
+<text x="152" y="70" class="w">post-op review</text>
+</g>
+<g font-size="7.5">
+<rect class="bx" x="148" y="34" width="40" height="18" rx="3"/><text x="168" y="46" class="m" text-anchor="middle">Register</text>
+<rect class="bx" x="196" y="34" width="36" height="18" rx="3"/><text x="214" y="46" class="m" text-anchor="middle">Cashier</text>
+<rect class="bx" x="240" y="34" width="52" height="18" rx="3"/><text x="266" y="46" class="m" text-anchor="middle">Vision test</text>
+<rect class="bx" x="300" y="34" width="46" height="18" rx="3"/><text x="323" y="46" class="m" text-anchor="middle">Optometry</text>
+</g>
+<path class="fl" d="M188 43h8M232 43h8M292 43h8"/>
+<path class="fl" d="M346 43h10v30H210"/>
+<g font-size="7.5">
+<rect class="bxa" x="150" y="80" width="60" height="26" rx="4"/>
+<text x="180" y="90" class="a" text-anchor="middle" font-weight="600">Doctor visit</text>
+<text x="180" y="100" class="m" text-anchor="middle">bottleneck</text>
+<rect class="bx" x="242" y="80" width="52" height="26" rx="4"/><text x="268" y="95" class="m" text-anchor="middle">Imaging</text>
+<rect class="bx" x="60" y="80" width="62" height="26" rx="4"/><text x="91" y="90" class="m" text-anchor="middle">Surgery</text><text x="91" y="100" class="m" text-anchor="middle">admission</text>
+</g>
+<path class="fl" d="M210 93h32"/>
+<path class="fm" d="M268 106v12H180v-12"/><text x="224" y="128" class="m" text-anchor="middle" font-size="6.5">loop back to doctor</text>
+<path class="fl" d="M150 93h-28"/>
+<line x1="12" y1="146" x2="388" y2="146" stroke="var(--line)"/>
+<text x="12" y="160" class="m" font-size="7.5">Objectives: mean queue wait  ×  opportunity cost of waiting — traded off, not optimised alone</text>
+<text x="12" y="172" class="m" font-size="7.5">Arena + Input Analyzer · scenarios ranked by TOPSIS / AHP · Basir Eye Clinic, 2014</text>
+</svg>

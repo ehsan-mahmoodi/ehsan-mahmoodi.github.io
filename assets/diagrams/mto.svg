@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="System dynamics of information flow in MTO supply chain">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">MTO Supply Chain &#8212; information flow, system dynamics</text>
+<g font-size="6.5">
+<rect class="bx" x="14" y="44" width="58" height="26" rx="4"/><text x="43" y="60" class="m" text-anchor="middle">Supplier</text>
+<rect class="bx" x="100" y="44" width="58" height="26" rx="4"/><text x="129" y="60" class="m" text-anchor="middle">Manufacturer</text>
+<rect class="bx" x="186" y="44" width="58" height="26" rx="4"/><text x="215" y="60" class="m" text-anchor="middle">Distributor</text>
+<rect class="bx" x="272" y="44" width="58" height="26" rx="4"/><text x="301" y="60" class="m" text-anchor="middle">Retailer</text>
+<rect class="bxa" x="344" y="44" width="44" height="26" rx="4"/><text x="366" y="60" class="a" text-anchor="middle" font-weight="600">Order</text>
+</g>
+<path class="fl" d="M72 57h28M158 57h28M244 57h28M330 57h14"/>
+<path class="fm" d="M366 70v22H43V70"/>
+<text x="200" y="104" class="w" font-size="7" text-anchor="middle">demand information feedback, delayed and distorted</text>
+<g font-size="6.5">
+<rect class="bx" x="40" y="112" width="140" height="26" rx="4"/>
+<text x="110" y="124" class="m" text-anchor="middle" font-weight="600">Without shared information</text>
+<text x="110" y="134" class="w" text-anchor="middle">amplified order swings</text>
+<rect class="bxa" x="220" y="112" width="140" height="26" rx="4"/>
+<text x="290" y="124" class="a" text-anchor="middle" font-weight="600">With shared information</text>
+<text x="290" y="134" class="g" text-anchor="middle">damped, stable inventory</text>
+</g>
+<line x1="12" y1="150" x2="388" y2="150" stroke="var(--line)"/>
+<text x="12" y="164" class="m" font-size="7.5">Vensim system-dynamics model with scenario runs on information-sharing policy.</text>
+<text x="12" y="176" class="a" font-size="7.5" font-weight="600">Journal of Modeling in Engineering, 2010</text>
+</svg>

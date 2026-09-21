@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Twin crane shared rail coordination and deadlock">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Twin Cranes &#8212; shared rail, no passing, deadlock recovery</text>
+<line x1="20" y1="48" x2="380" y2="48" stroke="var(--mut)" stroke-width="2"/>
+<g font-size="6.5">
+<rect class="bxa" x="70" y="52" width="40" height="16" rx="2"/><text x="90" y="63" class="a" text-anchor="middle" font-weight="600">C1</text>
+<path class="fl" d="M90 48v4"/>
+<rect class="bxa" x="250" y="52" width="40" height="16" rx="2"/><text x="270" y="63" class="a" text-anchor="middle" font-weight="600">C2</text>
+<path class="fl" d="M270 48v4"/>
+</g>
+<path class="fl" d="M114 60h44" marker-end="url(#ar)"/>
+<path class="fl" d="M246 60h-44"/>
+<text x="180" y="56" class="w" font-size="7" text-anchor="middle">conflict zone</text>
+<rect x="158" y="52" width="44" height="16" fill="var(--amb)" opacity="0.25" stroke="var(--amb)" stroke-dasharray="3 2"/>
+<g font-size="6.5">
+<rect class="bx" x="20" y="80" width="56" height="14" rx="2"/><text x="48" y="90" class="m" text-anchor="middle">bay 1</text>
+<rect class="bx" x="84" y="80" width="56" height="14" rx="2"/><text x="112" y="90" class="m" text-anchor="middle">bay 2</text>
+<rect class="bx" x="148" y="80" width="56" height="14" rx="2"/><text x="176" y="90" class="m" text-anchor="middle">bay 3</text>
+<rect class="bx" x="212" y="80" width="56" height="14" rx="2"/><text x="240" y="90" class="m" text-anchor="middle">bay 4</text>
+<rect class="bx" x="276" y="80" width="56" height="14" rx="2"/><text x="304" y="90" class="m" text-anchor="middle">bay 5</text>
+</g>
+<line x1="12" y1="108" x2="388" y2="108" stroke="var(--line)"/>
+<g font-size="7.5">
+<text x="12" y="124" class="t" font-weight="600">Spatial reservation</text>
+<text x="12" y="136" class="m" font-size="7">a crane claims track segments before it moves</text>
+<text x="212" y="124" class="t" font-weight="600">Deadlock recovery</text>
+<text x="212" y="136" class="m" font-size="7">both loaded, opposed &#8594; forced yield and retreat</text>
+</g>
+<text x="12" y="158" class="m" font-size="7.5">Started as a 2013 Visio study of a steel-mill crane pair; rebuilt 2026 as a Python DES with</text>
+<text x="12" y="170" class="m" font-size="7.5">pygame animation across 13 iterations (v0&#8211;v12).</text>
+</svg>

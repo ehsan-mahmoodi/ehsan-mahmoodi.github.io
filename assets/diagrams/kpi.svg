@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="KPI to strategic goal modelling">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">KPI to Strategy &#8212; linking measures to goals, Asiatech</text>
+<g font-size="6.5">
+<rect class="bxa" x="130" y="34" width="140" height="24" rx="4"/>
+<text x="200" y="49" class="a" text-anchor="middle" font-weight="600">Strategic goals</text>
+<rect class="bx" x="14" y="76" width="82" height="26" rx="4"/><text x="55" y="92" class="m" text-anchor="middle">Sales</text>
+<rect class="bx" x="108" y="76" width="82" height="26" rx="4"/><text x="149" y="92" class="m" text-anchor="middle">R &amp; D</text>
+<rect class="bx" x="202" y="76" width="82" height="26" rx="4"/><text x="243" y="88" class="m" text-anchor="middle">Service</text><text x="243" y="97" class="m" text-anchor="middle">quality</text>
+<rect class="bx" x="296" y="76" width="90" height="26" rx="4"/><text x="341" y="92" class="m" text-anchor="middle">Operations</text>
+</g>
+<path class="fl" d="M170 58 Q110 62 55 76"/>
+<path class="fl" d="M186 58 Q168 64 149 76"/>
+<path class="fl" d="M214 58 Q230 64 243 76"/>
+<path class="fl" d="M230 58 Q290 62 341 76"/>
+<g font-size="6">
+<rect class="bx" x="14" y="114" width="82" height="18" rx="3"/><text x="55" y="126" class="m" text-anchor="middle">conversion rate</text>
+<rect class="bx" x="108" y="114" width="82" height="18" rx="3"/><text x="149" y="126" class="m" text-anchor="middle">time to market</text>
+<rect class="bx" x="202" y="114" width="82" height="18" rx="3"/><text x="243" y="126" class="m" text-anchor="middle">first-call fix</text>
+<rect class="bx" x="296" y="114" width="90" height="18" rx="3"/><text x="341" y="126" class="m" text-anchor="middle">uptime</text>
+</g>
+<path class="fm" d="M55 102v12M149 102v12M243 102v12M341 102v12"/>
+<line x1="12" y1="146" x2="388" y2="146" stroke="var(--line)"/>
+<text x="12" y="161" class="m" font-size="7.5">Which measures actually move the goal, and which are just being counted? Cause-effect</text>
+<text x="12" y="173" class="m" font-size="7.5">structure over a telecom operator, 2019</text>
+</svg>

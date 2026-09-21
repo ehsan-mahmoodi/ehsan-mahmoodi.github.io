@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Resilience-driven manufacturing SMART project">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">SMART &#8212; resilient, energy-aware production</text>
+<path class="fm" d="M12 74h376"/>
+<path d="M12 74 L60 74 L84 108 L120 44 L150 74 L200 74" fill="none" stroke="var(--red)" stroke-width="1.5"/>
+<path d="M200 74 L240 74 L256 92 L276 62 L292 74 L388 74" fill="none" stroke="var(--grn)" stroke-width="1.5"/>
+<text x="100" y="34" class="w" font-size="7" text-anchor="middle">disturbance</text>
+<text x="100" y="128" class="m" font-size="6.5" text-anchor="middle">brittle system: deep loss, slow recovery</text>
+<text x="294" y="128" class="g" font-size="6.5" text-anchor="middle">resilient system: shallow dip, fast recovery</text>
+<line x1="200" y1="30" x2="200" y2="120" stroke="var(--line)" stroke-dasharray="3 3"/>
+<g font-size="6">
+<rect class="bx" x="14" y="136" width="86" height="16" rx="3"/><text x="57" y="147" class="m" text-anchor="middle">Volvo Penta</text>
+<rect class="bx" x="108" y="136" width="60" height="16" rx="3"/><text x="138" y="147" class="m" text-anchor="middle">ABB</text>
+<rect class="bx" x="176" y="136" width="60" height="16" rx="3"/><text x="206" y="147" class="m" text-anchor="middle">Daloc</text>
+<rect class="bx" x="244" y="136" width="60" height="16" rx="3"/><text x="274" y="147" class="m" text-anchor="middle">Xylem</text>
+<rect class="bxa" x="312" y="136" width="76" height="16" rx="3"/><text x="350" y="147" class="a" text-anchor="middle">KK-stiftelsen</text>
+</g>
+<text x="12" y="170" class="m" font-size="7.5">Scheduling that answers to real-time energy price and renewable availability &#183; SEK 11 M synergy programme</text>
+</svg>

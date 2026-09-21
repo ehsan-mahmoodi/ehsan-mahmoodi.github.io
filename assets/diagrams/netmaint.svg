@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Wired and wireless network maintenance planning">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Network Maintenance &#8212; wired and wireless estate</text>
+<g font-size="6">
+<circle cx="200" cy="62" r="18" class="bxa"/><text x="200" y="65" class="a" text-anchor="middle" font-weight="600">Core</text>
+<circle cx="100" cy="38" r="12" class="bx"/><text x="100" y="41" class="m" text-anchor="middle">N1</text>
+<circle cx="100" cy="92" r="12" class="bx"/><text x="100" y="95" class="m" text-anchor="middle">N2</text>
+<circle cx="300" cy="38" r="12" class="bx"/><text x="300" y="41" class="m" text-anchor="middle">N3</text>
+<circle cx="300" cy="92" r="12" class="bx"/><text x="300" y="95" class="m" text-anchor="middle">N4</text>
+<circle cx="46" cy="62" r="10" class="bx"/><text x="46" y="65" class="m" text-anchor="middle">e1</text>
+<circle cx="354" cy="62" r="10" class="bx"/><text x="354" y="65" class="m" text-anchor="middle">e2</text>
+</g>
+<path class="fl" d="M112 42 Q160 50 183 56"/>
+<path class="fl" d="M112 88 Q160 76 183 68"/>
+<path class="fl" d="M217 56 Q262 50 288 42"/>
+<path class="fl" d="M217 68 Q262 76 288 88"/>
+<path class="fm" d="M56 62h32M312 62h32"/>
+<path class="fm" d="M100 50v30M300 50v30"/>
+<text x="150" y="112" class="m" font-size="6">wired backbone</text>
+<text x="252" y="112" class="w" font-size="6">wireless link</text>
+<line x1="12" y1="124" x2="388" y2="124" stroke="var(--line)"/>
+<text x="12" y="139" class="m" font-size="7.5">Preventive versus corrective maintenance across a mixed estate, where a wireless hop degrades</text>
+<text x="12" y="151" class="m" font-size="7.5">gradually and a wired run fails outright. Crew routing and spares held against link criticality.</text>
+<text x="12" y="169" class="m" font-size="7.5">2020</text>
+</svg>

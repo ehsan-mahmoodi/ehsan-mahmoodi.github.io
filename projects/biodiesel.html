@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SME Biodiesel Plant, Northern Iran | Ehsan Mahmoodi</title>
+  <meta name="description" content="A design case study: a 3,000 t/yr biodiesel plant sized for an SME cooperative in Gilan or Mazandaran, from feedstock logistics through process design to payback."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      body { background: #ffffff; color: #24292f; }
+      nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+      nav .logo, .kpi .v, footer a { color: #0969da; }
+      nav .back, p.muted, figcaption, th, .kpi .l, h2 + .sub, .callout, footer { color: #57606a; }
+      section.blk { border-top: 1px solid #d0d7de; }
+      p, td, ul.plain li { color: #24292f; }
+      .callout, .kpi, .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+      .callout { border-left: 3px solid #9a6700; }
+      .callout strong { color: #24292f; }
+      .eyebrow { color: #0969da; }
+      header.page-head .lede { color: #24292f; }
+      figure img, figure svg { background: #f6f8fa; border-color: #d0d7de; }
+      th, td { border-bottom: 1px solid #d0d7de; }
+      tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+      td.pos { color: #1a7f37; }
+      td.neg { color: #cf222e; }
+      ul.plain li::before { color: #0969da; }
+      footer { border-top: 1px solid #d0d7de; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Design Case Study</div>
+  <h1>An SME-Scale Biodiesel Plant for Northern Iran</h1>
+  <p class="lede">
+    In 2009 I wrote a bachelor thesis on biodiesel. It was a careful piece of chemistry &mdash; acid
+    and base catalysed transesterification, supercritical methanol, enzymatic routes, reaction
+    mechanisms &mdash; and it answered a question nobody was asking. It never said who would build
+    the plant, where the oil would come from, or whether the numbers closed. This is that project,
+    done properly.
+  </p>
+</header>
+
+<div class="callout">
+  <strong>What this is.</strong> A design study, not a built plant. The process configuration and
+  engineering logic are mine; the cost and price figures are stated assumptions drawn from published
+  ranges for plants of this scale, set out openly in the economics section so you can move them. The
+  point of the study is not the payback number &mdash; it is showing which single variable that
+  number actually depends on.
+</div>
+
+<section class="blk">
+  <h2>Why northern Iran, and why small</h2>
+  <div class="sub">The siting decision comes before any chemistry.</div>
+
+  <p>
+    Biodiesel economics are feedstock economics. Roughly three quarters of the lifetime cost of a
+    plant like this walks in through the gate as oil, which means the only siting question that
+    matters is whether you can get cheap oil reliably, close by, for twenty years.
+  </p>
+  <p>
+    The Caspian provinces &mdash; Gilan, Mazandaran, Golestan &mdash; have two things most of Iran does
+    not. First, a dense hospitality and food-processing sector: a tourist coastline, a rice-milling
+    industry, and thousands of restaurants generating used cooking oil that is currently a disposal
+    problem rather than a commodity. Second, a humid, temperate climate suited to rapeseed as a
+    winter crop on land that sits idle between rice harvests, so feedstock oil can be grown without
+    displacing food production.
+  </p>
+  <p>
+    Small matters too. A national-scale refinery needs a national-scale collection network and a
+    national-scale balance sheet. A 3,000 tonne per year plant can be owned by an agricultural
+    cooperative, fed from a 60 km collection radius, and financed at a scale that an SME can
+    actually raise. It also fails cheaply, which is the honest argument for a pilot.
+  </p>
+
+  <figure>
+<svg viewBox="0 0 860 310" width="860" height="310" role="img" aria-label="Feedstock catchment across the Caspian provinces with a 60 km collection radius">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}
+</style>
+<path d="M40 40 Q220 18 430 42 Q640 66 820 52 L820 96 Q640 110 430 86 Q220 62 40 84 Z" fill="var(--acc)" opacity="0.12"/>
+<path d="M40 84 Q220 62 430 86 Q640 110 820 96" fill="none" stroke="var(--acc)" stroke-width="1.6"/>
+<text x="430" y="36" class="a" font-size="12" text-anchor="middle" font-weight="600">Caspian Sea</text>
+<path d="M40 84 Q220 62 430 86 Q640 110 820 96 L820 250 Q640 262 430 240 Q220 220 40 244 Z" fill="var(--grn)" opacity="0.07"/>
+<path d="M40 244 Q220 220 430 240 Q640 262 820 250" fill="none" stroke="var(--mut)" stroke-width="1" stroke-dasharray="5 4"/>
+<text x="430" y="276" class="m" font-size="10" text-anchor="middle">Alborz range &mdash; the natural boundary of the catchment</text>
+<text x="150" y="150" class="t" font-size="13" font-weight="600">GILAN</text>
+<text x="420" y="168" class="t" font-size="13" font-weight="600">MAZANDARAN</text>
+<text x="700" y="180" class="t" font-size="13" font-weight="600">GOLESTAN</text>
+<circle cx="430" cy="172" r="72" fill="var(--amb)" opacity="0.10" stroke="var(--amb)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="404" y="158" width="52" height="28" rx="4" fill="var(--pnl)" stroke="var(--acc)" stroke-width="1.6"/>
+<text x="430" y="176" class="a" font-size="10" text-anchor="middle" font-weight="600">PLANT</text>
+<text x="430" y="258" class="m" font-size="9.5" text-anchor="middle">60 km collection radius</text>
+<g font-size="9">
+<circle cx="250" cy="130" r="5" fill="var(--amb)"/><text x="262" y="134" class="m">restaurants / hotels</text>
+<circle cx="600" cy="140" r="5" fill="var(--amb)"/><text x="612" y="144" class="m">food processing</text>
+<circle cx="330" cy="212" r="5" fill="var(--grn)"/><text x="342" y="216" class="m">rapeseed, winter rotation</text>
+<circle cx="560" cy="206" r="5" fill="var(--grn)"/><text x="572" y="210" class="m">rice-fallow land</text>
+<circle cx="180" cy="196" r="5" fill="var(--grn)"/><text x="192" y="200" class="m">oilseed co-ops</text>
+</g>
+<path d="M255 133 Q340 150 404 166" fill="none" stroke="var(--amb)" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M595 143 Q510 152 456 166" fill="none" stroke="var(--amb)" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M335 209 Q380 196 412 186" fill="none" stroke="var(--grn)" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M555 203 Q500 194 456 184" fill="none" stroke="var(--grn)" stroke-width="1" stroke-dasharray="3 3"/>
+<path d="M185 193 Q290 176 404 174" fill="none" stroke="var(--grn)" stroke-width="1" stroke-dasharray="3 3"/>
+</svg>
+    <figcaption>Feedstock catchment. Used cooking oil from the coastal hospitality strip, rapeseed from rice-fallow land inland &mdash; both inside a 60 km haul.</figcaption>
+  </figure>
+</section>
+
+<section class="blk">
+  <h2>Design basis</h2>
+  <div class="sub">Everything downstream follows from these numbers.</div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">3,000 t</div><div class="l">FAME per year</div></div>
+    <div class="kpi"><div class="v">330 d</div><div class="l">operating days</div></div>
+    <div class="kpi"><div class="v">380 kg/h</div><div class="l">nominal output</div></div>
+    <div class="kpi"><div class="v">EN 14214</div><div class="l">product spec</div></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Parameter</th><th>Design value</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Feedstock blend</td><td>80% used cooking oil, 20% rapeseed</td><td>UCO is cheapest; rapeseed buffers seasonal UCO shortfall</td></tr>
+      <tr><td>Free fatty acid content</td><td>up to 5% in feed</td><td>UCO is degraded; above 5% the base catalyst soaps out</td></tr>
+      <tr><td>Pre-treatment</td><td>Acid esterification stage</td><td>Converts FFA to ester instead of losing it to soap</td></tr>
+      <tr><td>Main reaction</td><td>KOH-catalysed, 60 &deg;C, 6:1 methanol-to-oil</td><td>Mildest route that reaches spec; supercritical is not justified at this scale</td></tr>
+      <tr><td>Reactor configuration</td><td>Two-stage stirred batch</td><td>Two stages push conversion past 96.5%; batch suits variable feed quality</td></tr>
+      <tr><td>Methanol recovery</td><td>Vacuum flash, recycled</td><td>Excess methanol is the second-largest consumable; recovery pays back quickly</td></tr>
+    </tbody>
+  </table>
+
+  <p class="muted">
+    The choice worth defending here is the acid pre-treatment stage. It adds a vessel and a cost
+    line, and a plant running clean virgin oil would not need it. But the whole economic case rests
+    on cheap used cooking oil, and used cooking oil arrives with free fatty acids that would
+    otherwise turn catalyst and product into soap. The pre-treatment stage is what makes the
+    feedstock strategy survivable.
+  </p>
+  <p class="muted">
+    My 2009 thesis spent most of its length on supercritical methanol, which needs no catalyst and
+    tolerates poor feedstock. It is genuinely elegant. It also runs at roughly 350 &deg;C and 20 MPa,
+    which at 3,000 t/yr means pressure vessels and an energy bill a cooperative cannot carry.
+    Choosing the less interesting chemistry is the engineering decision.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Process design</h2>
+  <div class="sub">From tanker to certified fuel, with the recycle loops that make it economic.</div>
+
+  <figure>
+<svg viewBox="0 0 860 400" width="860" height="400" role="img" aria-label="Process flow diagram of the biodiesel plant">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1.2}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.8}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.8}
+.fw{stroke:var(--amb);fill:none;stroke-width:1.4;stroke-dasharray:5 3}
+.fg{stroke:var(--grn);fill:none;stroke-width:1.4}
+</style>
+<defs>
+<marker id="a1" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--acc)"/></marker>
+<marker id="a2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--amb)"/></marker>
+<marker id="a3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--grn)"/></marker>
+</defs>
+<text x="16" y="24" class="t" font-size="14" font-weight="600">Process flow &mdash; 3,000 t/yr FAME</text>
+<rect class="bx" x="16" y="56" width="104" height="54" rx="6"/>
+<text x="68" y="76" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Feed reception</text>
+<text x="68" y="90" class="m" font-size="9" text-anchor="middle">UCO + rapeseed</text>
+<text x="68" y="102" class="m" font-size="9" text-anchor="middle">3,050 t/yr</text>
+<rect class="bx" x="152" y="56" width="104" height="54" rx="6"/>
+<text x="204" y="76" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Pre-treatment</text>
+<text x="204" y="90" class="m" font-size="9" text-anchor="middle">filter, dry, degum</text>
+<text x="204" y="102" class="m" font-size="9" text-anchor="middle">water below 0.05%</text>
+<rect class="bx" x="288" y="56" width="104" height="54" rx="6"/>
+<text x="340" y="72" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Acid</text>
+<text x="340" y="85" class="t" font-size="10.5" text-anchor="middle" font-weight="600">esterification</text>
+<text x="340" y="100" class="m" font-size="9" text-anchor="middle">FFA to ester</text>
+<rect class="bxa" x="424" y="48" width="118" height="70" rx="6"/>
+<text x="483" y="70" class="a" font-size="11" text-anchor="middle" font-weight="600">TRANSESTER-</text>
+<text x="483" y="84" class="a" font-size="11" text-anchor="middle" font-weight="600">IFICATION</text>
+<text x="483" y="99" class="m" font-size="9" text-anchor="middle">KOH, 60 &deg;C, 6:1</text>
+<text x="483" y="111" class="m" font-size="9" text-anchor="middle">two stages</text>
+<rect class="bx" x="574" y="56" width="104" height="54" rx="6"/>
+<text x="626" y="76" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Separation</text>
+<text x="626" y="90" class="m" font-size="9" text-anchor="middle">gravity settle</text>
+<text x="626" y="102" class="m" font-size="9" text-anchor="middle">two phases</text>
+<rect class="bx" x="710" y="56" width="134" height="54" rx="6"/>
+<text x="777" y="76" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Wash and dry</text>
+<text x="777" y="90" class="m" font-size="9" text-anchor="middle">remove catalyst,</text>
+<text x="777" y="102" class="m" font-size="9" text-anchor="middle">soap, glycerol traces</text>
+<path class="fl" d="M120 83 h24" marker-end="url(#a1)"/>
+<path class="fl" d="M256 83 h24" marker-end="url(#a1)"/>
+<path class="fl" d="M392 83 h24" marker-end="url(#a1)"/>
+<path class="fl" d="M542 83 h24" marker-end="url(#a1)"/>
+<path class="fl" d="M678 83 h24" marker-end="url(#a1)"/>
+<rect class="bxa" x="710" y="164" width="134" height="58" rx="6"/>
+<text x="777" y="186" class="a" font-size="11.5" text-anchor="middle" font-weight="600">BIODIESEL</text>
+<text x="777" y="201" class="m" font-size="9" text-anchor="middle">EN 14214 FAME</text>
+<text x="777" y="215" class="g" font-size="10.5" text-anchor="middle" font-weight="600">3,000 t/yr</text>
+<path class="fl" d="M777 110 v46" marker-end="url(#a1)"/>
+<rect class="bx" x="400" y="180" width="128" height="52" rx="6"/>
+<text x="464" y="200" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Methanol storage</text>
+<text x="464" y="215" class="m" font-size="9" text-anchor="middle">make-up 340 t/yr</text>
+<path class="fl" d="M464 180 v-54" marker-end="url(#a1)"/>
+<text x="472" y="152" class="m" font-size="9">MeOH + KOH</text>
+<rect class="bx" x="572" y="262" width="136" height="54" rx="6"/>
+<text x="640" y="282" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Methanol recovery</text>
+<text x="640" y="296" class="m" font-size="9" text-anchor="middle">vacuum flash</text>
+<text x="640" y="308" class="m" font-size="9" text-anchor="middle">about 90% recycled</text>
+<rect class="bx" x="336" y="262" width="136" height="54" rx="6"/>
+<text x="404" y="282" class="w" font-size="10.5" text-anchor="middle" font-weight="600">Glycerol refining</text>
+<text x="404" y="296" class="m" font-size="9" text-anchor="middle">acidulate, separate</text>
+<text x="404" y="308" class="m" font-size="9" text-anchor="middle">80% crude glycerol</text>
+<path class="fw" d="M626 110 v148" marker-end="url(#a2)"/>
+<text x="634" y="142" class="w" font-size="9">heavy phase</text>
+<path class="fw" d="M572 289 h-96" marker-end="url(#a2)"/>
+<path class="fg" d="M604 262 V218 H532" marker-end="url(#a3)"/>
+<text x="538" y="210" class="g" font-size="9">recovered MeOH returned to storage</text>
+<rect class="bx" x="120" y="262" width="150" height="54" rx="6"/>
+<text x="195" y="282" class="w" font-size="10.5" text-anchor="middle" font-weight="600">Glycerol to market</text>
+<text x="195" y="296" class="m" font-size="9" text-anchor="middle">soap, animal feed</text>
+<text x="195" y="309" class="w" font-size="10.5" text-anchor="middle" font-weight="600">300 t/yr</text>
+<path class="fw" d="M336 289 h-58" marker-end="url(#a2)"/>
+<rect class="bx" x="16" y="164" width="200" height="58" rx="6"/>
+<text x="116" y="184" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Quality control lab</text>
+<text x="116" y="199" class="m" font-size="9" text-anchor="middle">FFA, water, ester content,</text>
+<text x="116" y="212" class="m" font-size="9" text-anchor="middle">flash point, oxidation stability</text>
+<path class="fl" d="M216 178 h124 v-68" stroke-dasharray="4 3" marker-end="url(#a1)"/>
+<path class="fl" d="M216 200 v52 h561 v-30" stroke-dasharray="4 3" marker-end="url(#a1)"/>
+<text x="16" y="358" class="m" font-size="9.5">Solid blue: main product path. Dashed amber: glycerol and heavy phase. Green: methanol recycle. Dotted: sampling points.</text>
+<text x="16" y="376" class="m" font-size="9.5">The two loops at the bottom carry the economics: methanol recovery cuts the largest consumable, glycerol turns a waste stream into revenue.</text>
+</svg>
+    <figcaption>Process flow diagram &mdash; the recycle loops are what separate a viable plant from a demonstration rig.</figcaption>
+  </figure>
+</section>
+
+<section class="blk">
+  <h2>Mass balance</h2>
+  <div class="sub">Annual basis, 330 operating days.</div>
+
+  <div class="two-col">
+    <div>
+      <h3>Inputs</h3>
+      <table>
+        <thead><tr><th>Stream</th><th class="num">t/yr</th></tr></thead>
+        <tbody>
+          <tr><td>Used cooking oil</td><td class="num">2,440</td></tr>
+          <tr><td>Rapeseed oil</td><td class="num">610</td></tr>
+          <tr><td>Methanol (make-up)</td><td class="num">340</td></tr>
+          <tr><td>KOH catalyst</td><td class="num">30</td></tr>
+          <tr><td>Sulfuric acid (pre-treatment)</td><td class="num">15</td></tr>
+          <tr><td>Wash water</td><td class="num">600</td></tr>
+          <tr class="total"><td>Total in</td><td class="num">4,035</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Outputs</h3>
+      <table>
+        <thead><tr><th>Stream</th><th class="num">t/yr</th></tr></thead>
+        <tbody>
+          <tr><td>Biodiesel (FAME)</td><td class="num">3,000</td></tr>
+          <tr><td>Crude glycerol, 80%</td><td class="num">300</td></tr>
+          <tr><td>Wash effluent</td><td class="num">620</td></tr>
+          <tr><td>Soap, losses, vent</td><td class="num">115</td></tr>
+          <tr><td>&nbsp;</td><td class="num">&nbsp;</td></tr>
+          <tr><td>&nbsp;</td><td class="num">&nbsp;</td></tr>
+          <tr class="total"><td>Total out</td><td class="num">4,035</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="muted">
+    Methanol is fed at a 6:1 molar ratio to drive the equilibrium, far more than the reaction
+    consumes. About 90% of the excess is recovered by vacuum flash and returned to storage for re-use, so
+    only the 340 t/yr make-up appears in the balance. Without that loop the methanol line would be
+    roughly three times larger and the plant would not clear its costs.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Economics</h2>
+  <div class="sub">Where the money goes, and what it comes back as.</div>
+
+  <div class="callout">
+    <strong>Stated assumptions.</strong> Used cooking oil &euro;500/t delivered, rapeseed oil
+    &euro;900/t, methanol &euro;400/t, biodiesel &euro;950/t, crude glycerol &euro;190/t, 12 full-time
+    staff, 15-year plant life. These are the levers &mdash; move them and the conclusion moves with them.
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h3>Capital cost</h3>
+      <table>
+        <thead><tr><th>Item</th><th class="num">&euro;k</th></tr></thead>
+        <tbody>
+          <tr><td>Reactors and vessels</td><td class="num">420</td></tr>
+          <tr><td>Methanol recovery unit</td><td class="num">180</td></tr>
+          <tr><td>Separation and washing</td><td class="num">150</td></tr>
+          <tr><td>Storage tanks</td><td class="num">160</td></tr>
+          <tr><td>Piping, instrumentation, control</td><td class="num">240</td></tr>
+          <tr><td>Laboratory</td><td class="num">60</td></tr>
+          <tr><td>Civil works and site</td><td class="num">220</td></tr>
+          <tr><td>Engineering and commissioning</td><td class="num">170</td></tr>
+          <tr class="total"><td>Total capex</td><td class="num">1,600</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Annual operating cost</h3>
+      <table>
+        <thead><tr><th>Item</th><th class="num">&euro;k</th></tr></thead>
+        <tbody>
+          <tr><td>Feedstock oil</td><td class="num">1,769</td></tr>
+          <tr><td>Methanol</td><td class="num">136</td></tr>
+          <tr><td>Catalyst and chemicals</td><td class="num">62</td></tr>
+          <tr><td>Utilities</td><td class="num">94</td></tr>
+          <tr><td>Labour, 12 FTE</td><td class="num">186</td></tr>
+          <tr><td>Maintenance</td><td class="num">48</td></tr>
+          <tr><td>Collection and logistics</td><td class="num">95</td></tr>
+          <tr><td>Overheads, insurance, certification</td><td class="num">84</td></tr>
+          <tr class="total"><td>Total opex</td><td class="num">2,474</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>Result</h3>
+  <table>
+    <thead><tr><th>Line</th><th class="num">&euro;k / yr</th></tr></thead>
+    <tbody>
+      <tr><td>Biodiesel revenue &mdash; 3,000 t at &euro;950</td><td class="num pos">2,850</td></tr>
+      <tr><td>Glycerol revenue &mdash; 300 t at &euro;190</td><td class="num pos">57</td></tr>
+      <tr><td>Operating cost</td><td class="num neg">(2,474)</td></tr>
+      <tr class="total"><td>EBITDA</td><td class="num">433</td></tr>
+    </tbody>
+  </table>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">&euro;1.60 M</div><div class="l">Total investment</div></div>
+    <div class="kpi"><div class="v">&euro;433 k</div><div class="l">EBITDA per year</div></div>
+    <div class="kpi"><div class="v">3.7 yr</div><div class="l">Simple payback</div></div>
+    <div class="kpi"><div class="v">~24 %</div><div class="l">IRR over 15 years</div></div>
+  </div>
+
+  <p class="muted">
+    Note what the glycerol line is doing. At &euro;57k it is under 2% of revenue &mdash; but it is 13% of
+    EBITDA. A by-product that looks negligible on the revenue statement is carrying an eighth of the
+    return, which is exactly the kind of thing a feasibility study misses when it reads only the top line.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>What the answer actually depends on</h2>
+  <div class="sub">One variable dominates, and it is not the chemistry.</div>
+
+  <figure>
+<svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Tornado chart of EBITDA sensitivity, dominated by feedstock oil price">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa}}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}
+</style>
+<text x="16" y="24" class="t" font-size="14" font-weight="600">EBITDA sensitivity &mdash; base case &euro;433k</text>
+<line x1="190" y1="44" x2="190" y2="248" stroke="var(--red)" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="190" y="266" class="m" font-size="9" text-anchor="middle">0</text>
+<text x="330" y="266" class="m" font-size="9" text-anchor="middle">200</text>
+<text x="470" y="266" class="m" font-size="9" text-anchor="middle">400</text>
+<text x="610" y="266" class="m" font-size="9" text-anchor="middle">600</text>
+<text x="750" y="266" class="m" font-size="9" text-anchor="middle">800</text>
+<text x="820" y="284" class="m" font-size="9" text-anchor="end">EBITDA, &euro;k per year</text>
+<line x1="120" y1="248" x2="820" y2="248" stroke="var(--line)"/>
+<line x1="493" y1="40" x2="493" y2="252" stroke="var(--acc)" stroke-width="1.4"/>
+<text x="493" y="36" class="a" font-size="9.5" text-anchor="middle">base 433</text>
+
+<rect x="245" y="56" width="496" height="24" fill="var(--amb)" opacity="0.55" rx="3"/>
+<text x="236" y="72" class="t" font-size="10" text-anchor="end">Feedstock oil price &plusmn;20%</text>
+<text x="252" y="72" class="t" font-size="9">79</text>
+<text x="734" y="72" class="t" font-size="9" text-anchor="end">787</text>
+
+<rect x="294" y="96" width="399" height="24" fill="var(--acc)" opacity="0.5" rx="3"/>
+<text x="285" y="112" class="t" font-size="10" text-anchor="end">Biodiesel price &plusmn;10%</text>
+<text x="301" y="112" class="t" font-size="9">148</text>
+<text x="686" y="112" class="t" font-size="9" text-anchor="end">718</text>
+
+<rect x="441" y="136" width="104" height="24" fill="var(--acc)" opacity="0.35" rx="3"/>
+<text x="432" y="152" class="t" font-size="10" text-anchor="end">Capacity utilisation &plusmn;10%</text>
+<text x="556" y="152" class="m" font-size="9">359 &ndash; 507</text>
+
+<rect x="473" y="176" width="40" height="24" fill="var(--acc)" opacity="0.28" rx="3"/>
+<text x="464" y="192" class="t" font-size="10" text-anchor="end">Labour cost &plusmn;15%</text>
+<text x="524" y="192" class="m" font-size="9">405 &ndash; 461</text>
+
+<rect x="474" y="216" width="38" height="24" fill="var(--acc)" opacity="0.28" rx="3"/>
+<text x="465" y="232" class="t" font-size="10" text-anchor="end">Methanol price &plusmn;20%</text>
+<text x="524" y="232" class="m" font-size="9">406 &ndash; 460</text>
+</svg>
+    <figcaption>Feedstock price swamps everything else. Methanol and labour barely register.</figcaption>
+  </figure>
+
+  <p>
+    A single 20% rise in delivered oil price takes &euro;354k out of a &euro;433k EBITDA. The plant
+    survives that on its own, and it survives a 10% fall in biodiesel price on its own. It does not
+    survive both at once &mdash; that combination puts the project &euro;206k under water, and the two
+    are correlated, because the same energy-market conditions that depress fuel prices tend to
+    loosen oil demand upstream.
+  </p>
+  <p>
+    So the engineering conclusion is blunt: <strong>this is not a process design problem, it is a
+    procurement problem.</strong> The reactor configuration is settled, well understood and barely
+    affects the outcome. What decides whether the plant is viable is whether the cooperative can
+    lock in used cooking oil on multi-year terms at a known price. I would not recommend building
+    this plant without that contract in hand, however good the process looks on paper.
+  </p>
+  <p class="muted">
+    That is also why the collection radius in the first figure is drawn at 60 km rather than 200.
+    A wider catchment gets more oil but puts the plant in competition with buyers who can pay more,
+    and turns a contractable local supply into a spot-priced one.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Risks worth stating plainly</h2>
+  <div class="sub">The ones that would actually stop the project.</div>
+
+  <table>
+    <thead><tr><th>Risk</th><th>Why it matters here</th><th>Response</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Subsidised fossil diesel</td>
+        <td>Iranian diesel is priced well below international levels. A biodiesel plant cannot win on price against a subsidised competitor in the open road-fuel market.</td>
+        <td>Target off-road, marine, generator and export markets rather than domestic road fuel; treat any blending mandate as upside, not as the base case.</td>
+      </tr>
+      <tr>
+        <td>Feedstock competition</td>
+        <td>Used cooking oil becomes valuable the moment someone else wants it. Informal collection networks can be outbid overnight.</td>
+        <td>Multi-year supply agreements with hotel groups and processors before financial close; own the collection logistics rather than buying at the gate.</td>
+      </tr>
+      <tr>
+        <td>Feedstock seasonality</td>
+        <td>Coastal tourism is strongly seasonal, so UCO volume swings through the year while the plant wants steady feed.</td>
+        <td>Rapeseed as the counter-seasonal 20%; storage sized for roughly six weeks of feed.</td>
+      </tr>
+      <tr>
+        <td>Glycerol market depth</td>
+        <td>300 t/yr of crude glycerol is small, and the regional market for it is thin. Losing this line costs 13% of EBITDA.</td>
+        <td>Offtake agreed with regional soap and animal-feed producers before commissioning; refining to technical grade only if a buyer justifies it.</td>
+      </tr>
+      <tr>
+        <td>Cold-flow properties</td>
+        <td>UCO-derived FAME gels in cold weather. Northern Iran is mild on the coast but not inland or in winter.</td>
+        <td>Blend limits by season and additive package; specify B20 rather than B100 for winter supply.</td>
+      </tr>
+      <tr>
+        <td>Effluent handling</td>
+        <td>620 t/yr of wash effluent carrying soap and residual methanol is a permitting issue, not a rounding error.</td>
+        <td>On-site treatment included in capex; dry-wash ion exchange as an alternative if discharge consent proves difficult.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="blk">
+  <h2>From 2009 to now</h2>
+  <div class="sub">What sixteen years changes about how you approach the same problem.</div>
+
+  <p>
+    The 2009 thesis was not wrong. Its chemistry was sound, its literature review was thorough, and
+    its treatment of reaction mechanisms would still hold up. What it lacked was any notion that an
+    engineering answer has to be bought by someone. It compared catalytic routes on conversion
+    efficiency and concluded that supercritical methanol was the most promising &mdash; which is true
+    on the axis it measured, and irrelevant on the axis that decides whether anything gets built.
+  </p>
+  <p>
+    The work I have done since &mdash; maintenance strategy for an acid plant, fleet sizing for an
+    offshore field, a 10 MW solar farm that had to clear a 27% IRR before anyone would sign
+    &mdash; taught me to run the question the other way round. Start from who is paying, what they
+    can bear, and which single variable moves the answer. Then choose the process that survives
+    that variable, even when a more elegant one exists.
+  </p>
+  <p>
+    That is the whole difference between the two versions of this project. Same feedstock, same
+    reaction, same country. One is a study of transesterification. The other is a plant somebody
+    could decide to build, and a clear statement of the one contract they would need to sign first.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Design case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+</body>
+</html>

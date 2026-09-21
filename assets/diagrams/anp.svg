@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Analytic network process productivity model">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Productivity Measurement &#8212; analytic network process</text>
+<g font-size="6.5">
+<circle cx="90" cy="60" r="22" class="bxa"/><text x="90" y="58" class="a" text-anchor="middle" font-weight="600">Goal</text><text x="90" y="67" class="m" text-anchor="middle">productivity</text>
+<circle cx="200" cy="44" r="20" class="bx"/><text x="200" y="42" class="m" text-anchor="middle">Labour</text><text x="200" y="51" class="m" text-anchor="middle">cluster</text>
+<circle cx="200" cy="106" r="20" class="bx"/><text x="200" y="104" class="m" text-anchor="middle">Capital</text><text x="200" y="113" class="m" text-anchor="middle">cluster</text>
+<circle cx="308" cy="74" r="20" class="bx"/><text x="308" y="72" class="m" text-anchor="middle">Process</text><text x="308" y="81" class="m" text-anchor="middle">cluster</text>
+</g>
+<path class="fl" d="M111 52 Q152 42 180 44"/>
+<path class="fl" d="M108 75 Q152 100 180 104"/>
+<path class="fl" d="M220 48 Q268 56 290 66"/>
+<path class="fl" d="M220 102 Q268 92 290 82"/>
+<path class="fm" d="M200 64v22"/>
+<path class="fm" d="M308 54 Q260 24 210 28 Q150 32 96 38"/>
+<text x="210" y="140" class="m" font-size="6.5" text-anchor="middle">feedback and interdependence, not a strict hierarchy</text>
+<line x1="12" y1="150" x2="388" y2="150" stroke="var(--line)"/>
+<text x="12" y="164" class="m" font-size="7.5">ANP handles criteria that influence each other, which a plain AHP hierarchy cannot. Built in</text>
+<text x="12" y="176" class="m" font-size="7.5">SuperDecisions across 8 model revisions with supermatrix convergence analysis &#183; 2015</text>
+</svg>

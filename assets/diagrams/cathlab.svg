@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Cardiac cath lab patient flow simulation">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Cath Lab — patient flow, single procedure table</text>
+<g font-size="7.5">
+<rect class="bx" x="12" y="36" width="52" height="26" rx="4"/><text x="38" y="52" class="m" text-anchor="middle">Clinic 7:30</text>
+<rect class="bx" x="78" y="36" width="52" height="26" rx="4"/><text x="104" y="49" class="m" text-anchor="middle">Test check</text><text x="104" y="58" class="m" text-anchor="middle">/ lab</text>
+<rect class="bx" x="144" y="36" width="52" height="26" rx="4"/><text x="170" y="52" class="m" text-anchor="middle">Admission</text>
+<rect class="bx" x="210" y="36" width="44" height="26" rx="4"/><text x="232" y="52" class="m" text-anchor="middle">Cashier</text>
+<rect class="bx" x="268" y="36" width="52" height="26" rx="4"/><text x="294" y="49" class="m" text-anchor="middle">Ward prep</text><text x="294" y="58" class="m" text-anchor="middle">24 beds</text>
+</g>
+<path class="fl" d="M64 49h12M130 49h12M196 49h12M254 49h12"/>
+<path class="fl" d="M294 62v14H150v10"/>
+<g font-size="7.5">
+<rect class="bxa" x="96" y="86" width="108" height="34" rx="4"/>
+<text x="150" y="100" class="a" text-anchor="middle" font-size="8.5" font-weight="600">CATH LAB — 1 table</text>
+<text x="150" y="112" class="m" text-anchor="middle">angiography · angioplasty · ad-hoc</text>
+<rect class="bx" x="222" y="86" width="50" height="34" rx="4"/><text x="247" y="100" class="m" text-anchor="middle">Recovery</text><text x="247" y="112" class="m" text-anchor="middle">monitored</text>
+<rect class="bx" x="290" y="86" width="50" height="34" rx="4"/><text x="315" y="106" class="m" text-anchor="middle">Discharge</text>
+</g>
+<path class="fl" d="M204 103h18M272 103h18"/>
+<path class="fm" d="M247 120v12H150v-12"/>
+<text x="198" y="142" class="m" text-anchor="middle" font-size="7">re-admit to ward if vitals unstable</text>
+<g font-size="7.5"><rect class="bx" x="12" y="86" width="72" height="34" rx="4"/>
+<text x="48" y="99" class="w" text-anchor="middle" font-weight="600">Queue priority</text>
+<text x="48" y="110" class="m" text-anchor="middle">emergency &gt; MD &gt; FIFO</text></g>
+<line x1="12" y1="156" x2="388" y2="156" stroke="var(--line)"/>
+<text x="12" y="171" class="m" font-size="7.5">Arena DES · bottleneck = single table + surgeon availability · Moheb-e-Mehr Hospital, 2014</text>
+</svg>

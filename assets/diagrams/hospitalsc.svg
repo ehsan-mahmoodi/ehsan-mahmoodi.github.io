@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Hospital supply chain efficiency analysis">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Hospital Supply Chain &#8212; efficiency and inventory policy</text>
+<g font-size="6.5">
+<rect class="bx" x="12" y="40" width="54" height="26" rx="4"/><text x="39" y="56" class="m" text-anchor="middle">Vendors</text>
+<rect class="bx" x="80" y="40" width="54" height="26" rx="4"/><text x="107" y="52" class="m" text-anchor="middle">Central</text><text x="107" y="62" class="m" text-anchor="middle">store</text>
+<rect class="bxa" x="148" y="40" width="54" height="26" rx="4"/><text x="175" y="52" class="a" text-anchor="middle">Ward</text><text x="175" y="62" class="a" text-anchor="middle">stock</text>
+<rect class="bx" x="216" y="40" width="54" height="26" rx="4"/><text x="243" y="52" class="m" text-anchor="middle">Theatre</text><text x="243" y="62" class="m" text-anchor="middle">/ pharmacy</text>
+<rect class="bx" x="284" y="40" width="54" height="26" rx="4"/><text x="311" y="56" class="m" text-anchor="middle">Patient</text>
+</g>
+<path class="fl" d="M66 53h14M134 53h14M202 53h14M270 53h14"/>
+<g font-size="6.5">
+<rect class="bx" x="40" y="86" width="150" height="40" rx="4"/>
+<text x="115" y="99" class="m" text-anchor="middle" font-weight="600">DEA efficiency frontier</text>
+<circle cx="66" cy="115" r="2.5" fill="var(--grn)"/><circle cx="90" cy="110" r="2.5" fill="var(--grn)"/>
+<circle cx="118" cy="107" r="2.5" fill="var(--grn)"/><circle cx="150" cy="105" r="2.5" fill="var(--grn)"/>
+<circle cx="100" cy="120" r="2.5" fill="var(--mut)"/><circle cx="130" cy="118" r="2.5" fill="var(--mut)"/>
+<path d="M62 118 Q100 106 154 104" fill="none" stroke="var(--grn)" stroke-width="1.2"/>
+</g>
+<g font-size="6.5">
+<rect class="bx" x="212" y="86" width="150" height="40" rx="4"/>
+<text x="287" y="99" class="m" text-anchor="middle" font-weight="600">Service level vs holding cost</text>
+<text x="287" y="112" class="w" text-anchor="middle">stockout of a critical item is not</text>
+<text x="287" y="121" class="w" text-anchor="middle">a cost line, it is a clinical event</text>
+</g>
+<line x1="12" y1="140" x2="388" y2="140" stroke="var(--line)"/>
+<text x="12" y="155" class="m" font-size="7.5">Benchmarking hospital logistics units where the cost of a stockout cannot be priced normally.</text>
+<text x="12" y="169" class="m" font-size="7.5">2016</text>
+</svg>

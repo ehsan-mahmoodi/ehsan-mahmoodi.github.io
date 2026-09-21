@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="SME data navigator platform">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">SME Data Navigator &#8212; public data into operator decisions</text>
+<g font-size="6.5">
+<rect class="bx" x="12" y="38" width="76" height="22" rx="3"/><text x="50" y="52" class="m" text-anchor="middle">Public statistics</text>
+<rect class="bx" x="12" y="66" width="76" height="22" rx="3"/><text x="50" y="80" class="m" text-anchor="middle">Cost indices</text>
+<rect class="bx" x="12" y="94" width="76" height="22" rx="3"/><text x="50" y="108" class="m" text-anchor="middle">Tender data</text>
+</g>
+<path class="fl" d="M88 49 Q118 52 134 62M88 77h46M88 105 Q118 102 134 92"/>
+<g font-size="6.5">
+<rect class="bxa" x="134" y="56" width="90" height="42" rx="4"/>
+<text x="179" y="72" class="a" text-anchor="middle" font-weight="600">Navigator</text>
+<text x="179" y="84" class="m" text-anchor="middle">guided report engine</text>
+</g>
+<g font-size="6.5">
+<rect class="bx" x="258" y="34" width="128" height="22" rx="3"/><text x="322" y="48" class="m" text-anchor="middle">Business health check</text>
+<rect class="bx" x="258" y="62" width="128" height="22" rx="3"/><text x="322" y="76" class="m" text-anchor="middle">Fair rate index</text>
+<rect class="bx" x="258" y="90" width="128" height="22" rx="3"/><text x="322" y="104" class="m" text-anchor="middle">Find work / tender check</text>
+</g>
+<path class="fl" d="M224 68 Q244 56 258 45M224 77h34M224 86 Q244 96 258 101"/>
+<line x1="12" y1="126" x2="388" y2="126" stroke="var(--line)"/>
+<text x="12" y="141" class="m" font-size="7.5">A small operator cannot read a national statistics release and act on it. The platform turns</text>
+<text x="12" y="153" class="m" font-size="7.5">published cost-pressure figures into what it means for this business, this month.</text>
+<text x="12" y="171" class="a" font-size="7.5" font-weight="600">Azure-ready storage &#183; four design iterations (v1 to v4)</text>
+</svg>
