@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="10 MW photovoltaic plant, Nir, Yazd">
 <style>
-:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
 text{font-family:Inter,system-ui,-apple-system,sans-serif}
 .t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
 .bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}

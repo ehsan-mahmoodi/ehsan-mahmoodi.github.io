@@ -25,6 +25,17 @@
     nav ul a { color: #8b949e; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
     nav ul a:hover { color: #e6edf3; }
 
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
     /* SECTIONS */
     section { max-width: 1320px; margin: 0 auto; padding: 72px 32px; }
     section + section { border-top: 1px solid #21262d; }
@@ -210,6 +221,24 @@
     .project-card[data-capability="industrial"]:hover { border-color: #d29922; }
     .project-card[data-capability="academia"]:hover { border-color: #bc8cff; }
 
+
+    /* OUTCOME HEADLINE */
+    .outcome {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      margin: 2px 0 14px;
+    }
+    .oc {
+      background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+      padding: 10px 12px; text-align: center;
+    }
+    .oc-v {
+      display: block; font-size: 1.28rem; font-weight: 700; line-height: 1.15;
+      color: #3fb950; font-variant-numeric: tabular-nums;
+    }
+    .oc-l { display: block; font-size: 0.7rem; color: #8b949e; margin-top: 2px; line-height: 1.35; }
+    .project-card[data-capability="fullstack"] .oc-v { color: #58a6ff; }
+    .project-card[data-capability="academia"] .oc-v { color: #bc8cff; }
+
     /* PROJECTS */
     /* projects span wider than the reading sections */
     #projects { max-width: 1640px; }
@@ -358,71 +387,120 @@
       .pub-cites { grid-column: 2; }
     }
 
-    /* LIGHT THEME */
-    @media (prefers-color-scheme: light) {
-      body { background: #ffffff; color: #24292f; }
-      nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
-      nav .logo, .hero h1 span, .card-link, .group-head, .metric .val { color: #0969da; }
-      .group-head { border-left-color: #0969da; }
-      nav ul a, .hero .subtitle, .project-card p, .section-subtitle, .contact-card .label,
-      .role-card p, .skills-label, .pub-year, .pub-venue, .metric .lbl, .group-note,
-      .feature-card p, .media-note, .pub-cites.none { color: #57606a; }
-      section { border-top: 1px solid #d0d7de; }
-      .hero-tag, .skill-tag, .project-card, .contact-card, .role-card, .metric, .feature-card {
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+      html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+      html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) nav .logo,
+      html:not([data-theme='dark']) .hero h1 span,
+      html:not([data-theme='dark']) .card-link,
+      html:not([data-theme='dark']) .group-head,
+      html:not([data-theme='dark']) .metric .val { color: #0969da; }
+      html:not([data-theme='dark']) .group-head { border-left-color: #0969da; }
+      html:not([data-theme='dark']) nav ul a,
+      html:not([data-theme='dark']) .hero .subtitle,
+      html:not([data-theme='dark']) .project-card p,
+      html:not([data-theme='dark']) .section-subtitle,
+      html:not([data-theme='dark']) .contact-card .label,
+      html:not([data-theme='dark']) .role-card p,
+      html:not([data-theme='dark']) .skills-label,
+      html:not([data-theme='dark']) .pub-year,
+      html:not([data-theme='dark']) .pub-venue,
+      html:not([data-theme='dark']) .metric .lbl,
+      html:not([data-theme='dark']) .group-note,
+      html:not([data-theme='dark']) .feature-card p,
+      html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+      html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+      html:not([data-theme='dark']) .oc { background: #ffffff; border: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) .oc-v { color: #1a7f37; }
+      html:not([data-theme='dark']) .oc-l { color: #57606a; }
+      html:not([data-theme='dark']) .project-card[data-capability='fullstack'] .oc-v { color: #0969da; }
+      html:not([data-theme='dark']) .project-card[data-capability='academia'] .oc-v { color: #8250df; }
+      html:not([data-theme='dark']) .media-note,
+      html:not([data-theme='dark']) .pub-cites.none { color: #57606a; }
+      html:not([data-theme='dark']) section { border-top: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) .hero-tag,
+      html:not([data-theme='dark']) .skill-tag,
+      html:not([data-theme='dark']) .project-card,
+      html:not([data-theme='dark']) .contact-card,
+      html:not([data-theme='dark']) .role-card,
+      html:not([data-theme='dark']) .metric,
+      html:not([data-theme='dark']) .feature-card {
         background: #f6f8fa; border: 1px solid #d0d7de; color: #24292f;
       }
-      .hero p, .role-card li { color: #24292f; }
-      .btn-secondary { background: transparent; color: #0969da; border-color: #d0d7de; }
-      .btn-secondary:hover { background: #f3f4f6; border-color: #0969da; }
-      .card-tag { background: #ffffff; border: 1px solid #d0d7de; color: #0969da; }
-      .project-card h3, .contact-card .value, .pub-title { color: #24292f; }
-      .project-card-image, .feature-card img { background: #ffffff; border-color: #d0d7de; }
-      .card-meta { color: #0969da; }
-      .card-fund, .pub-cites { color: #1a7f37; }
-      .role-card li::before { color: #0969da; }
-      .pub-item:hover { background: #f6f8fa; border-color: #d0d7de; }
-      .media-note, .empty-state { border-color: #d0d7de; }
-      .hero-stats { background: #f6f8fa; border: 1px solid #d0d7de; }
-      .hs-title, .hs-l, .hs-foot { color: #57606a; }
-      .hs-v { color: #0969da; }
-      .hs-row { border-bottom: 1px solid #d0d7de; }
-      .region-head h3 { color: #24292f; }
-      .region-head { border-bottom: 2px solid #d0d7de; }
-      .region-years { background: #ffffff; border: 1px solid #d0d7de; color: #0969da; }
-      .region-note, .region-empty, .fs-l, .as-d { color: #57606a; }
-      .fund-strip { background: #eaf6ec; border: 1px solid #b7dfc1; border-left: 3px solid #1a7f37; }
-      .fs-v { color: #1a7f37; }
-      .project-card.funded { border-color: #b7dfc1; }
-      .project-card.funded:hover { border-color: #1a7f37; }
-      .as-step { background: #f6f8fa; border: 1px solid #d0d7de; }
-      .as-n { color: #0969da; }
-      .as-t { color: #24292f; }
-      .rt-badge.cap-fullstack { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
-      .rt-badge.cap-industrial { color: #9a6700; border-color: #f2e5c3; background: #fff8c5; }
-      .rt-badge.cap-academia { color: #8250df; border-color: #e0d3f5; background: #fbefff; }
-      .pr-head h3 { color: #24292f; }
-      .pr-head { border-bottom: 2px solid #d0d7de; }
-      .partner-card { background: #f6f8fa; border: 1px solid #d0d7de; }
-      .pc-mark { color: #0969da; }
-      .pc-name { color: #24292f; }
-      .pc-loc { color: #1a7f37; }
-      .pc-what { color: #57606a; }
-      .stack-card { background: #f6f8fa; border: 1px solid #d0d7de; }
-      .sc-head h3 { color: #24292f; }
-      .sc-tag { background: #ffffff; border: 1px solid #d0d7de; color: #24292f; }
-      .empty-state { color: #57606a; }
-      .chip { background: #f6f8fa; border: 1px solid #d0d7de; color: #24292f; }
-      .chip[aria-pressed="true"] { background: #0969da; border-color: #0969da; color: #fff; }
-      .filter-label, .filter-count, .value-split div { color: #57606a; }
-      .value-split { background: #ffffff; border: 1px solid #d0d7de; }
-      .vlabel.tech { color: #0969da; }
-      .vlabel.biz { color: #1a7f37; }
-      .rt-badge { background: #ffffff; border: 1px solid #d0d7de; color: #57606a; }
-      .rt-badge.research { color: #8250df; border-color: #e0d3f5; }
-      .rt-badge.industry { color: #9a6700; border-color: #f2e5c3; }
-      footer { border-top: 1px solid #d0d7de; color: #57606a; }
-    }
+      html:not([data-theme='dark']) .hero p,
+      html:not([data-theme='dark']) .role-card li { color: #24292f; }
+      html:not([data-theme='dark']) .btn-secondary { background: transparent; color: #0969da; border-color: #d0d7de; }
+      html:not([data-theme='dark']) .btn-secondary:hover { background: #f3f4f6; border-color: #0969da; }
+      html:not([data-theme='dark']) .card-tag { background: #ffffff; border: 1px solid #d0d7de; color: #0969da; }
+      html:not([data-theme='dark']) .project-card h3,
+      html:not([data-theme='dark']) .contact-card .value,
+      html:not([data-theme='dark']) .pub-title { color: #24292f; }
+      html:not([data-theme='dark']) .project-card-image,
+      html:not([data-theme='dark']) .feature-card img { background: #ffffff; border-color: #d0d7de; }
+      html:not([data-theme='dark']) .card-meta { color: #0969da; }
+      html:not([data-theme='dark']) .card-fund,
+      html:not([data-theme='dark']) .pub-cites { color: #1a7f37; }
+      html:not([data-theme='dark']) .role-card li::before { color: #0969da; }
+      html:not([data-theme='dark']) .pub-item:hover { background: #f6f8fa; border-color: #d0d7de; }
+      html:not([data-theme='dark']) .media-note,
+      html:not([data-theme='dark']) .empty-state { border-color: #d0d7de; }
+      html:not([data-theme='dark']) .hero-stats { background: #f6f8fa; border: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) .hs-title,
+      html:not([data-theme='dark']) .hs-l,
+      html:not([data-theme='dark']) .hs-foot { color: #57606a; }
+      html:not([data-theme='dark']) .hs-v { color: #0969da; }
+      html:not([data-theme='dark']) .hs-row { border-bottom: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) .region-head h3 { color: #24292f; }
+      html:not([data-theme='dark']) .region-head { border-bottom: 2px solid #d0d7de; }
+      html:not([data-theme='dark']) .region-years { background: #ffffff; border: 1px solid #d0d7de; color: #0969da; }
+      html:not([data-theme='dark']) .region-note,
+      html:not([data-theme='dark']) .region-empty,
+      html:not([data-theme='dark']) .fs-l,
+      html:not([data-theme='dark']) .as-d { color: #57606a; }
+      html:not([data-theme='dark']) .fund-strip { background: #eaf6ec; border: 1px solid #b7dfc1; border-left: 3px solid #1a7f37; }
+      html:not([data-theme='dark']) .fs-v { color: #1a7f37; }
+      html:not([data-theme='dark']) .project-card.funded { border-color: #b7dfc1; }
+      html:not([data-theme='dark']) .project-card.funded:hover { border-color: #1a7f37; }
+      html:not([data-theme='dark']) .as-step { background: #f6f8fa; border: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) .as-n { color: #0969da; }
+      html:not([data-theme='dark']) .as-t { color: #24292f; }
+      html:not([data-theme='dark']) .rt-badge.cap-fullstack { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+      html:not([data-theme='dark']) .rt-badge.cap-industrial { color: #9a6700; border-color: #f2e5c3; background: #fff8c5; }
+      html:not([data-theme='dark']) .rt-badge.cap-academia { color: #8250df; border-color: #e0d3f5; background: #fbefff; }
+      html:not([data-theme='dark']) .pr-head h3 { color: #24292f; }
+      html:not([data-theme='dark']) .pr-head { border-bottom: 2px solid #d0d7de; }
+      html:not([data-theme='dark']) .partner-card { background: #f6f8fa; border: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) .pc-mark { color: #0969da; }
+      html:not([data-theme='dark']) .pc-name { color: #24292f; }
+      html:not([data-theme='dark']) .pc-loc { color: #1a7f37; }
+      html:not([data-theme='dark']) .pc-what { color: #57606a; }
+      html:not([data-theme='dark']) .stack-card { background: #f6f8fa; border: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) .sc-head h3 { color: #24292f; }
+      html:not([data-theme='dark']) .sc-tag { background: #ffffff; border: 1px solid #d0d7de; color: #24292f; }
+      html:not([data-theme='dark']) .empty-state { color: #57606a; }
+      html:not([data-theme='dark']) .chip { background: #f6f8fa; border: 1px solid #d0d7de; color: #24292f; }
+      html:not([data-theme='dark']) .chip[aria-pressed="true"] { background: #0969da; border-color: #0969da; color: #fff; }
+      html:not([data-theme='dark']) .filter-label,
+      html:not([data-theme='dark']) .filter-count,
+      html:not([data-theme='dark']) .value-split div { color: #57606a; }
+      html:not([data-theme='dark']) .value-split { background: #ffffff; border: 1px solid #d0d7de; }
+      html:not([data-theme='dark']) .vlabel.tech { color: #0969da; }
+      html:not([data-theme='dark']) .vlabel.biz { color: #1a7f37; }
+      html:not([data-theme='dark']) .rt-badge { background: #ffffff; border: 1px solid #d0d7de; color: #57606a; }
+      html:not([data-theme='dark']) .rt-badge.research { color: #8250df; border-color: #e0d3f5; }
+      html:not([data-theme='dark']) .rt-badge.industry { color: #9a6700; border-color: #f2e5c3; }
+      html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; color: #57606a; }
+
   </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
 </head>
 <body>
 
@@ -438,6 +516,8 @@
       <li><a href="#partners">Partners</a></li>
       <li><a href="#publications">Publications</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button></li>
     </ul>
   </div>
 </nav>
@@ -589,7 +669,8 @@
         <span class="sc-tag">Python</span><span class="sc-tag">C / C++</span><span class="sc-tag">Julia</span>
         <span class="sc-tag">SQL</span><span class="sc-tag">FastAPI</span><span class="sc-tag">Streamlit</span>
         <span class="sc-tag">Flask</span><span class="sc-tag">REST / web services</span>
-        <span class="sc-tag">Docker</span><span class="sc-tag">Azure</span><span class="sc-tag">Git / CI</span>
+        <span class="sc-tag">Docker</span><span class="sc-tag">Azure</span><span class="sc-tag">Git / GitHub Actions</span>
+        <span class="sc-tag">React</span><span class="sc-tag">Plotly / Dash</span><span class="sc-tag">Pytest</span>
       </div>
     </div>
 
@@ -600,7 +681,8 @@
         <span class="sc-tag">Rockwell Arena</span><span class="sc-tag">SimPy</span>
         <span class="sc-tag">Salabim</span><span class="sc-tag">Plant Simulation</span>
         <span class="sc-tag">FlexSim</span><span class="sc-tag">Vensim</span>
-        <span class="sc-tag">Digital twins</span>
+        <span class="sc-tag">Digital twins</span><span class="sc-tag">AnyLogic</span>
+        <span class="sc-tag">Agent-based modelling</span><span class="sc-tag">System dynamics</span>
       </div>
     </div>
 
@@ -612,6 +694,8 @@
         <span class="sc-tag">CPLEX</span><span class="sc-tag">Pyomo</span>
         <span class="sc-tag">pymoo</span><span class="sc-tag">DEAP</span>
         <span class="sc-tag">OptQuest</span><span class="sc-tag">Matheuristics</span>
+        <span class="sc-tag">OR-Tools</span><span class="sc-tag">Reinforcement learning</span>
+        <span class="sc-tag">Simulation-optimisation</span>
       </div>
     </div>
 
@@ -623,6 +707,9 @@
         <span class="sc-tag">Azure AI Foundry</span><span class="sc-tag">Azure OpenAI</span>
         <span class="sc-tag">Semantic Kernel</span><span class="sc-tag">Multi-agent systems</span>
         <span class="sc-tag">Surrogate models</span><span class="sc-tag">Meta-learning</span>
+        <span class="sc-tag">LangChain</span><span class="sc-tag">RAG</span>
+        <span class="sc-tag">PyTorch</span><span class="sc-tag">MLflow</span>
+        <span class="sc-tag">Explainable AI</span>
       </div>
     </div>
 
@@ -632,7 +719,19 @@
         <span class="sc-tag">TOPSIS</span><span class="sc-tag">AHP / ANP</span><span class="sc-tag">DEA</span>
         <span class="sc-tag">NPV / IRR / payback</span><span class="sc-tag">Sensitivity analysis</span>
         <span class="sc-tag">Bottleneck analysis</span><span class="sc-tag">Line balancing</span>
-        <span class="sc-tag">Maintenance strategy</span>
+        <span class="sc-tag">Maintenance strategy</span><span class="sc-tag">Lean / Six Sigma</span>
+        <span class="sc-tag">Life-cycle assessment</span><span class="sc-tag">Scenario planning</span>
+      </div>
+    </div>
+
+    <div class="stack-card">
+      <div class="sc-head"><span class="sc-icon">&#128451;&#65039;</span><h3>Data &amp; Platform</h3></div>
+      <div class="sc-tags">
+        <span class="sc-tag">Pandas / NumPy</span><span class="sc-tag">ETL pipelines</span>
+        <span class="sc-tag">Azure Data Lake</span><span class="sc-tag">Azure Functions</span>
+        <span class="sc-tag">Power BI</span><span class="sc-tag">SCADA / historian data</span>
+        <span class="sc-tag">OPC UA</span><span class="sc-tag">Time series</span>
+        <span class="sc-tag">Cloud CPS / IIoT</span>
       </div>
     </div>
 
@@ -695,6 +794,7 @@
       </div>
       <div class="rt-badges"><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge">Energy</span></div>
       <div class="card-meta">Built 2026 &middot; reference case: the 10 MW plant I designed in 2016&ndash;19</div>
+      <div class="outcome"><div class="oc"><span class="oc-v">1.00</span><span class="oc-l">precision</span></div><div class="oc"><span class="oc-v">0.93</span><span class="oc-l">recall</span></div></div>
       <p>
         A 10 MW plant has 1,584 strings and one maintenance crew. A disconnected string
         is obvious; a string running 7% low is worth real money and is invisible on a
@@ -706,8 +806,8 @@
         <div><span class="vlabel biz">Business value</span>Output is a work order list ranked by annualised revenue loss, not an alarm feed &mdash; the crew attends to the &euro;760/yr string before the &euro;35/yr one.</div>
       </div>
       <div class="card-tags"><span class="card-tag">Python</span><span class="card-tag">Anomaly detection</span><span class="card-tag">Time series</span><span class="card-tag">Theil-Sen</span><span class="card-tag">SCADA</span></div>
-      <div class="media-note">
-        Full source, tests and figures in a private repository &mdash; available on request.
+      <div class="card-links">
+        <a href="https://github.com/ehsan-mahmoodi/pv-fault-detection" target="_blank" rel="noopener" class="card-link">Repository &#8599;</a>
       </div>
     </div>
 
@@ -719,6 +819,7 @@
       </div>
       <div class="rt-badges"><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge">Energy</span></div>
       <div class="card-meta">Built 2026 &middot; engineering basis from the 2016&ndash;19 plant design</div>
+      <div class="outcome"><div class="oc"><span class="oc-v">120</span><span class="oc-l">feasible portfolios</span></div><div class="oc"><span class="oc-v">&euro;36M</span><span class="oc-l">price of diversification</span></div></div>
       <p>
         A pre-study screens a region down to 500 candidate points. Which 220 MW do you
         build? The criteria disagree by construction: the best irradiation is far from
@@ -730,8 +831,8 @@
         <div><span class="vlabel biz">Business value</span>120 defensible portfolios instead of one opaque answer. The board-level sentence: <strong>holding concentration risk at 0.085 rather than 0.133 costs &euro;36M</strong>.</div>
       </div>
       <div class="card-tags"><span class="card-tag">NSGA-II</span><span class="card-tag">Multi-objective</span><span class="card-tag">Location-allocation</span><span class="card-tag">Python</span><span class="card-tag">numpy</span></div>
-      <div class="media-note">
-        Full source, tests and figures in a private repository &mdash; available on request.
+      <div class="card-links">
+        <a href="https://github.com/ehsan-mahmoodi/pv-site-selection" target="_blank" rel="noopener" class="card-link">Repository &#8599;</a>
       </div>
     </div>
 
@@ -872,6 +973,7 @@
       </div>
       <div class="rt-badges"><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">Husqvarna AB</div>
+      <div class="outcome"><div class="oc"><span class="oc-v">0</span><span class="oc-l">physical trials needed</span></div><div class="oc"><span class="oc-v">GPT-4</span><span class="oc-l">explains each call</span></div></div>
       <p>Austempering parameters for ductile iron used to be found by running physical experiments. This platform predicts the outcome instead, and explains the prediction to the engineers who have to trust it.</p>
       <div class="value-split">
         <div><span class="vlabel tech">Technical</span>Gradient-boosted property prediction across the process window with a GPT-4 explanation layer.</div>
@@ -916,6 +1018,7 @@
       </div>
       <div class="rt-badges"><span class="rt-badge cap-academia">Industry&ndash;academia</span><span class="rt-badge">Energy</span></div>
       <div class="card-meta">2008 BSc thesis &middot; redesigned as a full case study</div>
+      <div class="outcome"><div class="oc"><span class="oc-v">&euro;433k</span><span class="oc-l">EBITDA per year</span></div><div class="oc"><span class="oc-v">3.7 yr</span><span class="oc-l">simple payback</span></div></div>
       <p>
         My bachelor thesis was a study of transesterification chemistry. It never said who would build
         the plant, where the oil would come from, or whether the numbers closed. I went back and did
@@ -939,6 +1042,7 @@
       </div>
       <div class="rt-badges"><span class="rt-badge cap-industrial">Industrial delivery</span><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">Bafgh &middot; MSc thesis, later rebuilt in Python</div>
+      <div class="outcome"><div class="oc"><span class="oc-v">96.6%</span><span class="oc-l">less annual downtime</span></div><div class="oc"><span class="oc-v">91.5%</span><span class="oc-l">lower monthly cost</span></div></div>
       <p>A zinc plating operation whose sulfuric acid unit runs as a side product &mdash; not the revenue line, but stopping it stops plating. Three strategies compared over eighteen scenarios on 24/7 operation.</p>
       <div class="value-split">
         <div><span class="vlabel tech">Technical</span>Arena and OptQuest across 18 scenarios ranked by TOPSIS; later an NSGA-II crew-sizing model in Python.</div>
@@ -958,6 +1062,7 @@
       </div>
       <div class="rt-badges"><span class="rt-badge cap-industrial">Industrial delivery</span><span class="rt-badge">Energy</span></div>
       <div class="card-meta">2016 &ndash; 2019 &middot; R&amp;D Expert, Kish Solar Trading Co.</div>
+      <div class="outcome"><div class="oc"><span class="oc-v">27%</span><span class="oc-l">IRR</span></div><div class="oc"><span class="oc-v">&euro;25.8M</span><span class="oc-l">NPV</span></div></div>
       <p>An on-grid solar plant taken from site assessment through to signed PPA, land, permits and international due diligence. I authored the project profile and the financial model.</p>
       <div class="value-split">
         <div><span class="vlabel tech">Technical</span>36,432 modules, 1,584 strings, nine SMA central inverters &mdash; 20,465 MWh in year one at 87% performance ratio.</div>
@@ -1024,6 +1129,7 @@
       </div>
       <div class="rt-badges"><span class="rt-badge cap-academia">Industry&ndash;academia</span><span class="rt-badge">Logistics</span></div>
       <div class="card-meta">2012 MSc thesis &middot; Kharg region, Persian Gulf</div>
+      <div class="outcome"><div class="oc"><span class="oc-v">2</span><span class="oc-l">journal papers</span></div><div class="oc"><span class="oc-v">25</span><span class="oc-l">citations</span></div></div>
       <p>How many vessels does an offshore field actually need, and on what routes, when demand is stochastic and weather takes vessels out of service unpredictably?</p>
       <div class="value-split">
         <div><span class="vlabel tech">Technical</span>Simulation-based multi-objective optimisation trading fleet size against service level.</div>
@@ -1145,6 +1251,7 @@
       </div>
       <div class="rt-badges"><span class="rt-badge cap-industrial">Industrial delivery</span><span class="rt-badge">Telecom &amp; IT</span></div>
       <div class="card-meta">2020 &middot; national wired and wireless estate</div>
+      <div class="outcome"><div class="oc"><span class="oc-v">3,880</span><span class="oc-l">elements monitored</span></div><div class="oc"><span class="oc-v">99.79%</span><span class="oc-l">availability</span></div></div>
       <p>A live twin of a nationwide telecom network. Two failure modes had to be planned for differently: a wired run fails outright, a wireless hop degrades gradually.</p>
       <div class="value-split">
         <div><span class="vlabel tech">Technical</span>3,880 monitored elements rolled up from element state to provincial availability, with RTT and packet loss.</div>
@@ -1558,6 +1665,46 @@
 <footer>
   <p>&copy; 2026 Ehsan Mahmoodi &middot; Built with GitHub Pages &middot; Auckland, New Zealand</p>
 </footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  // Diagrams ship as light/dark pairs; swap the file rather than filtering pixels.
+  function swapArt(dark) {
+    document.querySelectorAll('img[src]').forEach(function (img) {
+      var src = img.getAttribute('src');
+      var m = src.match(/^(.*?)(-dark)?\.(svg|jpg)$/);
+      if (!m) return;
+      var base = m[1], ext = m[3];
+      if (!/assets\/diagrams\//.test(src) && !/assets\/0[67]-pv-/.test(src)) return;
+      var want = dark ? base + '-dark.' + ext : base + '.' + ext;
+      if (want !== src) img.setAttribute('src', want);
+    });
+  }
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+    swapArt(dark);
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
