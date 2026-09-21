@@ -34,7 +34,7 @@ Open `index.html` and edit directly. Project cards follow one pattern:
 </div>
 ```
 
-## To do
+## Media
 
-- Add video links for the remaining simulation recordings (assembly line balancing, acid plant).
-  Cards carrying a `media-note` div are the placeholders.
+Six project cards link to simulation recordings on YouTube. Videos are linked, never
+embedded or committed, so the repo stays small.
