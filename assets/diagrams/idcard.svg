@@ -1,35 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="National ID card production line simulation">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Digital ID card distribution centre process with applicant groups, service steps and data centre link">
 <style>
-:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
-@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}}
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
 text{font-family:Inter,system-ui,-apple-system,sans-serif}
-.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}
 .bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
 .bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
 .fl{stroke:var(--acc);fill:none;stroke-width:1.4}
 .fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+.fg{stroke:var(--grn);fill:none;stroke-width:1.1;stroke-dasharray:3 2}
 </style>
-<text x="12" y="20" class="t" font-size="11" font-weight="600">ID Card Production &#8212; line simulation and capacity study</text>
-<g font-size="6.5">
-<rect class="bx" x="12" y="44" width="52" height="28" rx="4"/><text x="38" y="56" class="m" text-anchor="middle">Enrolment</text><text x="38" y="66" class="m" text-anchor="middle">data intake</text>
-<rect class="bx" x="76" y="44" width="52" height="28" rx="4"/><text x="102" y="56" class="m" text-anchor="middle">Verify</text><text x="102" y="66" class="m" text-anchor="middle">biometrics</text>
-<rect class="bxa" x="140" y="44" width="52" height="28" rx="4"/><text x="166" y="56" class="a" text-anchor="middle" font-weight="600">Personal-</text><text x="166" y="66" class="a" text-anchor="middle">isation</text>
-<rect class="bx" x="204" y="44" width="52" height="28" rx="4"/><text x="230" y="56" class="m" text-anchor="middle">Quality</text><text x="230" y="66" class="m" text-anchor="middle">check</text>
-<rect class="bx" x="268" y="44" width="52" height="28" rx="4"/><text x="294" y="60" class="m" text-anchor="middle">Package</text>
-<rect class="bx" x="332" y="44" width="56" height="28" rx="4"/><text x="360" y="60" class="m" text-anchor="middle">Dispatch</text>
+<text x="12" y="18" class="t" font-size="11" font-weight="600">Digital ID Distribution Centre &#8212; process and capacity design</text>
+<g font-size="6">
+<rect class="bx" x="12" y="30" width="52" height="12" rx="3"/><text x="38" y="38.5" class="m" text-anchor="middle">first-time</text>
+<rect class="bx" x="12" y="45" width="52" height="12" rx="3"/><text x="38" y="53.5" class="m" text-anchor="middle">renewal</text>
+<rect class="bx" x="12" y="60" width="52" height="12" rx="3"/><text x="38" y="68.5" class="m" text-anchor="middle">replacement</text>
+<rect class="bx" x="12" y="75" width="52" height="12" rx="3"/><text x="38" y="83.5" class="m" text-anchor="middle">assisted</text>
 </g>
-<path class="fl" d="M64 58h12M128 58h12M192 58h12M256 58h12M320 58h12"/>
-<path class="fm" d="M230 72v16h-64v-16"/>
-<text x="198" y="98" class="w" font-size="6.5" text-anchor="middle">rework loop on failed cards</text>
-<g font-size="6.5">
-<rect class="bx" x="60" y="106" width="130" height="26" rx="4"/>
-<text x="125" y="118" class="m" text-anchor="middle" font-weight="600">Throughput vs WIP</text>
-<text x="125" y="128" class="m" text-anchor="middle">cards per shift under demand surge</text>
-<rect class="bx" x="210" y="106" width="130" height="26" rx="4"/>
-<text x="275" y="118" class="m" text-anchor="middle" font-weight="600">Yield sensitivity</text>
-<text x="275" y="128" class="m" text-anchor="middle">reject rate drives rework load</text>
+<text x="12" y="100" class="m" font-size="6">applicant groups &#183; different service times</text>
+<path class="fl" d="M64 36 Q78 44 88 51M64 51h24M64 66 Q78 58 88 55M64 81 Q78 68 88 58"/>
+<g font-size="6">
+<rect class="bxa" x="88" y="44" width="34" height="22" rx="3"/><text x="105" y="53" class="a" text-anchor="middle">Queue</text><text x="105" y="62" class="m" text-anchor="middle">triage</text>
+<rect class="bx" x="130" y="44" width="42" height="22" rx="3"/><text x="151" y="53" class="m" text-anchor="middle">Document</text><text x="151" y="62" class="m" text-anchor="middle">check</text>
+<rect class="bxa" x="180" y="44" width="46" height="22" rx="3"/><text x="203" y="53" class="a" text-anchor="middle">Biometric</text><text x="203" y="62" class="m" text-anchor="middle">capture</text>
+<rect class="bx" x="234" y="44" width="44" height="22" rx="3"/><text x="256" y="53" class="m" text-anchor="middle">Validate</text><text x="256" y="62" class="m" text-anchor="middle">vs registry</text>
+<rect class="bx" x="286" y="44" width="44" height="22" rx="3"/><text x="308" y="53" class="m" text-anchor="middle">Enrol</text><text x="308" y="62" class="m" text-anchor="middle">/ confirm</text>
+<rect class="bxa" x="338" y="44" width="50" height="22" rx="3"/><text x="363" y="53" class="a" text-anchor="middle">Collect</text><text x="363" y="62" class="m" text-anchor="middle">card</text>
 </g>
-<line x1="12" y1="146" x2="388" y2="146" stroke="var(--line)"/>
-<text x="12" y="161" class="m" font-size="7.5">Arena model of a secure-document line: where does a national-scale rollout actually jam?</text>
-<text x="12" y="173" class="m" font-size="7.5">2013</text>
+<path class="fl" d="M122 55h8M172 55h8M226 55h8M278 55h8M330 55h8"/>
+<path class="fm" d="M203 66V88M256 66V88M308 66V88"/>
+<g font-size="6">
+<rect class="bx" x="180" y="88" width="150" height="22" rx="3"/>
+<text x="255" y="97" class="g" text-anchor="middle" font-weight="600">National data centre</text>
+<text x="255" y="106" class="m" text-anchor="middle">enrolment write &#183; registry lookup &#183; dedup</text>
+</g>
+<path class="fg" d="M180 99H151V66"/>
+<text x="154" y="80" class="g" font-size="5.5">status back</text>
+<line x1="12" y1="120" x2="388" y2="120" stroke="var(--line)"/>
+<text x="12" y="132" class="m" font-size="6">What the model answered</text>
+<g font-size="6">
+<rect class="bx" x="12" y="137" width="86" height="17" rx="3"/><text x="55" y="148.5" class="t" text-anchor="middle">processing time</text>
+<rect class="bx" x="104" y="137" width="86" height="17" rx="3"/><text x="147" y="148.5" class="t" text-anchor="middle">time in system</text>
+<rect class="bx" x="196" y="137" width="92" height="17" rx="3"/><text x="242" y="148.5" class="t" text-anchor="middle">staff per counter</text>
+<rect class="bxa" x="294" y="137" width="94" height="17" rx="3"/><text x="341" y="148.5" class="a" text-anchor="middle" font-weight="600">centres per region</text>
+</g>
+<text x="12" y="170" class="m" font-size="6.5">Centre count sized to each region&#8217;s population and applicant mix &#183; Arena DES &#183; 2013</text>
 </svg>

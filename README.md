@@ -36,5 +36,5 @@ Open `index.html` and edit directly. Project cards follow one pattern:
 
 ## To do
 
-- Add video links for the simulation recordings (assembly line balancing, acid plant).
+- Add video links for the remaining simulation recordings (assembly line balancing, acid plant).
   Cards carrying a `media-note` div are the placeholders.
