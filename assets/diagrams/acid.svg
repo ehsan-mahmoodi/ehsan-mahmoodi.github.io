@@ -9,7 +9,7 @@ text{font-family:Inter,system-ui,-apple-system,sans-serif}
 .fl{stroke:var(--acc);fill:none;stroke-width:1.4}
 .fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
 </style>
-<text x="12" y="20" class="t" font-size="11" font-weight="600">Acid Plant &#8212; maintenance strategy comparison, 24/7 operation</text>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Zinc Plating Plant &#8212; maintenance strategy comparison, 24/7</text>
 <g font-size="7">
 <rect class="bx" x="12" y="36" width="118" height="46" rx="4"/>
 <text x="71" y="50" class="m" text-anchor="middle" font-weight="600">Breakdown</text>
@@ -33,5 +33,5 @@ text{font-family:Inter,system-ui,-apple-system,sans-serif}
 <text x="330" y="124" class="m">Ranking</text><text x="330" y="137" class="a" font-size="10" font-weight="600">TOPSIS</text>
 </g>
 <text x="12" y="158" class="m" font-size="7.5">Rockwell Arena + OptQuest &#183; strategies scored on downtime, cost, crew utilisation and spares.</text>
-<text x="12" y="172" class="m" font-size="7.5">Bafgh sulfuric acid unit &#183; MSc thesis, later rebuilt in Python with an NSGA-II team-sizing model.</text>
+<text x="12" y="172" class="m" font-size="7.5">Zinc plating plant at Bafgh &#183; the sulfuric acid unit is a side product &#183; MSc thesis</text>
 </svg>
