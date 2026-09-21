@@ -77,7 +77,8 @@
     .section-subtitle { color: #8b949e; font-size: 0.95rem; margin-bottom: 36px; max-width: 760px; }
 
     /* TWO ROLES */
-    .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    #expertise { max-width: 1640px; }
+    .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px; }
     .role-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 26px; }
     .role-card .role-eyebrow {
       font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px;
@@ -157,6 +158,45 @@
     }
     .rt-badge.research { color: #bc8cff; border-color: #3d2a56; }
     .rt-badge.industry { color: #d29922; border-color: #4a3a12; }
+
+
+    /* REGION BLOCKS */
+    .region-block { margin-bottom: 56px; }
+    .region-head {
+      display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+      padding-bottom: 10px; border-bottom: 2px solid #30363d; margin-bottom: 12px;
+    }
+    .region-head h3 { font-size: 1.45rem; font-weight: 700; color: #e6edf3; letter-spacing: -0.01em; }
+    .region-years {
+      font-size: 0.84rem; color: #58a6ff; font-weight: 600;
+      background: #0d1117; border: 1px solid #30363d; padding: 3px 11px; border-radius: 20px;
+    }
+    .region-note { color: #8b949e; font-size: 0.89rem; margin-bottom: 22px; max-width: 900px; }
+    .region-empty { color: #8b949e; font-size: 0.86rem; font-style: italic; padding: 8px 0 20px; }
+    .region-empty[hidden], .projects-grid[hidden], .fund-strip[hidden],
+    .region-block[hidden] { display: none; }
+
+    /* FUNDING STRIP */
+    .fund-strip {
+      display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+      background: #12261a; border: 1px solid #1f4d2e; border-left: 3px solid #3fb950;
+      border-radius: 10px; padding: 14px 20px; margin-bottom: 22px;
+    }
+    .fs-v { font-size: 1.4rem; font-weight: 700; color: #3fb950; white-space: nowrap; }
+    .fs-l { font-size: 0.84rem; color: #8b949e; flex: 1; min-width: 260px; }
+    .project-card.funded { border-color: #2d5a3d; }
+    .project-card.funded:hover { border-color: #3fb950; }
+
+    /* APPROACH STRIP */
+    .approach-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px;
+    }
+    .as-step {
+      background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px 18px;
+    }
+    .as-n { display: block; font-size: 0.72rem; font-weight: 700; color: #58a6ff; letter-spacing: 1px; }
+    .as-t { display: block; font-size: 1rem; font-weight: 600; color: #e6edf3; margin: 2px 0 6px; }
+    .as-d { display: block; font-size: 0.8rem; color: #8b949e; line-height: 1.5; }
 
     /* PROJECTS */
     /* projects span wider than the reading sections */
@@ -247,11 +287,14 @@
     }
     @media (max-width: 1180px) {
       .projects-grid { grid-template-columns: repeat(2, 1fr); }
+      .approach-strip { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 860px) {
-      .projects-grid, .role-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .role-grid { grid-template-columns: 1fr; }
       .hero-inner { grid-template-columns: 1fr; gap: 32px; }
       .hero-stats { margin-top: 0; }
+      .approach-strip { grid-template-columns: 1fr; }
       section { padding: 56px 20px; }
       .filter-label { min-width: 100%; margin-bottom: 2px; }
       .feature-card { grid-template-columns: 1fr; }
@@ -291,6 +334,17 @@
       .hs-title, .hs-l, .hs-foot { color: #57606a; }
       .hs-v { color: #0969da; }
       .hs-row { border-bottom: 1px solid #d0d7de; }
+      .region-head h3 { color: #24292f; }
+      .region-head { border-bottom: 2px solid #d0d7de; }
+      .region-years { background: #ffffff; border: 1px solid #d0d7de; color: #0969da; }
+      .region-note, .region-empty, .fs-l, .as-d { color: #57606a; }
+      .fund-strip { background: #eaf6ec; border: 1px solid #b7dfc1; border-left: 3px solid #1a7f37; }
+      .fs-v { color: #1a7f37; }
+      .project-card.funded { border-color: #b7dfc1; }
+      .project-card.funded:hover { border-color: #1a7f37; }
+      .as-step { background: #f6f8fa; border: 1px solid #d0d7de; }
+      .as-n { color: #0969da; }
+      .as-t { color: #24292f; }
       .empty-state { color: #57606a; }
       .chip { background: #f6f8fa; border: 1px solid #d0d7de; color: #24292f; }
       .chip[aria-pressed="true"] { background: #0969da; border-color: #0969da; color: #fff; }
@@ -407,18 +461,35 @@
     </div>
 
     <div class="role-card">
-      <div class="role-eyebrow">Advise</div>
-      <h3>Business &amp; Operations Consulting</h3>
+      <div class="role-eyebrow">Deliver</div>
+      <h3>Industrial Solutions</h3>
       <p>
-        Finding where an operation actually loses time and money, sizing the fix, and saying
-        plainly whether it pays for itself.
+        Twenty years of operations knowledge behind the code. I know what a shop floor, a ward or
+        a depot actually does before I model it.
       </p>
       <ul>
+        <li>Discrete-event simulation of production, healthcare and logistics systems</li>
         <li>Process diagnosis, bottleneck and throughput analysis</li>
         <li>Capacity, staffing and layout studies before capital is committed</li>
-        <li>Techno-economic feasibility: NPV, IRR, payback and sensitivity</li>
         <li>Maintenance, reliability and asset strategy</li>
+        <li>Assembly line balancing and mixed-model sequencing</li>
+        <li>Digital twins synchronised to live plant and network data</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <div class="role-eyebrow">Justify</div>
+      <h3>Business Value</h3>
+      <p>
+        Every model has to end in a number someone can act on. If it does not pay, I say so
+        before the money is spent.
+      </p>
+      <ul>
+        <li>Techno-economic feasibility: NPV, IRR, payback and sensitivity</li>
+        <li>Business cases carried to signed investment and permits</li>
         <li>Multi-criteria decision analysis: TOPSIS, AHP, ANP, DEA</li>
+        <li>Cost-benefit framing for non-technical decision makers</li>
+        <li>Quantified outcomes &mdash; 96.6% downtime cut, 27% IRR, &euro;25.8M NPV</li>
         <li>Delivered for hospitals, process plants, utilities and public rollouts</li>
       </ul>
     </div>
@@ -447,26 +518,20 @@
 <section id="projects">
   <div class="section-title">Projects</div>
   <div class="section-subtitle">
-    Twenty-three projects across three countries, from funded research programmes to plants and hospitals
-    that had to keep running on Monday. Filter by where the work happened, whether it was research or
-    industry, and which sector. Simulation model files and client deliverables are not published &mdash;
-    each project is described by the problem, the approach, and what it was worth.
+    Twenty-two projects across three countries. Almost none of them were purely industrial or purely
+    academic &mdash; the same piece of work usually had to satisfy a plant manager and survive peer
+    review. So every card states the same two things: the <strong>software and method</strong> that
+    built it, and the <strong>business value</strong> it produced.
+  </div>
+
+  <div class="approach-strip">
+    <div class="as-step"><span class="as-n">01</span><span class="as-t">Diagnose</span><span class="as-d">Find where the operation actually loses time, money or capacity</span></div>
+    <div class="as-step"><span class="as-n">02</span><span class="as-t">Model</span><span class="as-d">Simulation or optimisation that reproduces the real constraint</span></div>
+    <div class="as-step"><span class="as-n">03</span><span class="as-t">Build</span><span class="as-d">Working software the client can run without me in the room</span></div>
+    <div class="as-step"><span class="as-n">04</span><span class="as-t">Quantify</span><span class="as-d">State the value in money or time, and say if it does not pay</span></div>
   </div>
 
   <div class="filter-bar">
-    <div class="filter-row">
-      <span class="filter-label">Region</span>
-      <button type="button" class="chip" data-filter="region" data-value="all" aria-pressed="true">All</button>
-      <button type="button" class="chip" data-filter="region" data-value="home" aria-pressed="false">Home country</button>
-      <button type="button" class="chip" data-filter="region" data-value="sweden" aria-pressed="false">Sweden</button>
-      <button type="button" class="chip" data-filter="region" data-value="nz" aria-pressed="false">New Zealand</button>
-    </div>
-    <div class="filter-row">
-      <span class="filter-label">Nature</span>
-      <button type="button" class="chip" data-filter="type" data-value="all" aria-pressed="true">All</button>
-      <button type="button" class="chip" data-filter="type" data-value="industry" aria-pressed="false">Industry</button>
-      <button type="button" class="chip" data-filter="type" data-value="research" aria-pressed="false">Research</button>
-    </div>
     <div class="filter-row">
       <span class="filter-label">Sector</span>
       <button type="button" class="chip" data-filter="sector" data-value="all" aria-pressed="true">All</button>
@@ -481,12 +546,7 @@
     <div class="filter-count" id="filter-count"></div>
   </div>
 
-  <div class="projects-grid" id="projects-grid">
-
-    <div class="empty-state" id="empty-state" hidden>
-      No projects match that combination. Try widening one of the filters.
-    </div>
-
+  <div class="region-block" data-region="feature">
     <div class="feature-card" data-region="home" data-type="research" data-sector="energy">
       <img src="assets/diagrams/biodiesel.svg" alt="SME biodiesel transesterification process train with mass balance and economics" loading="lazy">
       <div>
@@ -495,12 +555,11 @@
         <p>
           My 2009 bachelor project was a study of transesterification chemistry. Useful, but it stopped
           at the chemistry &mdash; it never said who would build the plant, where the oil would come from,
-          or whether the numbers closed. This is that project done properly: a 3,000 t/yr plant sized for
-          an agricultural cooperative, running on used cooking oil and regional rapeseed.
+          or whether the numbers closed. This is that project done properly.
         </p>
         <div class="value-split">
           <div><span class="vlabel tech">Technical</span>Process train, mass and energy balance, and two recycle loops &mdash; methanol recovery and glycerol &mdash; that decide whether it clears its costs.</div>
-          <div><span class="vlabel biz">Business value</span>&euro;433k EBITDA on &euro;1.6M capex, but a 20% feedstock price rise takes &euro;354k of it. The finding is that this is a procurement problem, not a process design problem.</div>
+          <div><span class="vlabel biz">Business value</span>&euro;433k EBITDA on &euro;1.6M capex, but a 20% feedstock price rise takes &euro;354k of it. The finding: this is a procurement problem, not a process design problem.</div>
         </div>
         <div class="card-tags">
           <span class="card-tag">Process design</span><span class="card-tag">Techno-economic analysis</span>
@@ -511,14 +570,82 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="project-card" data-region="sweden" data-type="research" data-sector="manufacturing">
+  <div class="region-block" data-region="nz">
+    <div class="region-head"><h3>New Zealand</h3><span class="region-years">2026 &ndash; Present</span></div>
+    <p class="region-note">Current work, with the University of Auckland and AUT &mdash; research prototypes built to be used by the operators and specifiers they are aimed at, not only written up.</p>
+    <div class="projects-grid">
+    <div class="project-card" data-region="nz" data-type="research industry" data-sector="logistics">
+      <img src="assets/05-sme-navigator.jpg" alt="Connecting the Dots application: fair business tools for New Zealand transport and logistics operators" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>SME Data Navigator &mdash; Connecting the Dots</h3>
+        <span class="card-icon">&#129517;</span>
+      </div>
+      <div class="rt-badges"><span class="rt-badge">Logistics</span></div>
+      <div class="card-meta">Auckland University of Technology &middot; CILT-supported</div>
+      <p>Small transport operators negotiate alone &mdash; one operator with a spreadsheet, against customers who can see the whole market. The platform gives them the numbers, the terms and the comparisons to make their case.</p>
+      <div class="value-split">
+        <div><span class="vlabel tech">Technical</span>Streamlit application over public cost indices and tender data, pooling each check anonymously.</div>
+        <div><span class="vlabel biz">Business value</span>A one-truck operator negotiates with the same evidence a large customer already has.</div>
+      </div>
+      <div class="card-tags"><span class="card-tag">Streamlit</span><span class="card-tag">Open data</span><span class="card-tag">Benchmarking</span><span class="card-tag">Research prototype</span></div>
+      <div class="card-links">
+        <a href="https://logistics-sme-data-navigator.onrender.com/" target="_blank" rel="noopener" class="card-link">Open the app</a>
+      </div>
+    </div>
+    <div class="project-card" data-region="nz" data-type="research" data-sector="construction">
+      <img src="assets/diagrams/facade.svg" alt="Facade material selection across cost, carbon and constructability" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Fa&ccedil;ade Material Selection</h3>
+        <span class="card-icon">&#127959;&#65039;</span>
+      </div>
+      <div class="rt-badges"><span class="rt-badge">Construction</span></div>
+      <div class="card-meta">University of Auckland</div>
+      <p>The cheapest cladding is rarely the lowest carbon, and the lowest carbon is often the hardest to build. Rather than collapse that into one score, all three are assessed and the trade-off is handed to the specifier.</p>
+      <div class="value-split">
+        <div><span class="vlabel tech">Technical</span>Multi-criteria assessment over cost per m&sup2;, embodied carbon and constructability across NZ climate zones.</div>
+        <div><span class="vlabel biz">Business value</span>Makes a carbon decision defensible at specification stage, when it is still cheap to change.</div>
+      </div>
+      <div class="card-tags"><span class="card-tag">MCDM</span><span class="card-tag">Embodied carbon</span><span class="card-tag">Web application</span><span class="card-tag">Azure</span></div>
+      <div class="card-links">
+        <a href="https://facade-material-selection.azurewebsites.net/" target="_blank" rel="noopener" class="card-link">Open the app (access on request)</a>
+      </div>
+    </div>
+    <div class="project-card" data-region="nz" data-type="research" data-sector="logistics">
+      <img src="assets/02-TwinCrane.gif" alt="Animated twin crane simulation" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>Twin Crane Simulation</h3>
+        <span class="card-icon">&#127959;&#65039;</span>
+      </div>
+      <div class="rt-badges"><span class="rt-badge">Logistics</span></div>
+      <div class="card-meta">2013 study &middot; rebuilt in Auckland, 2026</div>
+      <p>Two cranes on one rail that cannot pass each other. The hard part is not scheduling them but recovering when both are loaded and facing each other.</p>
+      <div class="value-split">
+        <div><span class="vlabel tech">Technical</span>Spatial reservation of track segments, collision avoidance and forced-yield deadlock recovery in a custom DES.</div>
+        <div><span class="vlabel biz">Business value</span>A deadlocked pair halts the whole bay &mdash; recovery logic protects throughput without laying more track.</div>
+      </div>
+      <div class="card-tags"><span class="card-tag">Python</span><span class="card-tag">Discrete-event</span><span class="card-tag">Pygame</span><span class="card-tag">Deadlock recovery</span></div>
+      <div class="card-links">
+        <a href="https://github.com/ehsan-mahmoodi/Twin-Crane" target="_blank" rel="noopener" class="card-link">Repository</a>
+      </div>
+    </div>
+    </div>
+    <p class="region-empty" hidden>Nothing in this region matches the current filter.</p>
+  </div>
+
+  <div class="region-block" data-region="sweden">
+    <div class="region-head"><h3>Sweden</h3><span class="region-years">2021 &ndash; 2026</span></div>
+    <p class="region-note">Doctoral and post-doctoral research at the University of Sk&ouml;vde, inside industry-funded programmes with Volvo Penta, Scania, ABB, Husqvarna, Daloc and Xylem.</p>
+    <div class="fund-strip"><span class="fs-v">SEK 41.5M</span><span class="fs-l">of industry-funded research I have worked inside &mdash; KK-stiftelsen and Vinnova programmes with Volvo Penta, Scania, ABB, Husqvarna, Daloc and Xylem. The three programmes below are highlighted.</span></div>
+    <div class="projects-grid">
+    <div class="project-card funded" data-region="sweden" data-type="research" data-sector="manufacturing">
       <img src="assets/diagrams/resilience.svg" alt="Resilience curve comparing a brittle and a resilient production system" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Resilience-Driven Manufacturing (SMART)</h3>
         <span class="card-icon">&#127981;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">Sweden</span></div>
+      <div class="rt-badges"><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">Nov 2025 &ndash; Present &middot; University of Sk&ouml;vde</div>
       <div class="card-fund">KK-stiftelsen Synergy Programme &middot; SEK 11,000,000</div>
       <p>With Volvo Penta, ABB, Daloc and Xylem. A resilient factory is not one that never gets hit &mdash; it is one whose output dips shallowly and recovers fast.</p>
@@ -531,14 +658,13 @@
         <a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/future-proof-factories-the-smart-way-to-resilient-production/" target="_blank" rel="noopener" class="card-link">Project page</a>
       </div>
     </div>
-
-    <div class="project-card" data-region="sweden" data-type="research" data-sector="manufacturing">
+    <div class="project-card funded" data-region="sweden" data-type="research" data-sector="manufacturing">
       <img src="assets/diagrams/aicompete.svg" alt="Multi-agent architecture with a coordinator negotiating between scheduling, energy, twin and carbon agents" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Multi-Agent AI for Sustainable Manufacturing</h3>
         <span class="card-icon">&#129302;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">Sweden</span></div>
+      <div class="rt-badges"><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">Sep 2025 &ndash; Present &middot; Sk&ouml;vde &amp; Uppsala</div>
       <div class="card-fund">Vinnova &middot; SEK 6,493,400</div>
       <p>AI-COMPETE, with Volvo Penta, Scania and Daloc. Productivity and carbon pull against each other, so the system is built as agents that negotiate rather than one objective that quietly sacrifices the other.</p>
@@ -551,14 +677,13 @@
         <a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/next-generation-factories-the-ai-way-to-sustainable-production/" target="_blank" rel="noopener" class="card-link">Project page</a>
       </div>
     </div>
-
-    <div class="project-card" data-region="sweden" data-type="research" data-sector="manufacturing">
+    <div class="project-card funded" data-region="sweden" data-type="research" data-sector="manufacturing">
       <img src="assets/diagrams/accurate.svg" alt="Digital twin loop between physical line, synchronised model and optimiser" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Agile Manufacturing in Industry 4.0</h3>
         <span class="card-icon">&#128296;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">Sweden</span></div>
+      <div class="rt-badges"><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">Sep 2021 &ndash; Dec 2025 &middot; University of Sk&ouml;vde</div>
       <div class="card-fund">KK-stiftelsen &middot; SEK 24,000,000</div>
       <p>ACCURATE 4.0, the programme my doctoral work sat inside. Three strands: line balancing with human-robot collaboration, dynamic bottleneck analysis, and AR-assisted collision avoidance.</p>
@@ -572,33 +697,13 @@
         <a href="https://www.linkedin.com/posts/h-gskolan-i-sk-vde_hur-g%C3%A5r-vi-fr%C3%A5n-forskning-till-praktisk-verklighet-activity-7402323846755700736-LHor/" target="_blank" rel="noopener" class="card-link">University video</a>
       </div>
     </div>
-
-    <div class="project-card" data-region="sweden" data-type="research" data-sector="manufacturing">
-      <img src="assets/diagrams/bottleneck.svg" alt="Shifting bottleneck detection across machines using cloud cyber-physical sensing" class="project-card-image" loading="lazy">
-      <div class="card-header">
-        <h3>Throughput Bottleneck Analysis</h3>
-        <span class="card-icon">&#128202;</span>
-      </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">Sweden</span></div>
-      <div class="card-meta">Doctoral research strand &middot; most-cited work</div>
-      <p>The bottleneck in a real line is not a fixed machine &mdash; it migrates as the shift wears on. Detecting the shift as it happens is the whole problem.</p>
-      <div class="value-split">
-        <div><span class="vlabel tech">Technical</span>Cloud cyber-physical sensing over active period, blockage and starvation to predict the shift.</div>
-        <div><span class="vlabel biz">Business value</span>Stops capacity money going to yesterday&rsquo;s constraint. 181 citations across the two main papers.</div>
-      </div>
-      <div class="card-tags"><span class="card-tag">CPS</span><span class="card-tag">Data-driven DSS</span><span class="card-tag">Shifting bottleneck</span><span class="card-tag">181 citations</span></div>
-      <div class="card-links">
-        <a href="#publications" class="card-link">See publications</a>
-      </div>
-    </div>
-
     <div class="project-card" data-region="sweden" data-type="research industry" data-sector="manufacturing">
       <img src="assets/01-Dashboard.png" alt="Heat treatment optimisation dashboard" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Sustainable Heat Treatment Optimization</h3>
         <span class="card-icon">&#9881;&#65039;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge industry">Industry</span><span class="rt-badge">Sweden</span></div>
+      <div class="rt-badges"><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">Husqvarna AB</div>
       <p>Austempering parameters for ductile iron used to be found by running physical experiments. This platform predicts the outcome instead, and explains the prediction to the engineers who have to trust it.</p>
       <div class="value-split">
@@ -610,14 +715,13 @@
         <a href="https://github.com/ehsan-mahmoodi/AI-Driven-Sustainable-Material-Design" target="_blank" rel="noopener" class="card-link">Repository</a>
       </div>
     </div>
-
     <div class="project-card" data-region="sweden" data-type="research" data-sector="energy">
       <img src="assets/diagrams/energy.svg" alt="Batch schedule aligned to spot price and on-site solar output" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Energy-Aware Batch Scheduling</h3>
         <span class="card-icon">&#9889;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">Sweden</span></div>
+      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
       <div class="card-meta">Applied Energy, 2026 &middot; published</div>
       <p>Batch production, spot electricity pricing and on-site renewable generation in one model, with maintenance treated as flexible rather than fixed.</p>
       <div class="value-split">
@@ -629,71 +733,21 @@
         <a href="https://doi.org/10.1016/j.apenergy.2026.128283" target="_blank" rel="noopener" class="card-link">Read the paper</a>
       </div>
     </div>
-
-    <div class="project-card" data-region="nz" data-type="research industry" data-sector="logistics">
-      <img src="assets/05-sme-navigator.jpg" alt="Connecting the Dots application: fair business tools for New Zealand transport and logistics operators" class="project-card-image" loading="lazy">
-      <div class="card-header">
-        <h3>SME Data Navigator &mdash; Connecting the Dots</h3>
-        <span class="card-icon">&#129517;</span>
-      </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge industry">Industry</span><span class="rt-badge">New Zealand</span></div>
-      <div class="card-meta">Auckland University of Technology &middot; CILT-supported</div>
-      <p>Small transport operators negotiate alone &mdash; one operator with a spreadsheet, against customers who can see the whole market. The platform gives them the numbers, the terms and the comparisons to make their case.</p>
-      <div class="value-split">
-        <div><span class="vlabel tech">Technical</span>Streamlit application over public cost indices and tender data, pooling each check anonymously.</div>
-        <div><span class="vlabel biz">Business value</span>A one-truck operator negotiates with the same evidence a large customer already has.</div>
-      </div>
-      <div class="card-tags"><span class="card-tag">Streamlit</span><span class="card-tag">Open data</span><span class="card-tag">Benchmarking</span><span class="card-tag">Research prototype</span></div>
-      <div class="card-links">
-        <a href="https://logistics-sme-data-navigator.onrender.com/" target="_blank" rel="noopener" class="card-link">Open the app</a>
-      </div>
     </div>
+    <p class="region-empty" hidden>Nothing in this region matches the current filter.</p>
+  </div>
 
-    <div class="project-card" data-region="nz" data-type="research" data-sector="construction">
-      <img src="assets/diagrams/facade.svg" alt="Facade material selection across cost, carbon and constructability" class="project-card-image" loading="lazy">
-      <div class="card-header">
-        <h3>Fa&ccedil;ade Material Selection</h3>
-        <span class="card-icon">&#127959;&#65039;</span>
-      </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">New Zealand</span></div>
-      <div class="card-meta">University of Auckland</div>
-      <p>The cheapest cladding is rarely the lowest carbon, and the lowest carbon is often the hardest to build. Rather than collapse that into one score, all three are assessed and the trade-off is handed to the specifier.</p>
-      <div class="value-split">
-        <div><span class="vlabel tech">Technical</span>Multi-criteria assessment over cost per m&sup2;, embodied carbon and constructability across NZ climate zones.</div>
-        <div><span class="vlabel biz">Business value</span>Makes a carbon decision defensible at specification stage, when it is still cheap to change.</div>
-      </div>
-      <div class="card-tags"><span class="card-tag">MCDM</span><span class="card-tag">Embodied carbon</span><span class="card-tag">Web application</span><span class="card-tag">Azure</span></div>
-      <div class="card-links">
-        <a href="https://facade-material-selection.azurewebsites.net/" target="_blank" rel="noopener" class="card-link">Open the app (access on request)</a>
-      </div>
-    </div>
-
-    <div class="project-card" data-region="home" data-type="research" data-sector="logistics">
-      <img src="assets/02-TwinCrane.gif" alt="Animated twin crane simulation" class="project-card-image" loading="lazy">
-      <div class="card-header">
-        <h3>Twin Crane Simulation</h3>
-        <span class="card-icon">&#127959;&#65039;</span>
-      </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">Home country</span></div>
-      <div class="card-meta">2013 study &rarr; 2026 Python rebuild</div>
-      <p>Two cranes on one rail that cannot pass each other. The hard part is not scheduling them but recovering when both are loaded and facing each other.</p>
-      <div class="value-split">
-        <div><span class="vlabel tech">Technical</span>Spatial reservation of track segments, collision avoidance and forced-yield deadlock recovery in a custom DES.</div>
-        <div><span class="vlabel biz">Business value</span>A deadlocked pair halts the whole bay &mdash; recovery logic protects throughput without laying more track.</div>
-      </div>
-      <div class="card-tags"><span class="card-tag">Python</span><span class="card-tag">Discrete-event</span><span class="card-tag">Pygame</span><span class="card-tag">Deadlock recovery</span></div>
-      <div class="card-links">
-        <a href="https://github.com/ehsan-mahmoodi/Twin-Crane" target="_blank" rel="noopener" class="card-link">Repository</a>
-      </div>
-    </div>
-
+  <div class="region-block" data-region="home">
+    <div class="region-head"><h3>Homeland</h3><span class="region-years">Before 2021</span></div>
+    <p class="region-note">Sixteen years of industrial and consulting delivery before Europe &mdash; hospitals, process plants, an offshore fleet, a 10 MW solar farm and a national service rollout.</p>
+    <div class="projects-grid">
     <div class="project-card" data-region="home" data-type="industry" data-sector="manufacturing">
       <img src="assets/diagrams/acid.svg" alt="Comparison of breakdown, preventive and predictive maintenance downtime" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Maintenance Optimisation, Zinc Plating Plant</h3>
         <span class="card-icon">&#127981;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">Bafgh &middot; MSc thesis, later rebuilt in Python</div>
       <p>A zinc plating operation whose sulfuric acid unit runs as a side product &mdash; not the revenue line, but stopping it stops plating. Three strategies compared over eighteen scenarios on 24/7 operation.</p>
       <div class="value-split">
@@ -706,14 +760,13 @@
         <a href="https://github.com/ehsan-mahmoodi/Acid-Production-Unit-Maintenance-Planning" target="_blank" rel="noopener" class="card-link">Repository</a>
       </div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="energy">
       <img src="assets/diagrams/solar.svg" alt="10 MW photovoltaic plant layout with inverters, substation and financial metrics" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>10 MW Photovoltaic Plant, Nir</h3>
         <span class="card-icon">&#9728;&#65039;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
       <div class="card-meta">2016 &ndash; 2019 &middot; R&amp;D Expert, Kish Solar Trading Co.</div>
       <p>An on-grid solar plant taken from site assessment through to signed PPA, land, permits and international due diligence. I authored the project profile and the financial model.</p>
       <div class="value-split">
@@ -722,14 +775,13 @@
       </div>
       <div class="card-tags"><span class="card-tag">Feasibility study</span><span class="card-tag">Financial modelling</span><span class="card-tag">PV design</span></div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="healthcare">
       <img src="assets/diagrams/cathlab.svg" alt="Cardiac catheterisation lab patient flow with single procedure table" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Cardiac Cath Lab Flow</h3>
         <span class="card-icon">&#129505;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Healthcare</span></div>
       <div class="card-meta">2014 &middot; Moheb-e-Mehr Hospital</div>
       <p>One procedure table, three procedure types and no fixed admission schedule &mdash; patients are called when their cardiologist happens to be in the lab.</p>
       <div class="value-split">
@@ -738,14 +790,13 @@
       </div>
       <div class="card-tags"><span class="card-tag">Arena</span><span class="card-tag">Healthcare DES</span><span class="card-tag">Priority rules</span><span class="card-tag">Bed capacity</span></div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="healthcare">
       <img src="assets/diagrams/basir.svg" alt="Eye clinic patient flow from information desk through to surgery admission" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Eye Surgery Clinic Simulation</h3>
         <span class="card-icon">&#128065;&#65039;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Healthcare</span></div>
       <div class="card-meta">2014 &middot; Basir Eye Clinic</div>
       <p>New patients and post-operative reviews share the same corridor, and the doctor is the bottleneck for both.</p>
       <div class="value-split">
@@ -757,14 +808,13 @@
         <a href="https://youtu.be/3m8o0QajsUI" target="_blank" rel="noopener" class="card-link">Watch the simulation &#8599;</a>
       </div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="manufacturing">
       <img src="assets/diagrams/alb.svg" alt="Assembly line station loads against cycle time with mixed-model sequence" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Assembly Line Balancing &amp; Sequencing</h3>
         <span class="card-icon">&#128668;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">2016</div>
       <p>Two decisions that cannot be taken separately: assign tasks to stations under precedence and cycle time, then sequence the variants so no station is repeatedly overloaded.</p>
       <div class="value-split">
@@ -776,14 +826,13 @@
         <a href="https://youtu.be/5FZWPI72-Zw" target="_blank" rel="noopener" class="card-link">Watch the simulation &#8599;</a>
       </div>
     </div>
-
     <div class="project-card" data-region="home" data-type="research industry" data-sector="logistics">
       <img src="assets/diagrams/osv.svg" alt="Offshore supply vessel routes from Kharg base to six platforms" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Offshore Supply Vessel Fleet Sizing</h3>
         <span class="card-icon">&#128674;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Logistics</span></div>
       <div class="card-meta">2012 MSc thesis &middot; Kharg region, Persian Gulf</div>
       <p>How many vessels does an offshore field actually need, and on what routes, when demand is stochastic and weather takes vessels out of service unpredictably?</p>
       <div class="value-split">
@@ -796,14 +845,13 @@
         <a href="#publications" class="card-link">See publications</a>
       </div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="public">
       <img src="assets/diagrams/idcard.svg" alt="Digital ID distribution centre process with applicant groups, service steps and data centre link" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Digital ID Card Distribution Centres</h3>
         <span class="card-icon">&#129534;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Public sector</span></div>
       <div class="card-meta">2013 &middot; national rollout</div>
       <p>Process design for the centres where citizens collect a digital ID: the service steps, the data transitions behind them, and what the data centre has to carry. Applicants do not arrive as one population.</p>
       <div class="value-split">
@@ -815,14 +863,13 @@
         <a href="https://youtu.be/zvHT01ezT0I" target="_blank" rel="noopener" class="card-link">Watch the simulation &#8599;</a>
       </div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="healthcare">
       <img src="assets/diagrams/hospitalsc.svg" alt="Hospital supply chain with DEA efficiency frontier" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Hospital Supply Chain Efficiency</h3>
         <span class="card-icon">&#127973;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Healthcare</span></div>
       <div class="card-meta">2016 &middot; Imam Khomeini Hospital</div>
       <p>Benchmarking hospital logistics units where the normal inventory trade-off breaks down: a stockout of a critical item is not a cost line, it is a clinical event.</p>
       <div class="value-split">
@@ -834,14 +881,13 @@
         <a href="https://youtu.be/tOrP_y_7mBA" target="_blank" rel="noopener" class="card-link">Watch the simulation &#8599;</a>
       </div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="manufacturing">
       <img src="assets/diagrams/anp.svg" alt="Analytic network process clusters with feedback loops" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Productivity Measurement with ANP</h3>
         <span class="card-icon">&#128200;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">2015</div>
       <p>Productivity criteria influence each other &mdash; capital investment changes labour requirements, which changes process design. A plain AHP hierarchy cannot express that.</p>
       <div class="value-split">
@@ -850,14 +896,13 @@
       </div>
       <div class="card-tags"><span class="card-tag">ANP</span><span class="card-tag">SuperDecisions</span><span class="card-tag">MCDM</span></div>
     </div>
-
     <div class="project-card" data-region="home" data-type="research" data-sector="logistics">
       <img src="assets/diagrams/mto.svg" alt="Make-to-order supply chain with delayed demand information feedback" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Information Flow in MTO Supply Chains</h3>
         <span class="card-icon">&#128257;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Logistics</span></div>
       <div class="card-meta">2010 &middot; published research</div>
       <p>What happens when demand information reaches upstream partners late and distorted: order swings amplify along the chain, and sharing information damps them.</p>
       <div class="value-split">
@@ -869,14 +914,13 @@
         <a href="#publications" class="card-link">See publication</a>
       </div>
     </div>
-
     <div class="project-card" data-region="home" data-type="research" data-sector="manufacturing">
       <img src="assets/diagrams/simopt.svg" alt="Benchmark comparison of OptQuest and Witness Optimizer" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Benchmarking Commercial Sim-Opt Packages</h3>
         <span class="card-icon">&#9878;&#65039;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge research">Research</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Manufacturing</span></div>
       <div class="card-meta">2011 &middot; Winter Simulation Conference</div>
       <p>Practitioners were choosing between OptQuest and Witness Optimizer on vendor claims, because nobody had tested them side by side. We did &mdash; same problems, same budgets.</p>
       <div class="value-split">
@@ -888,14 +932,13 @@
         <a href="#publications" class="card-link">See publication</a>
       </div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="telecom">
       <img src="assets/diagrams/kpi.svg" alt="KPIs linked to strategic goals across business functions" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>KPI to Strategy Modelling</h3>
         <span class="card-icon">&#127919;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Telecom &amp; IT</span></div>
       <div class="card-meta">2019 &middot; major telecom and IT service &amp; infrastructure provider</div>
       <p>Sales, R&amp;D, service quality and operations each had their own dashboards, and none explained whether the company was getting closer to its strategic goals.</p>
       <div class="value-split">
@@ -904,14 +947,13 @@
       </div>
       <div class="card-tags"><span class="card-tag">Strategy modelling</span><span class="card-tag">KPI design</span><span class="card-tag">Cause-effect analysis</span></div>
     </div>
-
     <div class="project-card" data-region="home" data-type="industry" data-sector="telecom">
       <img src="assets/04-network-digital-twin.jpg" alt="Network monitoring digital twin: national availability dashboard, provincial rollup, site and link topology" class="project-card-image" loading="lazy">
       <div class="card-header">
         <h3>Digital Twin for Network Maintenance</h3>
         <span class="card-icon">&#128225;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge industry">Industry</span><span class="rt-badge">Home country</span></div>
+      <div class="rt-badges"><span class="rt-badge">Telecom &amp; IT</span></div>
       <div class="card-meta">2020 &middot; national wired and wireless estate</div>
       <p>A live twin of a nationwide telecom network. Two failure modes had to be planned for differently: a wired run fails outright, a wireless hop degrades gradually.</p>
       <div class="value-split">
@@ -920,43 +962,45 @@
       </div>
       <div class="card-tags"><span class="card-tag">Digital Twin</span><span class="card-tag">Maintenance planning</span><span class="card-tag">Availability monitoring</span></div>
     </div>
-
+    </div>
+    <p class="region-empty" hidden>Nothing in this region matches the current filter.</p>
   </div>
+
 </section>
 
 <script>
 (function () {
-  var state = { region: 'all', type: 'all', sector: 'all' };
-  var grid = document.getElementById('projects-grid');
-  var cards = grid.querySelectorAll('[data-region]');
+  var sector = 'all';
+  var cards = document.querySelectorAll('#projects [data-sector]');
+  var blocks = document.querySelectorAll('#projects .region-block');
   var countEl = document.getElementById('filter-count');
-
-  function matches(card) {
-    if (state.region !== 'all' && card.dataset.region !== state.region) return false;
-    if (state.sector !== 'all' && card.dataset.sector !== state.sector) return false;
-    if (state.type !== 'all' && card.dataset.type.split(' ').indexOf(state.type) === -1) return false;
-    return true;
-  }
 
   function apply() {
     var shown = 0;
     cards.forEach(function (card) {
-      var ok = matches(card);
+      var ok = (sector === 'all') || (card.dataset.sector === sector);
       card.hidden = !ok;
       if (ok) shown++;
     });
-    document.getElementById('empty-state').hidden = shown > 0;
-    var isAll = state.region === 'all' && state.type === 'all' && state.sector === 'all';
-    countEl.textContent = isAll
+    blocks.forEach(function (b) {
+      var any = b.querySelectorAll('[data-sector]:not([hidden])').length;
+      var empty = b.querySelector('.region-empty');
+      if (empty) empty.hidden = any > 0;
+      var grid = b.querySelector('.projects-grid');
+      if (grid) grid.hidden = any === 0;
+      var strip = b.querySelector('.fund-strip');
+      if (strip) strip.hidden = any === 0;
+      if (!b.querySelector('.region-head')) b.hidden = any === 0;
+    });
+    countEl.textContent = sector === 'all'
       ? 'Showing all ' + shown + ' projects'
       : 'Showing ' + shown + ' of ' + cards.length + ' projects';
   }
 
   document.querySelectorAll('.chip').forEach(function (chip) {
     chip.addEventListener('click', function () {
-      var group = chip.dataset.filter;
-      state[group] = chip.dataset.value;
-      document.querySelectorAll('.chip[data-filter="' + group + '"]').forEach(function (c) {
+      sector = chip.dataset.value;
+      document.querySelectorAll('.chip').forEach(function (c) {
         c.setAttribute('aria-pressed', String(c === chip));
       });
       apply();
