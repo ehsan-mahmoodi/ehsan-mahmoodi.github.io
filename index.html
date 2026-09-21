@@ -580,6 +580,65 @@
     <div class="filter-count" id="filter-count"></div>
   </div>
 
+  <div class="region-block" data-region="demo">
+    <div class="region-head"><h3>Demonstrators</h3><span class="region-years">Built 2026</span></div>
+    <p class="region-note">Software written to show current capability rather than to document past
+      delivery. Both take their engineering basis from the 10 MW plant I designed at Kish Solar
+      between 2016 and 2019 &mdash; the geometry, performance ratio and irradiation are real &mdash; but the
+      data is synthetic and the code is new. Said plainly here so neither is mistaken for client work.</p>
+    <div class="projects-grid">
+    <div class="project-card" data-region="home" data-type="research industry" data-sector="energy">
+      <img src="assets/06-pv-fault-detection.jpg" alt="Fleet overview: daily output against fleet median, distribution of performance, and annualised loss by string" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>PV String Fault Detection from SCADA</h3>
+        <span class="card-icon">&#128268;</span>
+      </div>
+      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
+      <div class="card-meta">Built 2026 &middot; reference case: the 10 MW plant I designed in 2016&ndash;19</div>
+      <p>
+        A 10 MW plant has 1,584 strings and one maintenance crew. A disconnected string
+        is obvious; a string running 7% low is worth real money and is invisible on a
+        plant dashboard. Absolute thresholds fail, because performance ratio moves with
+        season and temperature.
+      </p>
+      <div class="value-split">
+        <div><span class="vlabel tech">Technical</span>Peer comparison against the fleet median, so weather cancels. Four detectors &mdash; zero output, robust MAD z-score, Theil-Sen trend, and a rolling window for soiling that rain resets. Scored <strong>precision 1.00, recall 0.93</strong> against injected faults.</div>
+        <div><span class="vlabel biz">Business value</span>Output is a work order list ranked by annualised revenue loss, not an alarm feed &mdash; the crew attends to the &euro;760/yr string before the &euro;35/yr one.</div>
+      </div>
+      <div class="card-tags"><span class="card-tag">Python</span><span class="card-tag">Anomaly detection</span><span class="card-tag">Time series</span><span class="card-tag">Theil-Sen</span><span class="card-tag">SCADA</span></div>
+      <div class="media-note">
+        Full source, tests and figures in a private repository &mdash; available on request.
+      </div>
+    </div>
+
+    <div class="project-card" data-region="home" data-type="research industry" data-sector="energy">
+      <img src="assets/07-pv-site-selection.jpg" alt="500 screened sites, Pareto front of cost against energy, the price of diversification, and convergence" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>PV Portfolio Siting, Multi-Objective</h3>
+        <span class="card-icon">&#128506;&#65039;</span>
+      </div>
+      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
+      <div class="card-meta">Built 2026 &middot; engineering basis from the 2016&ndash;19 plant design</div>
+      <p>
+        A pre-study screens a region down to 500 candidate points. Which 220 MW do you
+        build? The criteria disagree by construction: the best irradiation is far from
+        substations, the cheapest land is far from roads, and substations sit where land
+        costs most.
+      </p>
+      <div class="value-split">
+        <div><span class="vlabel tech">Technical</span>NSGA-II over a binary selection vector, written in numpy, with constrained domination and a repair operator that pushes portfolios into the capacity band. Three objectives: lifetime energy, capital cost, and concentration risk.</div>
+        <div><span class="vlabel biz">Business value</span>120 defensible portfolios instead of one opaque answer. The board-level sentence: <strong>holding concentration risk at 0.085 rather than 0.133 costs &euro;36M</strong>.</div>
+      </div>
+      <div class="card-tags"><span class="card-tag">NSGA-II</span><span class="card-tag">Multi-objective</span><span class="card-tag">Location-allocation</span><span class="card-tag">Python</span><span class="card-tag">numpy</span></div>
+      <div class="media-note">
+        Full source, tests and figures in a private repository &mdash; available on request.
+      </div>
+    </div>
+
+    </div>
+    <p class="region-empty" hidden>Nothing in this section matches the current filter.</p>
+  </div>
+
   <div class="region-block" data-region="nz">
     <div class="region-head"><h3>New Zealand</h3><span class="region-years">2026 &ndash; Present</span></div>
     <p class="region-note">Current work, with the University of Auckland and AUT &mdash; research prototypes built to be used by the operators and specifiers they are aimed at, not only written up.</p>
@@ -749,54 +808,6 @@
     <div class="region-head"><h3>Homeland</h3><span class="region-years">Before 2021</span></div>
     <p class="region-note">Sixteen years of industrial and consulting delivery before Europe &mdash; hospitals, process plants, an offshore fleet, a 10 MW solar farm and a national service rollout.</p>
     <div class="projects-grid">
-    <div class="project-card" data-region="home" data-type="research industry" data-sector="energy">
-      <img src="assets/06-pv-fault-detection.jpg" alt="Fleet overview: daily output against fleet median, distribution of performance, and annualised loss by string" class="project-card-image" loading="lazy">
-      <div class="card-header">
-        <h3>PV String Fault Detection from SCADA</h3>
-        <span class="card-icon">&#128268;</span>
-      </div>
-      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
-      <div class="card-meta">Demonstrator &middot; built on the Nir plant design</div>
-      <p>
-        A 10 MW plant has 1,584 strings and one maintenance crew. A disconnected string
-        is obvious; a string running 7% low is worth real money and is invisible on a
-        plant dashboard. Absolute thresholds fail, because performance ratio moves with
-        season and temperature.
-      </p>
-      <div class="value-split">
-        <div><span class="vlabel tech">Technical</span>Peer comparison against the fleet median, so weather cancels. Four detectors &mdash; zero output, robust MAD z-score, Theil-Sen trend, and a rolling window for soiling that rain resets. Scored <strong>precision 1.00, recall 0.93</strong> against injected faults.</div>
-        <div><span class="vlabel biz">Business value</span>Output is a work order list ranked by annualised revenue loss, not an alarm feed &mdash; the crew attends to the &euro;760/yr string before the &euro;35/yr one.</div>
-      </div>
-      <div class="card-tags"><span class="card-tag">Python</span><span class="card-tag">Anomaly detection</span><span class="card-tag">Time series</span><span class="card-tag">Theil-Sen</span><span class="card-tag">SCADA</span></div>
-      <div class="media-note">
-        Full source, tests and figures in a private repository &mdash; available on request.
-      </div>
-    </div>
-
-    <div class="project-card" data-region="home" data-type="research industry" data-sector="energy">
-      <img src="assets/07-pv-site-selection.jpg" alt="500 screened sites, Pareto front of cost against energy, the price of diversification, and convergence" class="project-card-image" loading="lazy">
-      <div class="card-header">
-        <h3>PV Portfolio Siting, Multi-Objective</h3>
-        <span class="card-icon">&#128506;&#65039;</span>
-      </div>
-      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
-      <div class="card-meta">Demonstrator &middot; 500-candidate pre-study</div>
-      <p>
-        A pre-study screens a region down to 500 candidate points. Which 220 MW do you
-        build? The criteria disagree by construction: the best irradiation is far from
-        substations, the cheapest land is far from roads, and substations sit where land
-        costs most.
-      </p>
-      <div class="value-split">
-        <div><span class="vlabel tech">Technical</span>NSGA-II over a binary selection vector, written in numpy, with constrained domination and a repair operator that pushes portfolios into the capacity band. Three objectives: lifetime energy, capital cost, and concentration risk.</div>
-        <div><span class="vlabel biz">Business value</span>120 defensible portfolios instead of one opaque answer. The board-level sentence: <strong>holding concentration risk at 0.085 rather than 0.133 costs &euro;36M</strong>.</div>
-      </div>
-      <div class="card-tags"><span class="card-tag">NSGA-II</span><span class="card-tag">Multi-objective</span><span class="card-tag">Location-allocation</span><span class="card-tag">Python</span><span class="card-tag">numpy</span></div>
-      <div class="media-note">
-        Full source, tests and figures in a private repository &mdash; available on request.
-      </div>
-    </div>
-
     <div class="project-card" data-region="home" data-type="research" data-sector="energy">
       <img src="assets/diagrams/biodiesel.svg" alt="SME biodiesel transesterification process train with mass balance and economics" class="project-card-image" loading="lazy">
       <div class="card-header">
