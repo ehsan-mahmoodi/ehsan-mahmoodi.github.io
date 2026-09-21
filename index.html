@@ -749,6 +749,54 @@
     <div class="region-head"><h3>Homeland</h3><span class="region-years">Before 2021</span></div>
     <p class="region-note">Sixteen years of industrial and consulting delivery before Europe &mdash; hospitals, process plants, an offshore fleet, a 10 MW solar farm and a national service rollout.</p>
     <div class="projects-grid">
+    <div class="project-card" data-region="home" data-type="research industry" data-sector="energy">
+      <img src="assets/06-pv-fault-detection.jpg" alt="Fleet overview: daily output against fleet median, distribution of performance, and annualised loss by string" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>PV String Fault Detection from SCADA</h3>
+        <span class="card-icon">&#128268;</span>
+      </div>
+      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
+      <div class="card-meta">Demonstrator &middot; built on the Nir plant design</div>
+      <p>
+        A 10 MW plant has 1,584 strings and one maintenance crew. A disconnected string
+        is obvious; a string running 7% low is worth real money and is invisible on a
+        plant dashboard. Absolute thresholds fail, because performance ratio moves with
+        season and temperature.
+      </p>
+      <div class="value-split">
+        <div><span class="vlabel tech">Technical</span>Peer comparison against the fleet median, so weather cancels. Four detectors &mdash; zero output, robust MAD z-score, Theil-Sen trend, and a rolling window for soiling that rain resets. Scored <strong>precision 1.00, recall 0.93</strong> against injected faults.</div>
+        <div><span class="vlabel biz">Business value</span>Output is a work order list ranked by annualised revenue loss, not an alarm feed &mdash; the crew attends to the &euro;760/yr string before the &euro;35/yr one.</div>
+      </div>
+      <div class="card-tags"><span class="card-tag">Python</span><span class="card-tag">Anomaly detection</span><span class="card-tag">Time series</span><span class="card-tag">Theil-Sen</span><span class="card-tag">SCADA</span></div>
+      <div class="media-note">
+        Full source, tests and figures in a private repository &mdash; available on request.
+      </div>
+    </div>
+
+    <div class="project-card" data-region="home" data-type="research industry" data-sector="energy">
+      <img src="assets/07-pv-site-selection.jpg" alt="500 screened sites, Pareto front of cost against energy, the price of diversification, and convergence" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>PV Portfolio Siting, Multi-Objective</h3>
+        <span class="card-icon">&#128506;&#65039;</span>
+      </div>
+      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
+      <div class="card-meta">Demonstrator &middot; 500-candidate pre-study</div>
+      <p>
+        A pre-study screens a region down to 500 candidate points. Which 220 MW do you
+        build? The criteria disagree by construction: the best irradiation is far from
+        substations, the cheapest land is far from roads, and substations sit where land
+        costs most.
+      </p>
+      <div class="value-split">
+        <div><span class="vlabel tech">Technical</span>NSGA-II over a binary selection vector, written in numpy, with constrained domination and a repair operator that pushes portfolios into the capacity band. Three objectives: lifetime energy, capital cost, and concentration risk.</div>
+        <div><span class="vlabel biz">Business value</span>120 defensible portfolios instead of one opaque answer. The board-level sentence: <strong>holding concentration risk at 0.085 rather than 0.133 costs &euro;36M</strong>.</div>
+      </div>
+      <div class="card-tags"><span class="card-tag">NSGA-II</span><span class="card-tag">Multi-objective</span><span class="card-tag">Location-allocation</span><span class="card-tag">Python</span><span class="card-tag">numpy</span></div>
+      <div class="media-note">
+        Full source, tests and figures in a private repository &mdash; available on request.
+      </div>
+    </div>
+
     <div class="project-card" data-region="home" data-type="research" data-sector="energy">
       <img src="assets/diagrams/biodiesel.svg" alt="SME biodiesel transesterification process train with mass balance and economics" class="project-card-image" loading="lazy">
       <div class="card-header">
@@ -1086,25 +1134,7 @@
         </div>
       </a>
 
-      <a class="partner-card" href="https://www.auckland.ac.nz/" target="_blank" rel="noopener">
-        <div class="pc-mark">UoA</div>
-        <div class="pc-name">University of Auckland</div>
-        <div class="pc-loc">Auckland, New Zealand</div>
-        <div class="pc-what">
-          Fa&ccedil;ade material selection across cost, embodied carbon and constructability for
-          New Zealand conditions.
-        </div>
-      </a>
 
-      <a class="partner-card" href="https://www.aut.ac.nz/" target="_blank" rel="noopener">
-        <div class="pc-mark">AUT</div>
-        <div class="pc-name">Auckland University of Technology</div>
-        <div class="pc-loc">Auckland, New Zealand</div>
-        <div class="pc-what">
-          Host of the SME Data Navigator, turning published cost indices into decisions a small
-          operator can act on.
-        </div>
-      </a>
 
     </div>
   </div>
@@ -1143,55 +1173,10 @@
         </div>
       </a>
 
-      <a class="partner-card" href="https://www.scania.com/" target="_blank" rel="noopener">
-        <div class="pc-mark">Scania</div>
-        <div class="pc-name">Scania</div>
-        <div class="pc-loc">S&ouml;dert&auml;lje, Sweden</div>
-        <div class="pc-what">
-          Partner in AI-COMPETE, building multi-agent decision support that balances productivity
-          against carbon footprint.
-        </div>
-      </a>
 
-      <a class="partner-card" href="https://global.abb/" target="_blank" rel="noopener">
-        <div class="pc-mark">ABB</div>
-        <div class="pc-name">ABB</div>
-        <div class="pc-loc">Sweden</div>
-        <div class="pc-what">
-          Partner in the SMART resilience programme, on production systems that recover quickly
-          from disturbance.
-        </div>
-      </a>
 
-      <a class="partner-card" href="https://www.daloc.se/en/" target="_blank" rel="noopener">
-        <div class="pc-mark">Daloc</div>
-        <div class="pc-name">Daloc</div>
-        <div class="pc-loc">T&ouml;reboda, Sweden</div>
-        <div class="pc-what">
-          Partner in SMART and AI-COMPETE, on resilient and energy-aware scheduling for
-          make-to-order production.
-        </div>
-      </a>
 
-      <a class="partner-card" href="https://www.xylem.com/" target="_blank" rel="noopener">
-        <div class="pc-mark">Xylem</div>
-        <div class="pc-name">Xylem</div>
-        <div class="pc-loc">Sweden</div>
-        <div class="pc-what">
-          Partner in the SMART programme on human-centric, resilient factory systems aligned
-          with Industry 5.0.
-        </div>
-      </a>
 
-      <a class="partner-card" href="https://www.his.se/en/" target="_blank" rel="noopener">
-        <div class="pc-mark">HiS</div>
-        <div class="pc-name">University of Sk&ouml;vde</div>
-        <div class="pc-loc">Sk&ouml;vde, Sweden</div>
-        <div class="pc-what">
-          Host of ACCURATE 4.0, SMART and AI-COMPETE &mdash; SEK 41.5M of KK-stiftelsen and
-          Vinnova funded research.
-        </div>
-      </a>
 
     </div>
   </div>
