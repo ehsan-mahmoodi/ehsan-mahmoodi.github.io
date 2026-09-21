@@ -34,6 +34,15 @@ Open `index.html` and edit directly. Project cards follow one pattern:
 </div>
 ```
 
+## Filters
+
+Project cards carry `data-region`, `data-type` and `data-sector`. The chip bar at the top of the
+projects section filters on all three at once; the script lives inline at the end of that section.
+Adding a project means adding one card with those three attributes - no other change needed.
+
+Regions are `home` / `sweden` / `nz`. Type may hold both values, space separated, for work that was
+research and industry at once.
+
 ## Media
 
 Six project cards link to simulation recordings on YouTube. Videos are linked, never
