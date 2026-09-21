@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ehsan Mahmoodi | Industrial Engineer &amp; Optimization Developer</title>
-  <meta name="description" content="Ehsan (Ethan) Mahmoodi - industrial and manufacturing engineer and optimisation developer. Simulation, multi-objective optimisation and applied AI for production, energy and healthcare systems."/>
+  <title>Ehsan Mahmoodi | AI-Enhanced Decision Systems &amp; Software Developer</title>
+  <meta name="description" content="Ehsan (Ethan) Mahmoodi, Auckland - I build AI-enhanced decision systems: optimisation, simulation and applied AI that produce decisions, not just dashboards. Software development, operations consulting and applied research."/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,6 +50,27 @@
     .btn-primary:hover { background: #2ea043; }
     .btn-secondary { background: transparent; color: #58a6ff; border: 1px solid #30363d; }
     .btn-secondary:hover { border-color: #58a6ff; background: #161b22; }
+
+
+    .hero-inner { display: grid; grid-template-columns: minmax(0,1fr) 330px; gap: 56px; align-items: start; }
+    .hero-stats {
+      background: #161b22; border: 1px solid #30363d; border-radius: 12px;
+      padding: 22px 24px; margin-top: 76px;
+    }
+    .hs-title {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px;
+      color: #8b949e; margin-bottom: 14px;
+    }
+    .hs-row {
+      display: flex; align-items: baseline; gap: 12px;
+      padding: 9px 0; border-bottom: 1px solid #21262d;
+    }
+    .hs-v {
+      font-size: 1.32rem; font-weight: 700; color: #58a6ff;
+      min-width: 62px; font-variant-numeric: tabular-nums;
+    }
+    .hs-l { font-size: 0.8rem; color: #8b949e; line-height: 1.45; }
+    .hs-foot { font-size: 0.78rem; color: #8b949e; margin-top: 14px; line-height: 1.5; }
 
     /* SECTION TITLES */
     .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
@@ -229,6 +250,8 @@
     }
     @media (max-width: 860px) {
       .projects-grid, .role-grid { grid-template-columns: 1fr; }
+      .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+      .hero-stats { margin-top: 0; }
       section { padding: 56px 20px; }
       .filter-label { min-width: 100%; margin-bottom: 2px; }
       .feature-card { grid-template-columns: 1fr; }
@@ -264,6 +287,10 @@
       .role-card li::before { color: #0969da; }
       .pub-item:hover { background: #f6f8fa; border-color: #d0d7de; }
       .media-note, .empty-state { border-color: #d0d7de; }
+      .hero-stats { background: #f6f8fa; border: 1px solid #d0d7de; }
+      .hs-title, .hs-l, .hs-foot { color: #57606a; }
+      .hs-v { color: #0969da; }
+      .hs-row { border-bottom: 1px solid #d0d7de; }
       .empty-state { color: #57606a; }
       .chip { background: #f6f8fa; border: 1px solid #d0d7de; color: #24292f; }
       .chip[aria-pressed="true"] { background: #0969da; border-color: #0969da; color: #fff; }
@@ -296,76 +323,125 @@
 
 <!-- HERO -->
 <section class="hero" id="about">
-  <div class="hero-tag">Open to Opportunities</div>
+ <div class="hero-inner">
+  <div>
+  <div class="hero-tag">Auckland &middot; Open to Opportunities</div>
   <h1>Hi, I'm <span>Ehsan (Ethan)</span><br/>Mahmoodi</h1>
-  <p class="subtitle">Manufacturing &amp; Industrial Engineer · Optimization and Simulation Developer</p>
-  <p>
-    I work at the point where a production system meets the software that runs it. On one side I am
-    an industrial engineer: I model factories, hospitals, plants and fleets, find where they actually
-    lose time and money, and redesign them. On the other side I am a developer: I build the
-    simulation models, optimisation algorithms and AI tools that make those decisions
-    reproducible instead of one-off consulting slides.
+  <p class="subtitle">
+    I build AI-enhanced decision systems &mdash; software that tells an organisation what to do next,
+    and what it costs to do something else.
   </p>
   <p>
-    Sixteen years of this, across Iran, Sweden and New Zealand &mdash; a sulfuric acid plant, two
-    hospitals, an offshore supply fleet, a 10 MW solar farm, assembly lines at Volvo Penta and
-    Husqvarna &mdash; and sixteen peer-reviewed publications along the way.
+    Most analytics stops at describing what happened. My work goes one step further and produces the
+    decision itself: how many vehicles to run, when to schedule maintenance, which material to specify,
+    how many service centres a region needs. Optimisation and simulation underneath, a working
+    application on top, and a business case that says plainly whether it pays.
+  </p>
+  <p>
+    Sixteen years across industry and research, in Iran, Sweden and now New Zealand &mdash; hospitals,
+    plants, an offshore fleet, a solar farm, assembly lines at Volvo Penta and Husqvarna. Currently
+    working with the University of Auckland and AUT on New Zealand problems, alongside sixteen
+    peer-reviewed publications and 343 citations.
   </p>
   <div class="hero-links">
     <a href="https://www.linkedin.com/in/ehsan-mahmoodi-2a4aa346/" target="_blank" rel="noopener" class="btn btn-primary">LinkedIn</a>
-    <a href="#projects" class="btn btn-secondary">View Projects</a>
-    <a href="#publications" class="btn btn-secondary">Publications</a>
+    <a href="#expertise" class="btn btn-secondary">What I Do</a>
+    <a href="#projects" class="btn btn-secondary">Projects</a>
     <a href="mailto:ethan.mhm86@gmail.com" class="btn btn-secondary">Get in Touch</a>
   </div>
+  </div>
+
+  <aside class="hero-stats">
+    <div class="hs-title">At a glance</div>
+    <div class="hs-row"><span class="hs-v">16</span><span class="hs-l">years across industry and research</span></div>
+    <div class="hs-row"><span class="hs-v">23</span><span class="hs-l">projects delivered, three countries</span></div>
+    <div class="hs-row"><span class="hs-v">16</span><span class="hs-l">peer-reviewed publications</span></div>
+    <div class="hs-row"><span class="hs-v">343</span><span class="hs-l">citations &middot; h-index 7</span></div>
+    <div class="hs-row"><span class="hs-v">41M+</span><span class="hs-l">SEK research funding worked on</span></div>
+    <div class="hs-foot">
+      Based in Auckland. Current research with the University of Auckland and AUT.
+    </div>
+  </aside>
+ </div>
 </section>
 
-<!-- TWO ROLES -->
+<!-- ROLES -->
 <section id="expertise">
-  <div class="section-title">Two Roles, One Problem</div>
+  <div class="section-title">What I Do</div>
   <div class="section-subtitle">
-    Most people who can model a factory cannot ship the software, and most people who can ship the
-    software have never stood on a shop floor. The projects below are deliberately split to show both.
+    Four capabilities that usually sit in four different people. The value is in the overlap: someone
+    who can diagnose the operation, model it, build the tool, and defend the method afterwards.
   </div>
   <div class="role-grid">
 
     <div class="role-card">
-      <div class="role-eyebrow">Role One</div>
-      <h3>Manufacturing &amp; Industrial Engineering</h3>
+      <div class="role-eyebrow">Build</div>
+      <h3>Software Development</h3>
       <p>
-        Diagnosing real systems: where the bottleneck is, what a stockout actually costs, whether
-        a maintenance policy pays for itself, how many vessels a field really needs.
+        I ship the tool, not the slide deck. Research prototype through to a deployed application
+        that people log into and use on a Monday.
       </p>
       <ul>
-        <li>Discrete-event simulation of production, healthcare and logistics systems</li>
-        <li>Throughput and bottleneck analysis, including shifting bottlenecks</li>
-        <li>Maintenance strategy design &mdash; breakdown, preventive, predictive</li>
-        <li>Assembly line balancing and mixed-model sequencing</li>
-        <li>Capacity, layout and staffing studies before capital is committed</li>
-        <li>Techno-economic feasibility: NPV, IRR, payback on plant investments</li>
-        <li>Multi-criteria decision analysis (TOPSIS, AHP, ANP, DEA)</li>
+        <li>Python, Julia, C/C++, SQL &mdash; production code, not notebooks</li>
+        <li>Web applications and dashboards: Streamlit, FastAPI, Flask</li>
+        <li>Cloud deployment on Azure, containerised with Docker</li>
+        <li>Data pipelines over public, operational and sensor sources</li>
+        <li>Custom simulation engines where no off-the-shelf package fits</li>
       </ul>
     </div>
 
     <div class="role-card">
-      <div class="role-eyebrow">Role Two</div>
-      <h3>Optimization &amp; Software Development</h3>
+      <div class="role-eyebrow">Decide</div>
+      <h3>AI-Enhanced Decision Systems</h3>
       <p>
-        Building the tools rather than buying them: solvers, metaheuristics, simulation engines,
-        dashboards and AI assistants that put a decision in someone's hands.
+        The part most teams are missing. Dashboards report the past; these systems recommend an
+        action and show what the alternatives would have cost.
       </p>
       <ul>
         <li>Multi-objective optimisation &mdash; NSGA-II, MOVNS, constraint programming</li>
-        <li>Metaheuristics and matheuristics for scheduling and routing</li>
         <li>Machine learning surrogates that replace expensive simulation runs</li>
-        <li>Python, Julia, C/C++ &mdash; from research prototype to packaged application</li>
-        <li>Simulation engines in Python (SimPy, Salabim, custom DES) and Arena</li>
-        <li>LLM and agent systems: Azure OpenAI, Semantic Kernel, multi-agent frameworks</li>
-        <li>Streamlit, FastAPI, Docker, Azure deployment</li>
+        <li>LLM and multi-agent systems: Azure OpenAI, Semantic Kernel</li>
+        <li>Digital twins synchronised to live operations</li>
+        <li>Trade-off and scenario analysis, never a single unexplained number</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <div class="role-eyebrow">Advise</div>
+      <h3>Business &amp; Operations Consulting</h3>
+      <p>
+        Finding where an operation actually loses time and money, sizing the fix, and saying
+        plainly whether it pays for itself.
+      </p>
+      <ul>
+        <li>Process diagnosis, bottleneck and throughput analysis</li>
+        <li>Capacity, staffing and layout studies before capital is committed</li>
+        <li>Techno-economic feasibility: NPV, IRR, payback and sensitivity</li>
+        <li>Maintenance, reliability and asset strategy</li>
+        <li>Multi-criteria decision analysis: TOPSIS, AHP, ANP, DEA</li>
+        <li>Delivered for hospitals, process plants, utilities and public rollouts</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <div class="role-eyebrow">Prove</div>
+      <h3>Applied Research</h3>
+      <p>
+        Peer review as quality control. Methods that hold up when someone competent tries to break
+        them, and funding that follows the result.
+      </p>
+      <ul>
+        <li>16 peer-reviewed publications &middot; 343 citations &middot; h-index 7</li>
+        <li>Researcher on programmes totalling over SEK 41 million</li>
+        <li>Industry partners: Volvo Penta, Scania, ABB, Husqvarna, Daloc, Xylem</li>
+        <li>Current New Zealand research with the University of Auckland and AUT</li>
+        <li>Journal reviewing and international co-authorship</li>
       </ul>
     </div>
 
   </div>
 </section>
+
 
 <!-- PROJECTS -->
 <section id="projects">
