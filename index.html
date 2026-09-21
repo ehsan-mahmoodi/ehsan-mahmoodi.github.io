@@ -246,6 +246,32 @@
     .feature-card h3 { font-size: 1.15rem; margin-bottom: 10px; }
     .feature-card p { color: #8b949e; font-size: 0.88rem; margin-bottom: 14px; }
 
+
+    /* PARTNERS */
+    #partners { max-width: 1640px; }
+    .partner-region { margin-bottom: 46px; }
+    .pr-head {
+      display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+      padding-bottom: 10px; border-bottom: 2px solid #30363d; margin-bottom: 22px;
+    }
+    .pr-head h3 { font-size: 1.3rem; font-weight: 700; color: #e6edf3; }
+    .partner-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;
+    }
+    .partner-card {
+      background: #161b22; border: 1px solid #30363d; border-radius: 12px;
+      padding: 20px; text-decoration: none; display: flex; flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .partner-card:hover { border-color: #58a6ff; transform: translateY(-3px); }
+    .pc-mark {
+      font-size: 1.22rem; font-weight: 700; color: #58a6ff;
+      letter-spacing: -0.02em; margin-bottom: 10px; line-height: 1.2;
+    }
+    .pc-name { font-size: 0.86rem; font-weight: 600; color: #e6edf3; margin-bottom: 3px; }
+    .pc-loc { font-size: 0.76rem; color: #3fb950; margin-bottom: 10px; }
+    .pc-what { font-size: 0.8rem; color: #8b949e; line-height: 1.55; }
+
     /* PUBLICATIONS */
     .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
     .metric { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px 18px; }
@@ -345,6 +371,13 @@
       .as-step { background: #f6f8fa; border: 1px solid #d0d7de; }
       .as-n { color: #0969da; }
       .as-t { color: #24292f; }
+      .pr-head h3 { color: #24292f; }
+      .pr-head { border-bottom: 2px solid #d0d7de; }
+      .partner-card { background: #f6f8fa; border: 1px solid #d0d7de; }
+      .pc-mark { color: #0969da; }
+      .pc-name { color: #24292f; }
+      .pc-loc { color: #1a7f37; }
+      .pc-what { color: #57606a; }
       .empty-state { color: #57606a; }
       .chip { background: #f6f8fa; border: 1px solid #d0d7de; color: #24292f; }
       .chip[aria-pressed="true"] { background: #0969da; border-color: #0969da; color: #fff; }
@@ -369,6 +402,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#expertise">Expertise</a></li>
       <li><a href="#projects">Projects</a></li>
+      <li><a href="#partners">Partners</a></li>
       <li><a href="#publications">Publications</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
@@ -546,32 +580,6 @@
     <div class="filter-count" id="filter-count"></div>
   </div>
 
-  <div class="region-block" data-region="feature">
-    <div class="feature-card" data-region="home" data-type="research" data-sector="energy">
-      <img src="assets/diagrams/biodiesel.svg" alt="SME biodiesel transesterification process train with mass balance and economics" loading="lazy">
-      <div>
-        <div class="card-meta">Featured design case study</div>
-        <h3>An SME-Scale Biodiesel Plant for a Caspian Cooperative</h3>
-        <p>
-          My 2009 bachelor project was a study of transesterification chemistry. Useful, but it stopped
-          at the chemistry &mdash; it never said who would build the plant, where the oil would come from,
-          or whether the numbers closed. This is that project done properly.
-        </p>
-        <div class="value-split">
-          <div><span class="vlabel tech">Technical</span>Process train, mass and energy balance, and two recycle loops &mdash; methanol recovery and glycerol &mdash; that decide whether it clears its costs.</div>
-          <div><span class="vlabel biz">Business value</span>&euro;433k EBITDA on &euro;1.6M capex, but a 20% feedstock price rise takes &euro;354k of it. The finding: this is a procurement problem, not a process design problem.</div>
-        </div>
-        <div class="card-tags">
-          <span class="card-tag">Process design</span><span class="card-tag">Techno-economic analysis</span>
-          <span class="card-tag">Feedstock logistics</span><span class="card-tag">Renewable energy</span>
-        </div>
-        <div class="card-links">
-          <a href="projects/biodiesel.html" class="card-link">Read the full case study &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="region-block" data-region="nz">
     <div class="region-head"><h3>New Zealand</h3><span class="region-years">2026 &ndash; Present</span></div>
     <p class="region-note">Current work, with the University of Auckland and AUT &mdash; research prototypes built to be used by the operators and specifiers they are aimed at, not only written up.</p>
@@ -741,6 +749,29 @@
     <div class="region-head"><h3>Homeland</h3><span class="region-years">Before 2021</span></div>
     <p class="region-note">Sixteen years of industrial and consulting delivery before Europe &mdash; hospitals, process plants, an offshore fleet, a 10 MW solar farm and a national service rollout.</p>
     <div class="projects-grid">
+    <div class="project-card" data-region="home" data-type="research" data-sector="energy">
+      <img src="assets/diagrams/biodiesel.svg" alt="SME biodiesel transesterification process train with mass balance and economics" class="project-card-image" loading="lazy">
+      <div class="card-header">
+        <h3>SME-Scale Biodiesel Plant Design</h3>
+        <span class="card-icon">&#127807;</span>
+      </div>
+      <div class="rt-badges"><span class="rt-badge">Energy</span></div>
+      <div class="card-meta">2008 BSc thesis &middot; redesigned as a full case study</div>
+      <p>
+        My bachelor thesis was a study of transesterification chemistry. It never said who would build
+        the plant, where the oil would come from, or whether the numbers closed. I went back and did
+        that part: a 3,000 t/yr plant sized for an agricultural cooperative.
+      </p>
+      <div class="value-split">
+        <div><span class="vlabel tech">Technical</span>Process train, mass and energy balance, and the two recycle loops &mdash; methanol recovery and glycerol &mdash; that decide whether it clears its costs.</div>
+        <div><span class="vlabel biz">Business value</span>&euro;433k EBITDA on &euro;1.6M capex, but a 20% feedstock price rise takes &euro;354k of it. The finding: a procurement problem, not a process design problem.</div>
+      </div>
+      <div class="card-tags"><span class="card-tag">Process design</span><span class="card-tag">Techno-economic analysis</span><span class="card-tag">Renewable energy</span></div>
+      <div class="card-links">
+        <a href="projects/biodiesel.html" class="card-link">Read the full case study &rarr;</a>
+      </div>
+    </div>
+
     <div class="project-card" data-region="home" data-type="industry" data-sector="manufacturing">
       <img src="assets/diagrams/acid.svg" alt="Comparison of breakdown, preventive and predictive maintenance downtime" class="project-card-image" loading="lazy">
       <div class="card-header">
@@ -1011,6 +1042,160 @@
 })();
 </script>
 
+
+<!-- PARTNERS -->
+<section id="partners">
+  <div class="section-title">Industrial Partners</div>
+  <div class="section-subtitle">
+    The organisations whose problems this work was built on. Research that never meets a real
+    constraint tends not to survive contact with one, so every programme below ran with the people
+    who would have to live with the answer.
+  </div>
+
+  <div class="partner-region">
+    <div class="pr-head"><h3>New Zealand</h3><span class="region-years">2026 &ndash; Present</span></div>
+    <div class="partner-grid">
+
+      <a class="partner-card" href="https://hera.org.nz/" target="_blank" rel="noopener">
+        <div class="pc-mark">HERA</div>
+        <div class="pc-name">Heavy Engineering Research Association</div>
+        <div class="pc-loc">Auckland, New Zealand</div>
+        <div class="pc-what">
+          New Zealand's independent research association for the heavy engineering industry,
+          founded 1978. Host of the Construction 4.0 programme.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://ngakopa.org.nz/research_projects/endeavour-fund-construction-4-0/" target="_blank" rel="noopener">
+        <div class="pc-mark">Ng&#257;kopa</div>
+        <div class="pc-name">Construction 4.0</div>
+        <div class="pc-loc">MBIE Endeavour Fund &middot; NZ$10.3M</div>
+        <div class="pc-what">
+          A four-year HERA-led programme transforming the construction sector, bridging
+          m&#257;tauranga M&#257;ori, sustainability and data-driven tools.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://cilt.co.nz/" target="_blank" rel="noopener">
+        <div class="pc-mark">CILT</div>
+        <div class="pc-name">Chartered Institute of Logistics and Transport</div>
+        <div class="pc-loc">New Zealand</div>
+        <div class="pc-what">
+          Supporting the SME Data Navigator, which gives small transport operators the cost and
+          rate evidence their customers already hold.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://www.auckland.ac.nz/" target="_blank" rel="noopener">
+        <div class="pc-mark">UoA</div>
+        <div class="pc-name">University of Auckland</div>
+        <div class="pc-loc">Auckland, New Zealand</div>
+        <div class="pc-what">
+          Fa&ccedil;ade material selection across cost, embodied carbon and constructability for
+          New Zealand conditions.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://www.aut.ac.nz/" target="_blank" rel="noopener">
+        <div class="pc-mark">AUT</div>
+        <div class="pc-name">Auckland University of Technology</div>
+        <div class="pc-loc">Auckland, New Zealand</div>
+        <div class="pc-what">
+          Host of the SME Data Navigator, turning published cost indices into decisions a small
+          operator can act on.
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="partner-region">
+    <div class="pr-head"><h3>Sweden</h3><span class="region-years">2021 &ndash; 2026</span></div>
+    <div class="partner-grid">
+
+      <a class="partner-card" href="https://www.volvopenta.com/" target="_blank" rel="noopener">
+        <div class="pc-mark">Volvo Penta</div>
+        <div class="pc-name">Volvo Penta</div>
+        <div class="pc-loc">Vara, Sweden</div>
+        <div class="pc-what">
+          Energy-efficient buffer allocation and production scheduling on the Vara engine line.
+          Partner in both the SMART and AI-COMPETE programmes.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://www.gknaerospace.com/" target="_blank" rel="noopener">
+        <div class="pc-mark">GKN</div>
+        <div class="pc-name">GKN Aerospace</div>
+        <div class="pc-loc">Trollh&auml;ttan, Sweden</div>
+        <div class="pc-what">
+          Buffer allocation in engine maintenance, repair and overhaul &mdash; remanufacturing
+          flow where every unit arrives in a different condition.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://www.husqvarnagroup.com/" target="_blank" rel="noopener">
+        <div class="pc-mark">Husqvarna</div>
+        <div class="pc-name">Husqvarna Group</div>
+        <div class="pc-loc">Huskvarna, Sweden</div>
+        <div class="pc-what">
+          AI-driven austempering parameter selection for ductile iron, replacing physical trials
+          with prediction.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://www.scania.com/" target="_blank" rel="noopener">
+        <div class="pc-mark">Scania</div>
+        <div class="pc-name">Scania</div>
+        <div class="pc-loc">S&ouml;dert&auml;lje, Sweden</div>
+        <div class="pc-what">
+          Partner in AI-COMPETE, building multi-agent decision support that balances productivity
+          against carbon footprint.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://global.abb/" target="_blank" rel="noopener">
+        <div class="pc-mark">ABB</div>
+        <div class="pc-name">ABB</div>
+        <div class="pc-loc">Sweden</div>
+        <div class="pc-what">
+          Partner in the SMART resilience programme, on production systems that recover quickly
+          from disturbance.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://www.daloc.se/en/" target="_blank" rel="noopener">
+        <div class="pc-mark">Daloc</div>
+        <div class="pc-name">Daloc</div>
+        <div class="pc-loc">T&ouml;reboda, Sweden</div>
+        <div class="pc-what">
+          Partner in SMART and AI-COMPETE, on resilient and energy-aware scheduling for
+          make-to-order production.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://www.xylem.com/" target="_blank" rel="noopener">
+        <div class="pc-mark">Xylem</div>
+        <div class="pc-name">Xylem</div>
+        <div class="pc-loc">Sweden</div>
+        <div class="pc-what">
+          Partner in the SMART programme on human-centric, resilient factory systems aligned
+          with Industry 5.0.
+        </div>
+      </a>
+
+      <a class="partner-card" href="https://www.his.se/en/" target="_blank" rel="noopener">
+        <div class="pc-mark">HiS</div>
+        <div class="pc-name">University of Sk&ouml;vde</div>
+        <div class="pc-loc">Sk&ouml;vde, Sweden</div>
+        <div class="pc-what">
+          Host of ACCURATE 4.0, SMART and AI-COMPETE &mdash; SEK 41.5M of KK-stiftelsen and
+          Vinnova funded research.
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
 
 <!-- PUBLICATIONS -->
 <section id="publications">
