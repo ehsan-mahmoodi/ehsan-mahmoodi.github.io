@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Digital ID Card Distribution Centres | Ehsan Mahmoodi</title>
+  <meta name="description" content="A discrete-event simulation of a digital ID distribution centre - registration, biometrics, card collection - scaled up to what a national rollout for ninety million people actually requires."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    .evid-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 6px; }
+    .evid {
+      display: flex; align-items: center; gap: 8px;
+      background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+      padding: 10px 16px; text-decoration: none; color: #58a6ff; font-size: 0.86rem; font-weight: 500;
+      transition: border-color 0.15s;
+    }
+    .evid:hover { border-color: #58a6ff; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      body { background: #ffffff; color: #24292f; }
+      nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+      nav .logo, .kpi .v, footer a, .evid { color: #0969da; }
+      nav .back, p.muted, figcaption, th, .kpi .l, h2 + .sub, .callout, footer { color: #57606a; }
+      section.blk { border-top: 1px solid #d0d7de; }
+      p, td, ul.plain li { color: #24292f; }
+      .callout, .kpi, .eyebrow, .evid { background: #f6f8fa; border: 1px solid #d0d7de; }
+      .callout { border-left: 3px solid #9a6700; }
+      .callout strong { color: #24292f; }
+      .eyebrow { color: #0969da; }
+      header.page-head .lede { color: #24292f; }
+      figure img, figure svg { background: #f6f8fa; border-color: #d0d7de; }
+      th, td { border-bottom: 1px solid #d0d7de; }
+      tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+      td.pos { color: #1a7f37; }
+      td.neg { color: #cf222e; }
+      ul.plain li::before { color: #0969da; }
+      footer { border-top: 1px solid #d0d7de; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Simulation Case Study</div>
+  <h1>Sizing a National Digital ID Rollout, One Centre at a Time</h1>
+  <p class="lede">
+    A national digital ID programme is really two systems pretending to be one: a physical service
+    &mdash; staff who check documents, take a photo, capture a fingerprint, and hand back a card
+    &mdash; and a digital one, where every one of those visits has to land correctly in a central
+    register. Undersize the first and citizens queue for hours. Undersize the second and the queue
+    moves but the record doesn't. In 2013 I modelled the first in detail, station by station in
+    Arena, and used the result to reason about the second: what a rollout to a nation of ninety
+    million people actually demands.
+  </p>
+</header>
+
+<div class="callout">
+  <strong>What this is.</strong> A discrete-event simulation of one distribution centre's real
+  front-of-house process, run for ten replications of a working day. The throughput and utilisation
+  figures below are the model's own output. The national centre-count and data-traffic estimates
+  further down are back-of-envelope, built on that per-centre result plus one stated assumption
+  &mdash; a roughly one-year target to enrol the whole population &mdash; flagged wherever it's used.
+</div>
+
+<section class="blk">
+  <h2>The process, station by station</h2>
+  <div class="sub">Six steps between walking in and walking out with a card.</div>
+
+  <p>
+    Applicants don't arrive as one population. Some are enrolling for the first time, some are
+    renewing, some are replacing a lost or damaged card, some need staff assistance &mdash; each
+    case carries its own service time. The centre also runs separate queues for men and women, a
+    real operational constraint the model carries through rather than averages away.
+  </p>
+  <p>
+    Every case still passes through the same stations: a front-desk triage, a check of the request
+    form and supporting documents, a queue number, an operator desk where the photo and fingerprint
+    are captured and the form is scanned, a digital submission to the central register, a status
+    confirmation back, and finally the printed card handed over at collection.
+  </p>
+
+  <figure>
+<svg viewBox="0 0 860 320" width="860" height="320" role="img" aria-label="Process flow from front desk through biometric capture to card collection, with a round trip to the central data centre">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1.2}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.8}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.8}
+.fg{stroke:var(--grn);fill:none;stroke-width:1.4}
+</style>
+<defs>
+<marker id="a1" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--acc)"/></marker>
+<marker id="a3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--grn)"/></marker>
+</defs>
+<text x="16" y="24" class="t" font-size="14" font-weight="600">Distribution centre &mdash; registration to collection</text>
+
+<rect class="bx" x="16" y="56" width="108" height="54" rx="6"/>
+<text x="70" y="76" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Front desk</text>
+<text x="70" y="90" class="m" font-size="9" text-anchor="middle">triage, queue split</text>
+<text x="70" y="102" class="m" font-size="9" text-anchor="middle">by case type</text>
+
+<rect class="bx" x="156" y="56" width="118" height="54" rx="6"/>
+<text x="215" y="76" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Form &amp; documents</text>
+<text x="215" y="90" class="m" font-size="9" text-anchor="middle">request form,</text>
+<text x="215" y="102" class="m" font-size="9" text-anchor="middle">supporting ID checked</text>
+
+<rect class="bx" x="306" y="56" width="108" height="54" rx="6"/>
+<text x="360" y="76" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Queue number</text>
+<text x="360" y="90" class="m" font-size="9" text-anchor="middle">assigned to the</text>
+<text x="360" y="102" class="m" font-size="9" text-anchor="middle">completed form</text>
+
+<rect class="bxa" x="446" y="48" width="148" height="70" rx="6"/>
+<text x="520" y="70" class="a" font-size="11" text-anchor="middle" font-weight="600">OPERATOR DESK</text>
+<text x="520" y="84" class="m" font-size="9" text-anchor="middle">photo + fingerprint</text>
+<text x="520" y="98" class="m" font-size="9" text-anchor="middle">scan &amp; data entry</text>
+<text x="520" y="111" class="m" font-size="9" text-anchor="middle">3 stations modelled</text>
+
+<rect class="bx" x="626" y="56" width="120" height="54" rx="6"/>
+<text x="686" y="76" class="t" font-size="10.5" text-anchor="middle" font-weight="600">Digital form saved</text>
+<text x="686" y="90" class="m" font-size="9" text-anchor="middle">submitted to the</text>
+<text x="686" y="102" class="m" font-size="9" text-anchor="middle">central register</text>
+
+<rect class="bxa" x="778" y="56" width="66" height="54" rx="6"/>
+<text x="811" y="78" class="a" font-size="10" text-anchor="middle" font-weight="600">CARD</text>
+<text x="811" y="92" class="a" font-size="10" text-anchor="middle" font-weight="600">ISSUED</text>
+
+<path class="fl" d="M124 83 h24" marker-end="url(#a1)"/>
+<path class="fl" d="M274 83 h24" marker-end="url(#a1)"/>
+<path class="fl" d="M414 83 h24" marker-end="url(#a1)"/>
+<path class="fl" d="M594 83 h24" marker-end="url(#a1)"/>
+<path class="fl" d="M746 83 h24" marker-end="url(#a1)"/>
+
+<rect class="bxa" x="446" y="200" width="148" height="58" rx="6"/>
+<text x="520" y="222" class="a" font-size="11" text-anchor="middle" font-weight="600">DATA CENTRE</text>
+<text x="520" y="236" class="m" font-size="9" text-anchor="middle">national register &mdash;</text>
+<text x="520" y="249" class="m" font-size="9" text-anchor="middle">0.5% busy, this centre alone</text>
+
+<path class="fg" d="M686 110 V180 H594" marker-end="url(#a3)"/>
+<text x="600" y="172" class="g" font-size="9">submit digital form</text>
+<path class="fg" d="M520 200 V128" marker-end="url(#a3)"/>
+<text x="450" y="150" class="g" font-size="9" text-anchor="end">status confirmed</text>
+
+<text x="16" y="290" class="m" font-size="9.5">Green: the only path that ever touches the central data centre. One centre barely dents it &mdash; a national rollout is a different question.</text>
+</svg>
+    <figcaption>Every applicant crosses the operator desk once and the data centre twice &mdash; that ratio is what makes national scale-up a different problem than centre design.</figcaption>
+  </figure>
+</section>
+
+<section class="blk">
+  <h2>What one centre's simulation found</h2>
+  <div class="sub">Ten replications of a working day, three operator desks staffed.</div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">~100/day</div><div class="l">applicants served, one centre, 3 operators</div></div>
+    <div class="kpi"><div class="v">104 min</div><div class="l">average time in system, mostly waiting</div></div>
+    <div class="kpi"><div class="v">~90%</div><div class="l">average operator utilisation</div></div>
+    <div class="kpi"><div class="v">~5%</div><div class="l">balked &mdash; left before being served</div></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Resource</th><th class="num">Utilisation</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td>Operator desks (&times;3)</td><td class="num">85&ndash;95%</td><td>The bottleneck. Almost no slack left.</td></tr>
+      <tr><td>Scanner / biometric stations</td><td class="num">~21%</td><td>Comfortable headroom.</td></tr>
+      <tr><td>Verification / inquiry system</td><td class="num">~6%</td><td>Barely touched.</td></tr>
+      <tr><td>Central data-centre link</td><td class="num">&lt;1%</td><td>Effectively idle, at this scale.</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    The finding that matters: at a single centre, the national data link looks irrelevant. The
+    people at the front desk are the entire constraint &mdash; three operators running at 85&ndash;95%
+    utilisation, and a roughly 1-in-20 applicant already walking away before being served, at what
+    is meant to be normal load. Anyone sizing this system by looking at the network first is solving
+    the wrong problem.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>From one centre to ninety million people</h2>
+  <div class="sub">The multiplication a single centre's numbers were never going to show on their own.</div>
+
+  <p>
+    Scale the per-centre result up with one explicit assumption &mdash; a roughly one-year target to
+    get the whole population enrolled, over about 250 working days &mdash; and a back-of-envelope
+    national requirement falls out directly from the simulation's own throughput:
+  </p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">90M</div><div class="l">population to enrol</div></div>
+    <div class="kpi"><div class="v">360,000/day</div><div class="l">enrolments needed nationally, 1-yr target</div></div>
+    <div class="kpi"><div class="v">~3,600</div><div class="l">centres, at the simulated 100/day capacity</div></div>
+    <div class="kpi"><div class="v">1 yr</div><div class="l">assumed rollout window (stated, not measured)</div></div>
+  </div>
+
+  <p class="muted">
+    That centre count is before renewals, replacements and assisted cases start arriving on top of
+    first-time enrolment &mdash; the ongoing demand the index card already flags as its own service
+    stream. It is also exactly the kind of number a national programme needs before it commits to a
+    staffing budget or a site lease, not after.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>What that means for the data centre</h2>
+  <div class="sub">The backend a single centre made look irrelevant is the one thing that can't fail nationally.</div>
+
+  <p>
+    Each applicant touches the central register twice &mdash; once to submit the digital form, once
+    to receive the status confirmation back. At one centre that's roughly 200 transactions across a
+    working day, which is why the link sits under 1% busy in the simulation. Multiply by the
+    ~3,600 centres the one-year target implies, running the same shift simultaneously, and it
+    becomes about 720,000 transactions across the day &mdash; on the order of <strong>20&ndash;25
+    transactions per second sustained</strong>, from thousands of physically separate sites, with
+    real peaks higher than that average.
+  </p>
+  <p>
+    That is the actual design point for the national infrastructure: not bandwidth to one building,
+    but a register that can absorb continuous, geographically distributed writes without becoming
+    the new bottleneck the moment the front-desk one is solved. A single-centre pilot would never
+    surface that number on its own &mdash; it only appears once you multiply by the scale the
+    rollout is actually built for.
+  </p>
+</section>
+
+<div class="evid-row">
+  <a class="evid" href="https://youtu.be/zvHT01ezT0I" target="_blank" rel="noopener">Watch the simulation &#8599;</a>
+</div>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+</body>
+</html>

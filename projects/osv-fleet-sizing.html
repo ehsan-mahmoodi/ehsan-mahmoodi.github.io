@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Offshore Supply Vessel Fleet Sizing, Kharg District | Ehsan Mahmoodi</title>
-  <meta name="description" content="A published, validated simulation-optimization study: demand-based routing beats the fixed weekly schedule Iran's offshore oil company was running, saving 3-5% of fleet cost at every service level tested."/>
+  <meta name="description" content="A published, validated simulation-optimization study: demand-based routing beats the fixed weekly schedule a real offshore operator was running, saving 3-5% of fleet cost at every service level tested."/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -133,9 +133,11 @@
   <div class="eyebrow">Simulation &amp; Optimization Case Study</div>
   <h1>How Many Supply Vessels Does an Offshore Field Actually Need?</h1>
   <p class="lede">
-    Four oil platforms in the Persian Gulf, one onshore base, and twenty vessels available to hire
-    on long-term or spot contracts. My 2012 MSc thesis asked a narrow question &mdash; is Iran's
-    offshore oil company routing its supply fleet well &mdash; and answered it with a validated
+    Offshore oil logistics comes down to the same decision everywhere: hire supply vessels long-term
+    or short-term, size that fleet correctly, and pick a routing strategy &mdash; and the strategy
+    choice alone can move total cost more than most people expect. Here is a real instance of it:
+    four oil platforms in the Persian Gulf, one onshore base, and twenty vessels available to hire.
+    My 2012 MSc thesis put a real operator's routing to the test and answered it with a validated
     discrete-event simulation, not a rule of thumb. The two papers that came out of it are the
     evidence; this page is the plain-English version, with the numbers the papers actually reported.
   </p>
@@ -143,7 +145,7 @@
 
 <div class="callout">
   <strong>What this is.</strong> A published, peer-reviewed study, not a hypothetical demo. The
-  simulation model was built on real Iranian Offshore Oil Company (IOOC) operating data from
+  simulation model was built on real operating data from the offshore field operator, from
   2008&ndash;2011, its logic verified against expert review of the model animation, and its output
   validated with a paired t-test against real spot-hire-day records (t&nbsp;=&nbsp;1.44, under the
   critical value of 2.07 &mdash; no statistically significant difference from reality). Every figure
@@ -155,7 +157,7 @@
   <div class="sub">Four fields, one base, and a hiring decision made mostly on habit.</div>
 
   <p>
-    IOOC's Kharg district serves four offshore production fields &mdash; Doroud, Forouzan, Esfandiar
+    The operator's Kharg district serves four offshore production fields &mdash; Doroud, Forouzan, Esfandiar
     and Aboozar &mdash; from a single onshore base on Kharg Island, 57&nbsp;km off the Bushehr coast.
     Each field generates two kinds of demand: delivery (food, water, fuel, equipment) and pickup
     (empty containers, waste, returned equipment). Missing a delivery risks a stalled platform;
@@ -165,7 +167,7 @@
     Vessels come in two flavours. Long-term contracted OSVs cost roughly &#36;2,000&ndash;4,000 per
     day and are committed capacity whether or not they're busy. Spot vessels cost
     &#36;6,000&ndash;10,000 per day and are hired only when the long-term fleet can't cover demand.
-    At the time of the study, IOOC assigned vessels to a fixed weekly schedule regardless of how
+    At the time of the study, the operator assigned vessels to a fixed weekly schedule regardless of how
     much each platform actually needed that week &mdash; the routing equivalent of a rota, not a
     dispatch decision.
   </p>
@@ -231,7 +233,7 @@ text{font-family:Inter,system-ui,sans-serif}
       <tr>
         <td><strong>RP1 &mdash; Fixed schedule</strong></td>
         <td>Each vessel has a predetermined weekly departure and route, regardless of that week's actual platform demand.</td>
-        <td>IOOC's actual practice at the time</td>
+        <td>The operator's actual practice at the time</td>
       </tr>
       <tr>
         <td><strong>RP2 &mdash; Demand-based</strong></td>
@@ -253,7 +255,7 @@ text{font-family:Inter,system-ui,sans-serif}
   <div class="sub">Discrete-event simulation, calibrated to real conditions, tuned by simulation-optimization.</div>
 
   <ul class="plain">
-    <li>Platform demand distributions fit to IOOC's historical pickup/delivery records per field.</li>
+    <li>Platform demand distributions fit to the operator's historical pickup/delivery records per field.</li>
     <li>Sailing speed scaled by a weather factor &alpha; (0.75/0.90/1.00) tied to significant wave height, so bad-weather delay is part of the model, not an afterthought.</li>
     <li>Vessel pool of 20 candidates, each with its own speed (10&ndash;15 knots), capacity (70&ndash;100 containers) and day-rate &mdash; long-term &#36;2,000&ndash;4,000/day, spot &#36;6,000&ndash;10,000/day.</li>
     <li>OptQuest-driven simulation optimization searches the 2<sup>20</sup> long-term hire/no-hire combinations for the near-optimal fleet at each of five target service levels (75/80/85/90/95%).</li>
