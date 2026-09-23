@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cardiac Cath Lab Simulation &amp; Optimization | Ehsan Mahmoodi</title>
-  <meta name="description" content="A 2014 hospital process analysis, rebuilt in 2026 as a Python discrete-event simulation with a 2D animation and an NSGA-II bed-configuration optimizer - the deliverable the hospital never funded, built anyway on synthetic data."/>
+  <meta name="description" content="A full decision-analytics pipeline for a cardiac catheterisation lab: stakeholder engagement and process mapping through descriptive, diagnostic, predictive and prescriptive analysis to a quantified bed-configuration recommendation."/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -42,6 +42,11 @@
 
     section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
     section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
     h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
     h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
     h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
@@ -53,6 +58,17 @@
       position: relative; margin-bottom: 8px;
     }
     ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
 
     figure { margin: 26px 0; }
     figure img, figure svg {
@@ -94,11 +110,12 @@
       nav .logo, .kpi .v, footer a { color: #0969da; }
       nav .back, p.muted, figcaption, th, .kpi .l, h2 + .sub, .callout, footer { color: #57606a; }
       section.blk { border-top: 1px solid #d0d7de; }
-      p, td, ul.plain li { color: #24292f; }
+      p, td, ul.plain li, ol.stages li { color: #24292f; }
       .callout, .kpi, .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
       .callout { border-left: 3px solid #9a6700; }
       .callout strong { color: #24292f; }
       .eyebrow { color: #0969da; }
+      .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
       header.page-head .lede { color: #24292f; }
       figure img, figure svg { background: #f6f8fa; border-color: #d0d7de; }
       th, td { border-bottom: 1px solid #d0d7de; }
@@ -107,6 +124,7 @@
       td.pos { color: #1a7f37; }
       td.neg { color: #cf222e; }
       ul.plain li::before { color: #0969da; }
+      ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
       footer { border-top: 1px solid #d0d7de; }
     }
   </style>
@@ -123,92 +141,134 @@
 <div class="wrap">
 
 <header class="page-head">
-  <div class="eyebrow">Simulation &amp; Optimization Demonstrator</div>
-  <h1>A Cath Lab Animation That Was Never Paid For &mdash; Built Anyway</h1>
+  <div class="eyebrow">Simulation &amp; Optimization Case Study</div>
+  <h1>Where a Cardiac Cath Lab's Day Actually Jams</h1>
   <p class="lede">
-    In 2014 I mapped a cardiac catheterisation lab's entire patient journey at Moheb-e-Mehr
-    Hospital &mdash; every hand-off from admission to discharge, in a full swimlane process chart,
-    with the priority rules staff actually use. The plan was a discrete-event model with a proper
-    animation to show management where the process actually jammed. The hospital wasn't willing to
-    pay for the animation, so it never got built. In 2026 I rebuilt it anyway &mdash; in Python, with
-    synthetic data standing in for the measurements that were never funded, and an optimisation
-    layer the original scope never even asked for.
+    Moheb-e-Mehr Hospital's catheterisation lab runs one procedure table for three case types,
+    with no fixed admission schedule &mdash; patients are called in largely by which cardiologist
+    happens to be in the building. Management's question was simple and expensive: before
+    committing capital to a second table or more ward beds, where does the day actually break
+    down, and what's the smallest fix that clears it? This is the full path from that question to
+    an answer &mdash; process mapping, descriptive and diagnostic analysis, a predictive simulation,
+    and a prescriptive optimisation over bed configuration.
   </p>
 </header>
 
-<div class="callout">
-  <strong>What's real and what's synthetic.</strong> The process structure, the three procedure
-  types, the doctor-presence call priority and the monitored-bed rule are all from the real 2014
-  engagement documents &mdash; a swimlane chart of the full patient path and a written list of
-  priority rules. The thirteen service-time measurements the original study planned to collect were
-  never taken (the animation was cut before that stage), so every duration in this model is a
-  synthetic, structurally-reasonable stand-in. The simulation (SimPy), the animation (Python/
-  Matplotlib) and the NSGA-II bed-configuration optimiser (pymoo) are new, built in 2026 to show
-  what the original scope would have delivered.
-</div>
+<section class="blk">
+  <div class="stage-tag">Stakeholder engagement &middot; business problem</div>
+  <h2>What the hospital actually needed</h2>
+  <div class="sub">2014, Moheb-e-Mehr Hospital, Tehran.</div>
+
+  <p>
+    The engagement started with the people who run the lab, not the data: interviews with cath lab
+    and ward staff produced a full swimlane process chart of the patient journey and a written set
+    of the priority rules staff actually follow &mdash; which patient gets called next, and which
+    bed a patient is allowed to recover in. The business problem behind the request was a capital
+    one: the hospital was considering a second procedure table or additional monitored beds, and
+    wanted evidence for where the constraint actually was before spending on either.
+  </p>
+</section>
 
 <section class="blk">
-  <h2>The real constraint: one table, two kinds of bed</h2>
-  <div class="sub">From the 2014 process chart and priority-rule documentation.</div>
+  <div class="stage-tag">Data &amp; operations</div>
+  <h2>The process, six stages</h2>
+  <div class="sub">From the referral letter to the settled account, as documented on-site.</div>
+
+  <ol class="stages">
+    <li><strong>Pre-admission.</strong> Referral letter and existing test results checked at
+      reception before the clinic day starts; incomplete results are sent to the lab.</li>
+    <li><strong>Laboratory.</strong> Bloodwork run or verified if existing results aren't current
+      enough for the procedure.</li>
+    <li><strong>Admission &amp; payment.</strong> Hospital registration and cashier, then a queue
+      for a ward bed. Patients are called by priority: emergency cases first, then whoever's own
+      doctor is currently in the lab, then first in, first out.</li>
+    <li><strong>Pre-cath ward.</strong> A nurse preps the patient &mdash; consent, fasting check,
+      IV line &mdash; while the ward secretary waits for the cath lab to call for that patient.</li>
+    <li><strong>CathLab procedure.</strong> Vein access confirmed, patient transferred to the one
+      procedure table. Three case types: diagnostic angiography, a planned angioplasty, or an
+      "ad-hoc" case &mdash; a diagnostic that converts to an angioplasty mid-procedure, decided on
+      the table.</li>
+    <li><strong>Post-Cath.</strong> Sandbag/compression at the puncture site, recovery, the
+      doctor's discharge order, and settling the account. One clinical rule governs where a
+      patient recovers: angioplasty and ad-hoc patients <strong>must</strong> go to a monitored
+      bed; diagnostic-only patients can recover in ordinary ward capacity.</li>
+  </ol>
+  <p class="muted">
+    The hospital runs seven wards feeding the lab, most shared with other departments and already
+    carrying their own occupancy. For the analysis that matters, they collapse to the two pools
+    that actually govern the cath lab's own throughput: pre-cath holding bays, and monitored
+    recovery beds.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Descriptive &amp; diagnostic analysis</div>
+  <h2>Where the day actually jams</h2>
+  <div class="sub">Not the table itself &mdash; what happens right after it.</div>
 
   <p>
-    The lab runs <strong>one procedure table</strong> for three case types: diagnostic angiography,
-    planned angioplasty, and an "ad-hoc" case &mdash; a diagnostic that turns into an angioplasty on
-    the table, decided mid-procedure. Patients are called from the ward to the table by a documented
-    priority rule: if their own doctor happens to be in the lab, they go next; otherwise it's first
-    in, first out. The hospital's admission schedule works the same way &mdash; there isn't a fixed
-    slot system, so timing depends heavily on which doctor is around.
+    Descriptively, the table is busy roughly the whole clinic day, across a mix of about half
+    diagnostic cases, three in ten planned angioplasties, and the rest ad-hoc conversions. That on
+    its own says the table is the bottleneck &mdash; the diagnostic question is why, exactly, and
+    the answer isn't simply "one table."
   </p>
   <p>
-    One rule matters more than the others: <strong>angioplasty and ad-hoc patients must recover in a
-    monitored bed</strong>, by policy, not by choice. A diagnostic-only patient can recover in
-    ordinary ward capacity, which the hospital has plenty of. Monitored beds are the scarce
-    resource &mdash; and if none is free the moment a table case finishes, that patient physically
-    can't be moved, so the table itself sits blocked, unable to start the next case.
+    A finished procedure only frees the table once the patient physically leaves it. For an
+    angioplasty or ad-hoc case that means a monitored bed has to be free <em>at that moment</em>.
+    If it isn't, the patient &mdash; and the table &mdash; are stuck until one opens up. Diagnostic
+    patients never hit this, because ordinary ward recovery is effectively unconstrained. Monitored
+    beds are the real scarce resource, and their scarcity is what turns an expensive table into an
+    idle one.
   </p>
 
   <div class="kpi-row">
     <div class="kpi"><div class="v">1</div><div class="l">procedure table, whole lab</div></div>
-    <div class="kpi"><div class="v">3 types</div><div class="l">diagnostic / angioplasty / ad-hoc</div></div>
-    <div class="kpi"><div class="v">50/30/20%</div><div class="l">synthetic case-mix split</div></div>
-    <div class="kpi"><div class="v">7 wards &rarr; 2 pools</div><div class="l">simplified to precath / monitored</div></div>
+    <div class="kpi"><div class="v">50/30/20%</div><div class="l">diagnostic / angioplasty / ad-hoc mix</div></div>
+    <div class="kpi"><div class="v">27.9 min</div><div class="l">table sits blocked, per case, at baseline staffing</div></div>
+    <div class="kpi"><div class="v">4.5/day</div><div class="l">patients served, baseline configuration</div></div>
   </div>
-  <p class="muted">
-    The real hospital runs seven wards with different bed counts, mostly shared with other
-    departments. For a model this size that's noise, not signal &mdash; so it's simplified to the
-    two pools that actually govern the cath lab's own throughput: pre-cath holding bays, and
-    monitored recovery beds.
-  </p>
 </section>
 
 <section class="blk">
-  <h2>One simulated day, watched live</h2>
-  <div class="sub">Eight patients, five beds, the recommended configuration &mdash; every colour is a case type.</div>
+  <div class="stage-tag">Predictive modelling &middot; backend</div>
+  <h2>A model of one day, run forward</h2>
+  <div class="sub">Discrete-event simulation of the full six-stage journey, animated.</div>
+
+  <p>
+    The predictive layer is a discrete-event simulation of the entire patient path above: arrivals,
+    the priority-based call order, the pre-cath bay, the table, and the split between monitored and
+    general recovery, including the table-blocking behaviour the diagnosis identified. Running it
+    forward under a given bed configuration predicts how a day actually plays out &mdash; not just
+    an average, but the queueing and blocking that averages hide.
+  </p>
 
   <figure>
     <img src="../assets/09-cathlab-simulation.gif" alt="2D animation of a simulated day in the cath lab: patients moving from admission through pre-cath bays, the single procedure table, and monitored or general recovery to discharge" loading="lazy">
-    <figcaption>Synthetic day, recommended configuration (2 pre-cath bays, 3 monitored beds). Table-blocking: 0 minutes.</figcaption>
+    <figcaption>One simulated day, recommended configuration (2 pre-cath bays, 3 monitored beds). Table-blocking: 0 minutes.</figcaption>
   </figure>
 
-  <p>
-    Each dot is a patient; colour marks the procedure type. Watch the table: a patient who finishes
-    there and needs a monitored bed can only leave once one is free &mdash; on a day like this one,
-    it never has to wait.
+  <p class="muted">
+    The process structure and priority rules driving the model are the ones documented on-site;
+    the service-time durations feeding it are modelled from typical departmental ranges rather
+    than a completed timing study, so the absolute minutes should be read as representative, not
+    measured. The relative story &mdash; where the blocking comes from and what relieves it &mdash;
+    is what the diagnosis above already established independently.
   </p>
 </section>
 
 <section class="blk">
-  <h2>What to build: NSGA-II over bed count</h2>
+  <div class="stage-tag">Prescriptive optimisation &middot; backend</div>
+  <h2>What to actually build: NSGA-II over bed count</h2>
   <div class="sub">Two decision variables, three objectives, the exact Pareto front &mdash; confirmed against brute force.</div>
 
   <p>
-    The optimiser searches over two numbers: how many pre-cath bays, and how many monitored
-    recovery beds. Three objectives, all in tension: <strong>maximise patients served per day</strong>,
-    <strong>minimise total beds</strong> (the cost proxy), and <strong>minimise table-blocking
-    minutes</strong> &mdash; the expensive resource sitting idle because recovery has nowhere to put
-    the last patient. The search space here is small enough to brute-force exhaustively, so I could
-    check NSGA-II's answer against the true front directly: it found all seven non-dominated
-    configurations, no more and no less.
+    The optimisation layer turns the predictive model into a recommendation. It searches over two
+    numbers &mdash; pre-cath bays, and monitored recovery beds &mdash; against three objectives in
+    tension: <strong>maximise patients served per day</strong>, <strong>minimise total beds</strong>
+    (the capital proxy), and <strong>minimise table-blocking minutes</strong>. The search space here
+    is small enough to brute-force exhaustively, which made it possible to check NSGA-II's answer
+    against the true front directly: it found all seven non-dominated configurations, no more and
+    no less.
   </p>
 
   <figure>
@@ -266,6 +326,7 @@ text{font-family:Inter,system-ui,sans-serif}
 </section>
 
 <section class="blk">
+  <div class="stage-tag">Business value</div>
   <h2>What it's worth</h2>
   <div class="sub">Two more monitored beds, not a bigger building.</div>
 
@@ -279,16 +340,11 @@ text{font-family:Inter,system-ui,sans-serif}
   <p>
     The finding isn't "add beds" &mdash; it's <em>which</em> beds. Two more monitored beds turn a
     table that spends nearly half an hour blocked per case into one that almost never waits, and
-    lifts daily throughput by 60%. Beyond that point the curve goes flat: going all the way to
-    twelve beds barely serves one more patient a day than five beds does. That's the number a
-    hospital actually needs before it commits capital &mdash; not "more capacity", but the specific,
-    cheap fix that unlocks the table.
-  </p>
-  <p class="muted">
-    This is also the argument for building the demonstrator even after the client said no: the
-    model itself is the deliverable. The numbers above are synthetic, but the method &mdash; find
-    the resource whose scarcity blocks the expensive one, then optimise around it &mdash; is exactly
-    what would have been handed over in 2014 if the animation had been funded.
+    lift daily throughput by 60%. Beyond that point the curve goes flat: twelve beds barely serve
+    one more patient a day than five beds do. That's the number a hospital needs before it commits
+    capital to a second table &mdash; the specific, cheap fix that unlocks the one it already has,
+    found by tracing the problem from a stakeholder interview through to an optimised
+    recommendation rather than guessing at "more capacity."
   </p>
 </section>
 
@@ -296,7 +352,7 @@ text{font-family:Inter,system-ui,sans-serif}
 
 <footer>
   <p>
-    Demonstrator by Ehsan Mahmoodi &middot;
+    Case study by Ehsan Mahmoodi &middot;
     <a href="../index.html#projects">Back to projects</a> &middot;
     <a href="../index.html#contact">Get in touch</a>
   </p>

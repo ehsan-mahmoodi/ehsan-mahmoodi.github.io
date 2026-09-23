@@ -515,6 +515,7 @@
     <ul>
       <li><a href="#about">About</a></li>
       <li><a href="#expertise">Expertise</a></li>
+      <li><a href="#approach">Approach</a></li>
       <li><a href="#stack">Stack</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#partners">Partners</a></li>
@@ -640,6 +641,73 @@
         <li>Peer-reviewed methods that hold up to scrutiny</li>
         <li>Research alongside industry and university partners</li>
         <li>Rigour carried into every applied project</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- APPROACH -->
+<section id="approach">
+  <div class="section-title">My Approach</div>
+  <div class="section-subtitle">
+    Every project below follows the same path, in order: descriptive and diagnostic analysis to
+    find out what's actually happening and why, a predictive model of what would happen under
+    different conditions, and a prescriptive optimisation that turns the model into a
+    recommendation &mdash; then delivered as working software, not a slide.
+  </div>
+  <div class="role-grid">
+
+    <div class="role-card">
+      <div class="role-eyebrow">Describe</div>
+      <h3>Descriptive Analytics</h3>
+      <p>
+        What the data or the process actually shows, before any interpretation gets added.
+      </p>
+      <ul>
+        <li>Pandas / NumPy, SQL, ETL pipelines</li>
+        <li>Power BI, time series, SCADA / historian data</li>
+        <li>Process mapping from stakeholder interviews</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <div class="role-eyebrow">Diagnose</div>
+      <h3>Diagnostic Analytics</h3>
+      <p>
+        Why it behaves that way &mdash; the root cause, not the symptom the ticket names.
+      </p>
+      <ul>
+        <li>Bottleneck and sensitivity analysis</li>
+        <li>TOPSIS, AHP / ANP, DEA</li>
+        <li>Simulation animation as a diagnostic lens</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <div class="role-eyebrow">Predict</div>
+      <h3>Predictive Modelling</h3>
+      <p>
+        What happens next, or under a scenario that hasn't happened yet.
+      </p>
+      <ul>
+        <li>Discrete-event, agent-based and system-dynamics simulation</li>
+        <li>scikit-learn, XGBoost, TensorFlow / PyTorch</li>
+        <li>Surrogate models where the real model is too slow to search</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <div class="role-eyebrow">Prescribe</div>
+      <h3>Prescriptive Optimisation</h3>
+      <p>
+        What to actually do &mdash; the recommendation, with the trade-offs stated, not hidden.
+      </p>
+      <ul>
+        <li>NSGA-II / III, Gurobi, CPLEX, Pyomo, OR-Tools</li>
+        <li>Simulation-optimisation, reinforcement learning</li>
+        <li>Delivered as a backend (data, models, optimisation) behind a working frontend (dashboard, UI, or animation)</li>
       </ul>
     </div>
 
@@ -1107,12 +1175,12 @@
         <h3>Cardiac Cath Lab Flow</h3>
         <span class="card-icon">&#129505;</span>
       </div>
-      <div class="rt-badges"><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge ongoing">Demonstrator</span><span class="rt-badge">Healthcare</span></div>
-      <div class="card-meta">2014 process design &middot; Moheb-e-Mehr Hospital &middot; animation/optimisation rebuilt 2026 on synthetic data</div>
+      <div class="rt-badges"><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge">Healthcare</span></div>
+      <div class="card-meta">2014 &middot; Moheb-e-Mehr Hospital</div>
       <div class="outcome"><div class="oc"><span class="oc-v">+60%</span><span class="oc-l">patients served/day</span></div><div class="oc"><span class="oc-v">&minus;98%</span><span class="oc-l">table-blocking time</span></div></div>
-      <p>One procedure table, three procedure types and no fixed admission schedule &mdash; patients are called when their cardiologist happens to be in the lab. The hospital never funded the animation, so it's rebuilt here with synthetic data and an optimisation layer the original scope didn't even include.</p>
+      <p>One procedure table, three procedure types and no fixed admission schedule &mdash; patients are called when their cardiologist happens to be in the lab. Stakeholder interviews and process mapping through to a predictive simulation and a prescriptive bed-configuration optimisation.</p>
       <div class="value-split">
-        <div><span class="vlabel tech">Technical</span>Python/SimPy DES with the real priority rules and monitored-bed constraint, 2D Matplotlib animation, NSGA-II (pymoo) over bed configuration &mdash; verified against the true Pareto front.</div>
+        <div><span class="vlabel tech">Technical</span>Python/SimPy discrete-event simulation of the full six-stage patient journey, 2D animation, NSGA-II bed-configuration optimisation &mdash; verified against the true Pareto front.</div>
         <div><span class="vlabel biz">Business value</span>Two extra monitored beds cut table-blocking 98% and lift daily throughput 60%; doubling bed count past that barely moves the number.</div>
       </div>
       <div class="card-tags"><span class="card-tag">Python</span><span class="card-tag">SimPy</span><span class="card-tag">NSGA-II</span><span class="card-tag">Priority rules</span><span class="card-tag">Bed capacity</span></div>
