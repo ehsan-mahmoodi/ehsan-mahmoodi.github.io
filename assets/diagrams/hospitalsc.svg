@@ -28,7 +28,7 @@ text{font-family:Inter,system-ui,-apple-system,sans-serif}
 <g font-size="6.5">
 <rect class="bx" x="212" y="86" width="150" height="40" rx="4"/>
 <text x="287" y="99" class="m" text-anchor="middle" font-weight="600">The finding</text>
-<text x="287" y="112" class="w" text-anchor="middle">85% of patients need CT/MRI &mdash;</text>
+<text x="287" y="112" class="w" text-anchor="middle">85% of patients need CT/MRI &#8212;</text>
 <text x="287" y="121" class="w" text-anchor="middle">that queue, not staff, sets length of stay</text>
 </g>
 <line x1="12" y1="140" x2="388" y2="140" stroke="var(--line)"/>
