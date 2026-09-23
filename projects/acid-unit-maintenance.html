@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maintenance Policy Planning &amp; Optimization, Zinc Smelting Acid Unit | Ehsan Mahmoodi</title>
+  <meta name="description" content="Discrete-event simulation and multi-criteria optimization comparing corrective, preventive and predictive maintenance policies for a zinc smelting complex's sulfuric acid unit."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Simulation &amp; Optimization Case Study</div>
+  <h1>Maintenance Policy Planning and Optimization &mdash; Zinc Smelting Complex, Acid Production Unit</h1>
+  <p class="lede">
+    A zinc smelting complex runs a sulfuric acid plant as a second production line, not a side
+    project: the acid separates roasted ore from its oxide, and the unit's byproduct steam supplies
+    heat to the rest of the site for free. When a blower or pump on that unit fails, the complex
+    loses both. The question was which maintenance policy &mdash; and which repair crew size &mdash;
+    actually minimises downtime and cost, tested by simulating a full year of failures under three
+    competing policies rather than guessing from intuition.
+  </p>
+</header>
+
+<section class="blk">
+  <div class="stage-tag">Stakeholder engagement &middot; business problem</div>
+  <h2>Why the acid unit, and why now</h2>
+  <div class="sub">2013, Bafgh Zinc Smelting Complex, Iran &mdash; an MSc thesis engagement in industrial engineering.</div>
+
+  <p>
+    The complex's sulfuric acid factory was built in 1999 to a nominal 150 t/day at 98% H&#8322;SO&#8324;,
+    consuming roughly 40 t/day of the sulfur produced when roasting zinc ore. Two prior shutdown
+    episodes, from corrosion in lines and joints, had already forced a major overhaul; the plant was
+    ramping back toward nameplate capacity when this study started. The engagement was with the
+    factory's maintenance team and its 20-person cross-trade repair crew, and the business problem
+    was concrete: unplanned failures of the unit's blowers and pumps were stopping acid production,
+    which in turn stalls the zinc roasting line and forfeits the plant's free byproduct steam &mdash;
+    and every shutdown-restart cycle burns roughly 7,000 litres of gas-oil reheating the furnace and
+    accelerates wear on the same rotating equipment that just failed.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Data &amp; operations</div>
+  <h2>The process, and what keeps it running</h2>
+  <div class="sub">From sulfur burner to stored acid, with the equipment that has to stay up.</div>
+
+  <ol class="stages">
+    <li><strong>Sulfur burning.</strong> Molten sulfur, sprayed by pumps into a furnace fed with
+      dried combustion air, burns to SO&#8322; at around 900&#176;C.</li>
+    <li><strong>Catalytic conversion.</strong> SO&#8322; passes through a four-bed converter over
+      vanadium pentoxide catalyst, oxidising to SO&#8323;; the reaction heat is recovered as steam.</li>
+    <li><strong>Absorption.</strong> SO&#8323; is absorbed into recirculating acid and diluted with
+      water to 98% H&#8322;SO&#8324;, then sent to 3,000-tonne storage tanks.</li>
+    <li><strong>Byproduct steam.</strong> The recovered steam (about 10 t/h at 7 barg, 180&#176;C) is
+      the plant's one free heat source &mdash; used elsewhere in the complex at no fuel cost, so long
+      as the unit is running.</li>
+    <li><strong>Rotating equipment.</strong> Blowers move combustion air and process gas; pumps
+      circulate sulfur, acid and water. These, not the static vessels, are what actually fail.</li>
+    <li><strong>Shared repair crew.</strong> One 20-person team &mdash; six mechanics, four piping,
+      four welders, three electrical, two instrument, one civil &mdash; covers the whole complex, not
+      just this unit, so a repair here competes with repairs everywhere else.</li>
+  </ol>
+
+  <p class="muted">
+    Failure and repair data were collected on-site over a one-year review window: blower failures
+    follow an exponential distribution with an 80-day mean time between failures, pump failures a
+    30-day mean; repair time and cost both depend on whether the crew fixes the unit in place, brings
+    it into the factory workshop, or sends it out for external repair.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Descriptive &amp; diagnostic analysis</div>
+  <h2>What the current policy actually costs</h2>
+  <div class="sub">Repair only after failure, with no early warning.</div>
+
+  <p>
+    The policy in place at the time was pure corrective maintenance: fix it when it breaks, with the
+    crew sizes already on staff. Descriptively, that policy loses the acid unit roughly 3,151 hours
+    of production a year &mdash; about 36% of the calendar year offline &mdash; to breakdowns and
+    repairs, at a maintenance cost of some 225 million Toman a month. Diagnostically, the reason
+    isn't crew size on its own &mdash; it's that the policy has no mechanism to catch a failing
+    blower or pump before it stops the line, and every stoppage cascades: the unit shuts down, the
+    converter beds have to be purged of gas rather than left to cool a valuable catalyst charge, and
+    restart burns fuel and time that a policy with any warning at all would avoid.
+  </p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">3,151 h</div><div class="l">downtime/year, current corrective-only policy</div></div>
+    <div class="kpi"><div class="v">80 / 30 d</div><div class="l">mean time between failures, blower / pump</div></div>
+    <div class="kpi"><div class="v">150 t/d</div><div class="l">nominal output, 98% H&#8322;SO&#8324;</div></div>
+    <div class="kpi"><div class="v">20</div><div class="l">crew, shared across six trades and the whole complex</div></div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Predictive modelling &middot; backend</div>
+  <h2>Simulating a year under three policies</h2>
+  <div class="sub">Discrete-event simulation of failure, diagnosis and repair, for each policy in turn.</div>
+
+  <p>
+    The predictive layer is a discrete-event simulation, built in Arena, of the blower and pump
+    failure-repair cycle competing for the same shared crew as the rest of the complex. Three
+    maintenance policies were modelled and run forward, each replicated 30 times to stabilise the
+    downtime and cost estimates:
+  </p>
+  <ul class="plain">
+    <li><strong>Corrective (breakdown).</strong> Repair only after the equipment stops &mdash; the
+      current policy.</li>
+    <li><strong>Preventive.</strong> Scheduled weekly inspections of every blower and pump, with a
+      probability of triggering immediate, scheduled or deferred repair depending on what the
+      inspection finds, on top of whatever random failures still occur between inspections.</li>
+    <li><strong>Predictive (condition-based).</strong> Continuous monitoring of vibration, noise and
+      temperature; when a symptom appears, the model estimates remaining time to failure and triggers
+      an emergency repair if that's under 24 hours, or a scheduled one if there's more runway.</li>
+  </ul>
+  <p class="muted">
+    Each policy was tested at the current crew sizes and produced its own downtime and cost curve
+    before any staffing changes &mdash; the predictive policy alone, with no other change, already
+    cuts annual downtime from around 3,151 hours to under 90.
+  </p>
+
+  <figure>
+    <img src="../assets/10-acid-unit-simulation.gif" alt="Arena simulation model of the sulfuric acid unit: colour-coded process flow (sulfur, gas, acid, steam and recycle lines) driving the discrete-event failure-repair logic underneath" loading="lazy">
+    <figcaption>The Arena model itself, running the predictive-maintenance policy &mdash; process flow on top, the failure/repair event logic underneath.</figcaption>
+  </figure>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Prescriptive optimisation &middot; backend</div>
+  <h2>Sizing the crew, then ranking 18 scenarios</h2>
+  <div class="sub">OptQuest search per policy, TOPSIS ranking across all of them.</div>
+
+  <p>
+    For each of the three policies, OptQuest for Arena searched combinations of crew size across the
+    six trades to minimise a combined objective of downtime and repair cost, producing six candidate
+    scenarios per policy &mdash; 18 in total. Those 18 were then ranked together with TOPSIS across
+    eight criteria: monthly maintenance cost, annual downtime, and a desirability score for each
+    trade's utilisation, since a crew that's either idle or constantly overloaded is worse than one
+    that's simply busy.
+  </p>
+
+  <figure>
+<svg viewBox="0 0 860 260" width="860" height="260" role="img" aria-label="Annual downtime hours by maintenance policy: corrective, preventive and predictive">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+</style>
+<text x="16" y="24" class="t" font-size="14" font-weight="600">Best downtime found per policy, hours/year</text>
+
+<text x="180" y="60" class="t" font-size="11" text-anchor="end">Corrective (current)</text>
+<rect x="188" y="46" width="620" height="28" fill="var(--amb)" opacity="0.55" rx="3"/>
+<text x="818" y="65" class="t" font-size="10.5">3,151 h</text>
+
+<text x="180" y="118" class="t" font-size="11" text-anchor="end">Preventive, best of 6</text>
+<rect x="188" y="104" width="41" height="28" fill="var(--acc)" opacity="0.55" rx="3"/>
+<text x="239" y="123" class="t" font-size="10.5">209 h</text>
+
+<text x="180" y="176" class="t" font-size="11" text-anchor="end">Predictive, best of 6</text>
+<rect x="188" y="162" width="21" height="28" fill="var(--grn)" opacity="0.7" rx="3"/>
+<text x="219" y="181" class="t" font-size="10.5" font-weight="600">108 h</text>
+
+<text x="188" y="222" class="m" font-size="9.5">Predictive dominates on both axes at once &mdash; less downtime and lower cost than either alternative,</text>
+<text x="188" y="236" class="m" font-size="9.5">which is why TOPSIS ranked it first across all 18 scenarios.</text>
+</svg>
+    <figcaption>Best achievable annual downtime under each policy, after OptQuest sized the repair crew. Corrective-only is the policy running today.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th>Scenario</th><th>Policy</th><th class="num">TOPSIS rank</th><th class="num">Downtime, h/yr</th><th class="num">Cost, Toman/mo</th></tr></thead>
+    <tbody>
+      <tr class="win"><td><strong>Predictive-06</strong></td><td>Predictive, optimised crew</td><td class="num pos">1 of 18</td><td class="num">108</td><td class="num">19,090,337</td></tr>
+      <tr><td>Preventive-02</td><td>Preventive, optimised crew</td><td class="num">2 of 18</td><td class="num">209</td><td class="num">50,628,313</td></tr>
+      <tr><td>Predictive-01</td><td>Predictive, current crew</td><td class="num">3 of 18</td><td class="num">88</td><td class="num">20,087,187</td></tr>
+      <tr><td>Breakdown-01</td><td>Corrective, current crew &mdash; today's policy</td><td class="num neg">18 of 18</td><td class="num">3,151</td><td class="num">224,831,274</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">
+    The policy running in the plant today ranked dead last of the 18 scenarios tested &mdash; even
+    the best-staffed breakdown-only configuration still cost roughly seven times more per month than
+    Predictive-06. The winning configuration keeps the crew almost the same size (5 mechanics, 4
+    welders, 3 piping, 3 instrument, 3 electrical, 1 civil &mdash; 19 people against today's 20) and
+    changes only the policy: continuous condition monitoring instead of waiting for a breakdown.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Business value</div>
+  <h2>What it's worth</h2>
+  <div class="sub">A staffing and policy change, not new equipment.</div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">96.6%</div><div class="l">less annual downtime, corrective &rarr; predictive</div></div>
+    <div class="kpi"><div class="v">91.5%</div><div class="l">lower monthly maintenance cost</div></div>
+    <div class="kpi"><div class="v">18</div><div class="l">scenarios simulated across 3 policies</div></div>
+    <div class="kpi"><div class="v">#1 of 18</div><div class="l">TOPSIS rank, recommended policy</div></div>
+  </div>
+
+  <p>
+    The recommendation isn't a trade-off a manager has to weigh &mdash; predictive maintenance with
+    an optimised crew mix beats the current policy on downtime and on cost simultaneously, which is
+    why it topped the ranking outright rather than landing on some Pareto front. Cutting 3,151 hours
+    of annual downtime to 108 gives the plant back roughly four months of production a year, and the
+    condition monitoring itself (vibration, noise, temperature sensing) is a modest capital outlay
+    against a policy that was previously costing 225 million Toman a month and never saw a failure
+    coming.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>
