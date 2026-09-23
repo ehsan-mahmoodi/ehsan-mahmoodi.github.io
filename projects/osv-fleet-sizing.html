@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Offshore Supply Vessel Fleet Sizing, Kharg District | Ehsan Mahmoodi</title>
+  <meta name="description" content="A published, validated simulation-optimization study: demand-based routing beats the fixed weekly schedule Iran's offshore oil company was running, saving 3-5% of fleet cost at every service level tested."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    .evid-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 6px; }
+    .evid {
+      display: flex; align-items: center; gap: 8px;
+      background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+      padding: 10px 16px; text-decoration: none; color: #58a6ff; font-size: 0.86rem; font-weight: 500;
+      transition: border-color 0.15s;
+    }
+    .evid:hover { border-color: #58a6ff; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      body { background: #ffffff; color: #24292f; }
+      nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+      nav .logo, .kpi .v, footer a, .evid { color: #0969da; }
+      nav .back, p.muted, figcaption, th, .kpi .l, h2 + .sub, .callout, footer { color: #57606a; }
+      section.blk { border-top: 1px solid #d0d7de; }
+      p, td, ul.plain li { color: #24292f; }
+      .callout, .kpi, .eyebrow, .evid { background: #f6f8fa; border: 1px solid #d0d7de; }
+      .callout { border-left: 3px solid #9a6700; }
+      .callout strong { color: #24292f; }
+      .eyebrow { color: #0969da; }
+      header.page-head .lede { color: #24292f; }
+      figure img, figure svg { background: #f6f8fa; border-color: #d0d7de; }
+      th, td { border-bottom: 1px solid #d0d7de; }
+      tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+      td.pos { color: #1a7f37; }
+      td.neg { color: #cf222e; }
+      ul.plain li::before { color: #0969da; }
+      footer { border-top: 1px solid #d0d7de; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Simulation &amp; Optimization Case Study</div>
+  <h1>How Many Supply Vessels Does an Offshore Field Actually Need?</h1>
+  <p class="lede">
+    Four oil platforms in the Persian Gulf, one onshore base, and twenty vessels available to hire
+    on long-term or spot contracts. My 2012 MSc thesis asked a narrow question &mdash; is Iran's
+    offshore oil company routing its supply fleet well &mdash; and answered it with a validated
+    discrete-event simulation, not a rule of thumb. The two papers that came out of it are the
+    evidence; this page is the plain-English version, with the numbers the papers actually reported.
+  </p>
+</header>
+
+<div class="callout">
+  <strong>What this is.</strong> A published, peer-reviewed study, not a hypothetical demo. The
+  simulation model was built on real Iranian Offshore Oil Company (IOOC) operating data from
+  2008&ndash;2011, its logic verified against expert review of the model animation, and its output
+  validated with a paired t-test against real spot-hire-day records (t&nbsp;=&nbsp;1.44, under the
+  critical value of 2.07 &mdash; no statistically significant difference from reality). Every figure
+  below is the paper's own result, not a reconstruction.
+</div>
+
+<section class="blk">
+  <h2>The problem: paying for a fleet you can't see the shape of</h2>
+  <div class="sub">Four fields, one base, and a hiring decision made mostly on habit.</div>
+
+  <p>
+    IOOC's Kharg district serves four offshore production fields &mdash; Doroud, Forouzan, Esfandiar
+    and Aboozar &mdash; from a single onshore base on Kharg Island, 57&nbsp;km off the Bushehr coast.
+    Each field generates two kinds of demand: delivery (food, water, fuel, equipment) and pickup
+    (empty containers, waste, returned equipment). Missing a delivery risks a stalled platform;
+    over-supplying the fleet just burns charter budget that never comes back.
+  </p>
+  <p>
+    Vessels come in two flavours. Long-term contracted OSVs cost roughly &#36;2,000&ndash;4,000 per
+    day and are committed capacity whether or not they're busy. Spot vessels cost
+    &#36;6,000&ndash;10,000 per day and are hired only when the long-term fleet can't cover demand.
+    At the time of the study, IOOC assigned vessels to a fixed weekly schedule regardless of how
+    much each platform actually needed that week &mdash; the routing equivalent of a rota, not a
+    dispatch decision.
+  </p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">4</div><div class="l">offshore fields served</div></div>
+    <div class="kpi"><div class="v">1</div><div class="l">onshore base, Kharg Island</div></div>
+    <div class="kpi"><div class="v">20</div><div class="l">candidate vessels to hire from</div></div>
+    <div class="kpi"><div class="v">&gt;1M</div><div class="l">possible fleet combinations</div></div>
+  </div>
+
+  <figure>
+<svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Kharg district: one onshore base supplying four offshore fields in the Persian Gulf">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}
+</style>
+<rect x="8" y="8" width="844" height="284" rx="10" fill="var(--acc)" opacity="0.06"/>
+<text x="30" y="34" class="a" font-size="12" font-weight="600">PERSIAN GULF &mdash; KHARG DISTRICT</text>
+
+<rect x="46" y="120" width="70" height="44" rx="6" fill="var(--pnl)" stroke="var(--acc)" stroke-width="1.8"/>
+<text x="81" y="140" class="a" font-size="10" text-anchor="middle" font-weight="600">KHARG</text>
+<text x="81" y="153" class="a" font-size="10" text-anchor="middle" font-weight="600">BASE</text>
+<text x="81" y="182" class="m" font-size="9" text-anchor="middle">onshore, 1 base</text>
+
+<circle cx="330" cy="70" r="7" fill="var(--amb)"/>
+<text x="346" y="66" class="t" font-size="11" font-weight="600">Aboozar</text>
+<circle cx="420" cy="118" r="7" fill="var(--amb)"/>
+<text x="436" y="114" class="t" font-size="11" font-weight="600">Doroud</text>
+<circle cx="470" cy="210" r="7" fill="var(--amb)"/>
+<text x="486" y="206" class="t" font-size="11" font-weight="600">Esfandiar</text>
+<circle cx="380" cy="250" r="7" fill="var(--amb)"/>
+<text x="396" y="254" class="t" font-size="11" font-weight="600">Forouzan</text>
+
+<path d="M116 138 Q220 96 330 70" fill="none" stroke="var(--acc)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<path d="M116 145 Q260 128 420 118" fill="none" stroke="var(--acc)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<path d="M116 155 Q290 190 470 210" fill="none" stroke="var(--acc)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<path d="M116 162 Q250 220 380 250" fill="none" stroke="var(--acc)" stroke-width="1.2" stroke-dasharray="4 3"/>
+
+<g font-size="9">
+<circle cx="600" cy="60" r="4" fill="var(--acc)"/><text x="612" y="64" class="m">delivery: food, water, fuel, equipment</text>
+<circle cx="600" cy="80" r="4" fill="var(--amb)"/><text x="612" y="84" class="m">pickup: empty containers, waste, returns</text>
+</g>
+<text x="600" y="120" class="m" font-size="9">Each field is visited on a routing policy of the</text>
+<text x="600" y="134" class="m" font-size="9">operator's choosing &mdash; that choice is what</text>
+<text x="600" y="148" class="m" font-size="9">this study puts a dollar figure on.</text>
+
+<text x="30" y="270" class="m" font-size="9.5">Routes shown are schematic, not navigational &mdash; each field's real sailing time depends on weather-adjusted vessel speed.</text>
+</svg>
+    <figcaption>One onshore base, four offshore fields, each generating its own pickup and delivery demand.</figcaption>
+  </figure>
+</section>
+
+<section class="blk">
+  <h2>Two routing policies, tested head to head</h2>
+  <div class="sub">Same fields, same vessels, same demand &mdash; only the dispatch logic changes.</div>
+
+  <table>
+    <thead><tr><th>Policy</th><th>Logic</th><th>Who used it</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>RP1 &mdash; Fixed schedule</strong></td>
+        <td>Each vessel has a predetermined weekly departure and route, regardless of that week's actual platform demand.</td>
+        <td>IOOC's actual practice at the time</td>
+      </tr>
+      <tr>
+        <td><strong>RP2 &mdash; Demand-based</strong></td>
+        <td>Assign each request to the smallest vessel that can cover it, prefer a long-term vessel already available, and combine requests onto one vessel where possible.</td>
+        <td>The policy this study proposes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="muted">
+    To make the comparison fair, both policies were run through the same simulation-based
+    optimizer, so neither is being judged on a lucky guess at fleet size. Each policy gets its own
+    near-optimal fleet size and composition before the two are compared.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Model and method</h2>
+  <div class="sub">Discrete-event simulation, calibrated to real conditions, tuned by simulation-optimization.</div>
+
+  <ul class="plain">
+    <li>Platform demand distributions fit to IOOC's historical pickup/delivery records per field.</li>
+    <li>Sailing speed scaled by a weather factor &alpha; (0.75/0.90/1.00) tied to significant wave height, so bad-weather delay is part of the model, not an afterthought.</li>
+    <li>Vessel pool of 20 candidates, each with its own speed (10&ndash;15 knots), capacity (70&ndash;100 containers) and day-rate &mdash; long-term &#36;2,000&ndash;4,000/day, spot &#36;6,000&ndash;10,000/day.</li>
+    <li>OptQuest-driven simulation optimization searches the 2<sup>20</sup> long-term hire/no-hire combinations for the near-optimal fleet at each of five target service levels (75/80/85/90/95%).</li>
+    <li>Validated against real 2009&ndash;2011 spot-hire-day counts with a paired t-test: no statistically significant difference between simulated and real operations.</li>
+  </ul>
+
+  <figure>
+<svg viewBox="0 0 860 320" width="860" height="320" role="img" aria-label="Trade-off curve: total fleet cost versus platform service level, fixed schedule against demand-based routing">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}
+</style>
+<text x="16" y="24" class="t" font-size="14" font-weight="600">Total fleet cost vs platform service level</text>
+
+<line x1="100" y1="40" x2="100" y2="260" stroke="var(--line)"/>
+<line x1="100" y1="260" x2="800" y2="260" stroke="var(--line)"/>
+<text x="16" y="80" class="m" font-size="9.5">95%</text>
+<text x="16" y="153" class="m" font-size="9.5">85%</text>
+<text x="16" y="227" class="m" font-size="9.5">75%</text>
+<text x="16" y="45" class="m" font-size="9" text-anchor="start">Platform service level</text>
+<text x="454" y="284" class="m" font-size="9.5" text-anchor="middle">Total annual fleet cost ($M) &mdash; lower is better</text>
+<text x="454" y="298" class="m" font-size="9" text-anchor="middle">7.2</text>
+<text x="600" y="298" class="m" font-size="9" text-anchor="middle">7.5</text>
+<text x="728" y="298" class="m" font-size="9" text-anchor="middle">7.8</text>
+
+<polyline points="454.1,223.3 462.4,186.7 512.6,150 585.1,113.3 728.4,76.7" fill="none" stroke="var(--amb)" stroke-width="2"/>
+<g fill="var(--amb)">
+<circle cx="454.1" cy="223.3" r="4"/><circle cx="462.4" cy="186.7" r="4"/><circle cx="512.6" cy="150" r="4"/>
+<circle cx="585.1" cy="113.3" r="4"/><circle cx="728.4" cy="76.7" r="4"/>
+</g>
+<text x="740" y="72" class="t" font-size="10" font-weight="600">RP1 &mdash; Fixed schedule</text>
+
+<polyline points="209.5,223.3 242.5,186.7 338.0,150 362.7,113.3 380.0,76.7" fill="none" stroke="var(--acc)" stroke-width="2.2"/>
+<g fill="var(--acc)">
+<circle cx="209.5" cy="223.3" r="4.5"/><circle cx="242.5" cy="186.7" r="4.5"/><circle cx="338.0" cy="150" r="4.5"/>
+<circle cx="362.7" cy="113.3" r="4.5"/><circle cx="380.0" cy="76.7" r="4.5"/>
+</g>
+<text x="140" y="240" class="a" font-size="10" font-weight="600">RP2 &mdash; Demand-based</text>
+
+<path d="M215 223 L448 223" stroke="var(--grn)" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text x="330" y="216" class="g" font-size="9" text-anchor="middle">same service level, lower cost</text>
+</svg>
+    <figcaption>At every tested service level, demand-based routing (RP2) sits to the left of the fixed schedule (RP1) &mdash; same reliability, lower cost.</figcaption>
+  </figure>
+</section>
+
+<section class="blk">
+  <h2>What it's worth</h2>
+  <div class="sub">The paper's own cost table, at optimal fleet settings, averaged over 50 replications.</div>
+
+  <table>
+    <thead>
+      <tr><th>Platform service level</th><th class="num">RP1 cost, $/yr</th><th class="num">RP2 cost, $/yr</th><th class="num">Saving</th><th class="num">Fleet size, RP1 vs RP2</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>75%</td><td class="num">7,530,105</td><td class="num">7,232,500</td><td class="num pos">$297,605 &middot; 4.0%</td><td class="num">3 vs 3</td></tr>
+      <tr><td>80%</td><td class="num">7,539,580</td><td class="num">7,272,830</td><td class="num pos">$266,750 &middot; 3.5%</td><td class="num">4 vs 3</td></tr>
+      <tr><td>85%</td><td class="num">7,600,932</td><td class="num">7,389,266</td><td class="num pos">$211,666 &middot; 2.8%</td><td class="num">4 vs 4</td></tr>
+      <tr><td>90%</td><td class="num">7,689,251</td><td class="num">7,419,037</td><td class="num pos">$270,214 &middot; 3.5%</td><td class="num">5 vs 4</td></tr>
+      <tr><td>95%</td><td class="num">7,863,300</td><td class="num">7,439,821</td><td class="num pos">$423,479 &middot; 5.4%</td><td class="num">6 vs 5</td></tr>
+    </tbody>
+  </table>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">$212k&ndash;423k</div><div class="l">annual saving, switching RP1 &rarr; RP2</div></div>
+    <div class="kpi"><div class="v">3.8%</div><div class="l">average cost reduction across all 5 levels</div></div>
+    <div class="kpi"><div class="v">5.4%</div><div class="l">saving at 95% service &mdash; where reliability matters most</div></div>
+    <div class="kpi"><div class="v">&minus;1 vessel</div><div class="l">fewer long-term hires at 80% and 95% targets</div></div>
+  </div>
+
+  <p>
+    Table 6 of the paper also breaks the saving down by cost type: RP1 leans on more long-term
+    hiring (more fixed capital committed), while RP2 leans slightly more on short-term spot
+    hire &mdash; but needs far fewer total vessel-days overall, so the net cost is still lower.
+    Average platform waiting time is shorter under RP2 at every service level too; the saving is
+    not bought with worse service, it comes with it.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Why the advantage grows exactly when it matters</h2>
+  <div class="sub">This is not a fixed markup &mdash; it scales with how tightly you have to guarantee delivery.</div>
+
+  <p>
+    At the loosest service target tested (75%), demand-based routing saves about 4% of fleet cost.
+    Push the requirement to 95% &mdash; the level an operator actually wants once a stalled platform
+    starts costing real production time &mdash; and the saving grows to 5.4%, because the fixed
+    schedule has to over-provision broadly to hit high reliability everywhere, while demand-based
+    routing only adds capacity where the demand actually is.
+  </p>
+  <p>
+    The practical read for a fleet manager: the fixed weekly rota is not wrong because it is
+    unsophisticated, it is wrong because it prices in reliability it isn't using efficiently. A
+    routing rule that reacts to platform requests, evaluated properly with simulation-optimization
+    rather than a spreadsheet rule of thumb, recovers that inefficiency as cash &mdash; consistently,
+    year on year, at zero capital cost.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>From a 2012 thesis to two published papers</h2>
+  <div class="sub">The work behind this page.</div>
+
+  <p>
+    The routing formulation &mdash; a pickup-and-delivery vehicle routing problem with soft time
+    windows and no ability to stage containers at sea &mdash; was published first, in the
+    <em>International Journal of Industrial Engineering &amp; Production Management</em> (2014).
+    The fleet-sizing comparison on this page, with the validated simulation and the cost figures
+    above, followed in <em>Maritime Economics &amp; Logistics</em> (2016), a Palgrave/Macmillan
+    journal. Together the two papers have collected 25 citations.
+  </p>
+
+  <div class="evid-row">
+    <a class="evid" href="https://doi.org/10.1057/mel.2015.21" target="_blank" rel="noopener">Read the 2016 paper (DOI) &#8599;</a>
+    <a class="evid" href="https://youtu.be/SctIOdhzN80" target="_blank" rel="noopener">Watch the simulation &#8599;</a>
+    <a class="evid" href="../index.html#publications">See both publications</a>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+</body>
+</html>
