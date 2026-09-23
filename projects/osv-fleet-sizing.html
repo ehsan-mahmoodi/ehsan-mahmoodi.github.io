@@ -23,6 +23,16 @@
     nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
     nav .back:hover { color: #e6edf3; }
 
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
     .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
 
     header.page-head { padding: 64px 0 40px; }
@@ -96,34 +106,46 @@
       th, td { padding: 8px 6px; }
     }
 
-    @media (prefers-color-scheme: light) {
-      body { background: #ffffff; color: #24292f; }
-      nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
-      nav .logo, .kpi .v, footer a, .evid { color: #0969da; }
-      nav .back, p.muted, figcaption, th, .kpi .l, h2 + .sub, .callout, footer { color: #57606a; }
-      section.blk { border-top: 1px solid #d0d7de; }
-      p, td, ul.plain li { color: #24292f; }
-      .callout, .kpi, .eyebrow, .evid { background: #f6f8fa; border: 1px solid #d0d7de; }
-      .callout { border-left: 3px solid #9a6700; }
-      .callout strong { color: #24292f; }
-      .eyebrow { color: #0969da; }
-      header.page-head .lede { color: #24292f; }
-      figure img, figure svg { background: #f6f8fa; border-color: #d0d7de; }
-      th, td { border-bottom: 1px solid #d0d7de; }
-      tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
-      td.pos { color: #1a7f37; }
-      td.neg { color: #cf222e; }
-      ul.plain li::before { color: #0969da; }
-      footer { border-top: 1px solid #d0d7de; }
-    }
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a, html:not([data-theme='dark']) .evid { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow, html:not([data-theme='dark']) .evid { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
   </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
 </head>
 <body>
 
 <nav>
   <div class="nav-inner">
     <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
-    <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
   </div>
 </nav>
 
@@ -183,7 +205,7 @@
 <svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Kharg district: one onshore base supplying four offshore fields in the Persian Gulf">
 <style>
 :root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
-@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}
 text{font-family:Inter,system-ui,sans-serif}
 .t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}
 </style>
@@ -266,7 +288,7 @@ text{font-family:Inter,system-ui,sans-serif}
 <svg viewBox="0 0 860 320" width="860" height="320" role="img" aria-label="Trade-off curve: total fleet cost versus platform service level, fixed schedule against demand-based routing">
 <style>
 :root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
-@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}
 text{font-family:Inter,system-ui,sans-serif}
 .t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}
 </style>
@@ -387,5 +409,31 @@ text{font-family:Inter,system-ui,sans-serif}
   </p>
 </footer>
 
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
 </body>
 </html>
