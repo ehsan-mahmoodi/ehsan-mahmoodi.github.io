@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eye Surgery Clinic Simulation, Basir Eye Clinic | Ehsan Mahmoodi</title>
+  <meta name="description" content="A validated discrete-event simulation of a high-volume eye clinic, thirteen improvement scenarios tested and ranked by TOPSIS, and the one that cut average time in system by 42% while raising profit."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    .evid-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 22px 0 6px; }
+    .evid {
+      display: flex; align-items: center; gap: 8px;
+      background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+      padding: 10px 16px; text-decoration: none; color: #58a6ff; font-size: 0.86rem; font-weight: 500;
+      transition: border-color 0.15s;
+    }
+    .evid:hover { border-color: #58a6ff; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      body { background: #ffffff; color: #24292f; }
+      nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+      nav .logo, .kpi .v, footer a, .evid { color: #0969da; }
+      nav .back, p.muted, figcaption, th, .kpi .l, h2 + .sub, .callout, footer { color: #57606a; }
+      section.blk { border-top: 1px solid #d0d7de; }
+      p, td, ul.plain li { color: #24292f; }
+      .callout, .kpi, .eyebrow, .evid { background: #f6f8fa; border: 1px solid #d0d7de; }
+      .callout { border-left: 3px solid #9a6700; }
+      .callout strong { color: #24292f; }
+      .eyebrow { color: #0969da; }
+      header.page-head .lede { color: #24292f; }
+      figure img, figure svg { background: #f6f8fa; border-color: #d0d7de; }
+      th, td { border-bottom: 1px solid #d0d7de; }
+      tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+      tr.win td { background: rgba(26,127,55,0.08); }
+      td.pos { color: #1a7f37; }
+      td.neg { color: #cf222e; }
+      ul.plain li::before { color: #0969da; }
+      footer { border-top: 1px solid #d0d7de; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Simulation Case Study</div>
+  <h1>Cutting an Eye Clinic's Wait Time Without Cutting Its Margin</h1>
+  <p class="lede">
+    Basir Eye Clinic runs about 8,000 patient visits a month through one corridor &mdash; new
+    patients, post-operative reviews and returning cases all sharing the same reception, cashier,
+    imaging and doctor stations. Management's own read on patient complaints was clear: waiting
+    time, not price or outcome, was the top dissatisfaction driver. I built a validated Arena
+    simulation of the clinic, tested thirteen candidate fixes against it, and ranked them with
+    TOPSIS on time, staff workload and profit together &mdash; not on wait time alone.
+  </p>
+</header>
+
+<div class="callout">
+  <strong>What this is.</strong> A discrete-event simulation calibrated to the clinic's own 2016
+  operating data (input distributions fitted in Arena's Input Analyzer, p&nbsp;&gt;&nbsp;0.05) and
+  validated against real patient records &mdash; simulated average time in system for each of the
+  three patient types landed within a few per cent of the observed values. Thirteen improvement
+  scenarios were run through the same model and scored with TOPSIS across time in system, five
+  station utilisation rates and a daily-profit objective. The figures below are read directly from
+  that model's output and the TOPSIS scoring workbook, not estimated.
+</div>
+
+<section class="blk">
+  <h2>One corridor, three kinds of patient</h2>
+  <div class="sub">About 326 people a day, each following a different path through the same rooms.</div>
+
+  <p>
+    Basir has run as a private specialist eye clinic since the early 1990s and was the first
+    centre in the region to install excimer laser refractive correction &mdash; for years one of
+    only two in the country. Every patient still passes through some combination of the same
+    stations: reception, cashier, computerised vision testing, optometry, and the doctor, with a
+    side trip to paraclinic imaging for those who need it.
+  </p>
+  <p>
+    Patients arrive as three distinct populations, not one queue: about half are visiting for the
+    first time, around a third are returning cases whose paper file has to be pulled from the
+    archive before they can be seen, and roughly one in seven are post-operative patients back for
+    a next-day review. Arrivals themselves are uneven &mdash; light from 7am, peaking hard around
+    9am as everyone tries to beat the day's doctor appointments filling up.
+  </p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">326/day</div><div class="l">average patient arrivals</div></div>
+    <div class="kpi"><div class="v">50 / 35 / 15%</div><div class="l">new / returning / post-op split</div></div>
+    <div class="kpi"><div class="v">238 min</div><div class="l">baseline average time in system</div></div>
+    <div class="kpi"><div class="v">93%</div><div class="l">baseline doctor utilisation</div></div>
+  </div>
+</section>
+
+<section class="blk">
+  <h2>Where the wait actually comes from</h2>
+  <div class="sub">Average queue time per process, before any change &mdash; the model's own bottleneck ranking.</div>
+
+  <table>
+    <thead><tr><th>Station</th><th class="num">Avg. queue wait</th></tr></thead>
+    <tbody>
+      <tr><td>Paraclinic imaging</td><td class="num">66.3 min</td></tr>
+      <tr><td>Doctor</td><td class="num">35.2 min</td></tr>
+      <tr><td>Cashier</td><td class="num">17.5 min</td></tr>
+      <tr><td>Reception</td><td class="num">3.2 min</td></tr>
+    </tbody>
+  </table>
+
+  <p class="muted">
+    Paraclinic imaging carries the single longest queue, but it's downstream of the doctor and
+    only a subset of patients pass through it. The doctor sits on every patient's path without
+    exception, at 93% utilisation with next to no slack &mdash; which is exactly why, once all
+    thirteen fixes were actually tested against the model rather than guessed at, doctor capacity
+    is what moved the outcome.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Thirteen fixes, ranked by TOPSIS &mdash; not by wait time alone</h2>
+  <div class="sub">Nine resource-increase scenarios, four process fixes, scored on time in system, five station workloads and daily profit together.</div>
+
+  <p>
+    Adding staff anywhere is easy to propose and easy to over-do. The scenarios tested ranged from
+    more doctors, cashiers, reception clerks and optometrists, to process changes: digitising the
+    paper archive, merging the cashier and reception steps, adding a triage step to catch patients
+    who don't need a doctor visit, and smoothing appointment bookings across the day. Each was run
+    through the same validated model, then scored with TOPSIS against a stated ideal &mdash;
+    shortest time in system, a healthy-not-punishing utilisation band for every station, and the
+    highest daily profit &mdash; so a scenario that only wins on one dimension doesn't automatically
+    win overall.
+  </p>
+
+  <table>
+    <thead><tr><th>Scenario</th><th class="num">Avg. time in system</th><th class="num">Doctor utilisation</th><th class="num">Daily profit vs baseline</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline (current operation)</td><td class="num">237.5 min</td><td class="num">92.8%</td><td class="num">&mdash;</td></tr>
+      <tr class="win"><td><strong>Winning scenario &mdash; added doctor capacity</strong></td><td class="num">137.9 min</td><td class="num">62.7%</td><td class="num pos">+0.5%</td></tr>
+      <tr><td>Runner-up &mdash; smaller doctor increase (near-tied 2nd by score)</td><td class="num">138.1 min</td><td class="num">72.6%</td><td class="num neg">&minus;0.6%</td></tr>
+      <tr><td>Highest raw profit of all 13, ranked 4th overall</td><td class="num">181.6 min</td><td class="num">95.0%</td><td class="num pos">+1.9%</td></tr>
+      <tr><td>Typical single-station fix (e.g. more cashiers)</td><td class="num">219&ndash;239 min</td><td class="num">~93%</td><td class="num neg">&minus;1.3% to flat</td></tr>
+    </tbody>
+  </table>
+
+  <p class="muted">
+    Notice the fourth row: the single most profitable scenario tested wasn't the fastest one, and
+    it wasn't the TOPSIS winner either &mdash; it ranked 4th once queue time and every station's
+    workload were weighed in alongside profit. That's the whole point of scoring on more than one
+    axis: the best-looking number in isolation isn't always the best decision.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>What won, and why it also made money</h2>
+  <div class="sub">The scenario TOPSIS actually ranked first.</div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">&minus;42%</div><div class="l">average time in system, 237.5 &rarr; 137.9 min</div></div>
+    <div class="kpi"><div class="v">&minus;71%</div><div class="l">post-op review time, 31.8 &rarr; 9.1 min</div></div>
+    <div class="kpi"><div class="v">92.8 &rarr; 62.7%</div><div class="l">doctor utilisation, saturated to comfortable</div></div>
+    <div class="kpi"><div class="v">+0.5%</div><div class="l">daily profit, despite the added staffing cost</div></div>
+  </div>
+
+  <p>
+    The two top-ranked scenarios share the same signature in the model's output: doctor
+    utilisation drops sharply while every other station's workload barely moves &mdash; the clear
+    fingerprint of added doctor capacity, not a process tweak. The winning scenario pushes further
+    than its near-twin runner-up and, tellingly, is also the only one of the two that ends up
+    <strong>more profitable than doing nothing</strong>: it doesn't just clear the backlog, it lets
+    the clinic complete more patient visits in the same day, and that extra completed volume is
+    what pays for the added desks.
+  </p>
+  <p class="muted">
+    That's the number that actually matters to a clinic owner deciding whether to hire: staffing up
+    the bottleneck resource here isn't a cost the business absorbs for the sake of patient
+    satisfaction &mdash; on this model, it pays for itself.
+  </p>
+</section>
+
+<div class="evid-row">
+  <a class="evid" href="https://youtu.be/3m8o0QajsUI" target="_blank" rel="noopener">Watch the simulation &#8599;</a>
+</div>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+</body>
+</html>
