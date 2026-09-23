@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cardiac Cath Lab Simulation &amp; Optimization | Ehsan Mahmoodi</title>
+  <meta name="description" content="A 2014 hospital process analysis, rebuilt in 2026 as a Python discrete-event simulation with a 2D animation and an NSGA-II bed-configuration optimizer - the deliverable the hospital never funded, built anyway on synthetic data."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      body { background: #ffffff; color: #24292f; }
+      nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+      nav .logo, .kpi .v, footer a { color: #0969da; }
+      nav .back, p.muted, figcaption, th, .kpi .l, h2 + .sub, .callout, footer { color: #57606a; }
+      section.blk { border-top: 1px solid #d0d7de; }
+      p, td, ul.plain li { color: #24292f; }
+      .callout, .kpi, .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+      .callout { border-left: 3px solid #9a6700; }
+      .callout strong { color: #24292f; }
+      .eyebrow { color: #0969da; }
+      header.page-head .lede { color: #24292f; }
+      figure img, figure svg { background: #f6f8fa; border-color: #d0d7de; }
+      th, td { border-bottom: 1px solid #d0d7de; }
+      tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+      tr.win td { background: rgba(26,127,55,0.08); }
+      td.pos { color: #1a7f37; }
+      td.neg { color: #cf222e; }
+      ul.plain li::before { color: #0969da; }
+      footer { border-top: 1px solid #d0d7de; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Simulation &amp; Optimization Demonstrator</div>
+  <h1>A Cath Lab Animation That Was Never Paid For &mdash; Built Anyway</h1>
+  <p class="lede">
+    In 2014 I mapped a cardiac catheterisation lab's entire patient journey at Moheb-e-Mehr
+    Hospital &mdash; every hand-off from admission to discharge, in a full swimlane process chart,
+    with the priority rules staff actually use. The plan was a discrete-event model with a proper
+    animation to show management where the process actually jammed. The hospital wasn't willing to
+    pay for the animation, so it never got built. In 2026 I rebuilt it anyway &mdash; in Python, with
+    synthetic data standing in for the measurements that were never funded, and an optimisation
+    layer the original scope never even asked for.
+  </p>
+</header>
+
+<div class="callout">
+  <strong>What's real and what's synthetic.</strong> The process structure, the three procedure
+  types, the doctor-presence call priority and the monitored-bed rule are all from the real 2014
+  engagement documents &mdash; a swimlane chart of the full patient path and a written list of
+  priority rules. The thirteen service-time measurements the original study planned to collect were
+  never taken (the animation was cut before that stage), so every duration in this model is a
+  synthetic, structurally-reasonable stand-in. The simulation (SimPy), the animation (Python/
+  Matplotlib) and the NSGA-II bed-configuration optimiser (pymoo) are new, built in 2026 to show
+  what the original scope would have delivered.
+</div>
+
+<section class="blk">
+  <h2>The real constraint: one table, two kinds of bed</h2>
+  <div class="sub">From the 2014 process chart and priority-rule documentation.</div>
+
+  <p>
+    The lab runs <strong>one procedure table</strong> for three case types: diagnostic angiography,
+    planned angioplasty, and an "ad-hoc" case &mdash; a diagnostic that turns into an angioplasty on
+    the table, decided mid-procedure. Patients are called from the ward to the table by a documented
+    priority rule: if their own doctor happens to be in the lab, they go next; otherwise it's first
+    in, first out. The hospital's admission schedule works the same way &mdash; there isn't a fixed
+    slot system, so timing depends heavily on which doctor is around.
+  </p>
+  <p>
+    One rule matters more than the others: <strong>angioplasty and ad-hoc patients must recover in a
+    monitored bed</strong>, by policy, not by choice. A diagnostic-only patient can recover in
+    ordinary ward capacity, which the hospital has plenty of. Monitored beds are the scarce
+    resource &mdash; and if none is free the moment a table case finishes, that patient physically
+    can't be moved, so the table itself sits blocked, unable to start the next case.
+  </p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">1</div><div class="l">procedure table, whole lab</div></div>
+    <div class="kpi"><div class="v">3 types</div><div class="l">diagnostic / angioplasty / ad-hoc</div></div>
+    <div class="kpi"><div class="v">50/30/20%</div><div class="l">synthetic case-mix split</div></div>
+    <div class="kpi"><div class="v">7 wards &rarr; 2 pools</div><div class="l">simplified to precath / monitored</div></div>
+  </div>
+  <p class="muted">
+    The real hospital runs seven wards with different bed counts, mostly shared with other
+    departments. For a model this size that's noise, not signal &mdash; so it's simplified to the
+    two pools that actually govern the cath lab's own throughput: pre-cath holding bays, and
+    monitored recovery beds.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>One simulated day, watched live</h2>
+  <div class="sub">Eight patients, five beds, the recommended configuration &mdash; every colour is a case type.</div>
+
+  <figure>
+    <img src="../assets/09-cathlab-simulation.gif" alt="2D animation of a simulated day in the cath lab: patients moving from admission through pre-cath bays, the single procedure table, and monitored or general recovery to discharge" loading="lazy">
+    <figcaption>Synthetic day, recommended configuration (2 pre-cath bays, 3 monitored beds). Table-blocking: 0 minutes.</figcaption>
+  </figure>
+
+  <p>
+    Each dot is a patient; colour marks the procedure type. Watch the table: a patient who finishes
+    there and needs a monitored bed can only leave once one is free &mdash; on a day like this one,
+    it never has to wait.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>What to build: NSGA-II over bed count</h2>
+  <div class="sub">Two decision variables, three objectives, the exact Pareto front &mdash; confirmed against brute force.</div>
+
+  <p>
+    The optimiser searches over two numbers: how many pre-cath bays, and how many monitored
+    recovery beds. Three objectives, all in tension: <strong>maximise patients served per day</strong>,
+    <strong>minimise total beds</strong> (the cost proxy), and <strong>minimise table-blocking
+    minutes</strong> &mdash; the expensive resource sitting idle because recovery has nowhere to put
+    the last patient. The search space here is small enough to brute-force exhaustively, so I could
+    check NSGA-II's answer against the true front directly: it found all seven non-dominated
+    configurations, no more and no less.
+  </p>
+
+  <figure>
+<svg viewBox="0 0 860 320" width="860" height="320" role="img" aria-label="Pareto front: total beds versus patients served per day, from the NSGA-II search">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--pnl:#161b22}
+@media (prefers-color-scheme:light){:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pnl:#f6f8fa}}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}
+</style>
+<text x="16" y="24" class="t" font-size="14" font-weight="600">Pareto front &mdash; total beds vs patients served/day</text>
+
+<line x1="100" y1="40" x2="100" y2="260" stroke="var(--line)"/>
+<line x1="100" y1="260" x2="800" y2="260" stroke="var(--line)"/>
+<text x="60" y="244" class="m" font-size="9.5" text-anchor="end">4.5</text>
+<text x="60" y="164" class="m" font-size="9.5" text-anchor="end">6.5</text>
+<text x="60" y="84" class="m" font-size="9.5" text-anchor="end">8.5</text>
+<text x="16" y="45" class="m" font-size="9">patients served/day</text>
+<text x="454" y="284" class="m" font-size="9.5" text-anchor="middle">total beds (pre-cath + monitored)</text>
+<text x="164" y="298" class="m" font-size="9" text-anchor="middle">3</text>
+<text x="418" y="298" class="m" font-size="9" text-anchor="middle">7</text>
+<text x="736" y="298" class="m" font-size="9" text-anchor="middle">12</text>
+
+<path d="M164,238 L227,146 L291,119 L355,119 L355,88 L418,88 L736,80" fill="none" stroke="var(--acc)" stroke-width="1.6" stroke-dasharray="3 3" opacity="0.55"/>
+
+<circle cx="164" cy="238" r="7" fill="var(--amb)" stroke="#0d1117" stroke-width="1.5"/>
+<text x="164" y="222" class="w" font-size="9.5" text-anchor="middle" font-weight="600">baseline (3 beds)</text>
+<text x="164" y="256" class="m" font-size="8.5" text-anchor="middle">27.9 min blocked</text>
+
+<circle cx="227" cy="146" r="5.5" fill="var(--acc)"/>
+<circle cx="291" cy="119" r="8.5" fill="var(--grn)" stroke="#0d1117" stroke-width="1.8"/>
+<text x="291" y="102" class="g" font-size="9.5" text-anchor="middle" font-weight="600">recommended (5 beds)</text>
+<text x="291" y="137" class="m" font-size="8.5" text-anchor="middle">0.65 min blocked</text>
+<circle cx="355" cy="119" r="5.5" fill="var(--acc)"/>
+<circle cx="355" cy="88" r="5.5" fill="var(--acc)"/>
+<circle cx="418" cy="88" r="5.5" fill="var(--acc)"/>
+<circle cx="736" cy="80" r="5.5" fill="var(--acc)"/>
+<text x="736" y="64" class="m" font-size="9" text-anchor="middle">12 beds &rarr; 8.1/day</text>
+
+<text x="500" y="200" class="m" font-size="9" text-anchor="middle">most of the gain happens</text>
+<text x="500" y="213" class="m" font-size="9" text-anchor="middle">in the first two extra beds</text>
+</svg>
+    <figcaption>Every point is a non-dominated configuration. Past 5 beds, doubling the fleet buys less than one more patient a day.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th>Configuration</th><th class="num">Total beds</th><th class="num">Served/day</th><th class="num">Table blocked</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline &mdash; 2 pre-cath, 1 monitored</td><td class="num">3</td><td class="num">4.5</td><td class="num neg">27.9 min</td></tr>
+      <tr class="win"><td><strong>Recommended &mdash; 2 pre-cath, 3 monitored</strong></td><td class="num">5</td><td class="num">7.2</td><td class="num pos">0.65 min</td></tr>
+      <tr><td>3 pre-cath, 3 monitored</td><td class="num">6</td><td class="num">7.9</td><td class="num pos">0.67 min</td></tr>
+      <tr><td>Largest tested &mdash; 8 pre-cath, 4 monitored</td><td class="num">12</td><td class="num">8.1</td><td class="num pos">0.0 min</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="blk">
+  <h2>What it's worth</h2>
+  <div class="sub">Two more monitored beds, not a bigger building.</div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">+2 beds</div><div class="l">monitored capacity, 1 &rarr; 3</div></div>
+    <div class="kpi"><div class="v">+60%</div><div class="l">patients served/day, 4.5 &rarr; 7.2</div></div>
+    <div class="kpi"><div class="v">&minus;98%</div><div class="l">table-blocking time, 27.9 &rarr; 0.65 min</div></div>
+    <div class="kpi"><div class="v">&lt;1 patient</div><div class="l">extra gain from doubling to 12 beds</div></div>
+  </div>
+
+  <p>
+    The finding isn't "add beds" &mdash; it's <em>which</em> beds. Two more monitored beds turn a
+    table that spends nearly half an hour blocked per case into one that almost never waits, and
+    lifts daily throughput by 60%. Beyond that point the curve goes flat: going all the way to
+    twelve beds barely serves one more patient a day than five beds does. That's the number a
+    hospital actually needs before it commits capital &mdash; not "more capacity", but the specific,
+    cheap fix that unlocks the table.
+  </p>
+  <p class="muted">
+    This is also the argument for building the demonstrator even after the client said no: the
+    model itself is the deliverable. The numbers above are synthetic, but the method &mdash; find
+    the resource whose scarcity blocks the expensive one, then optimise around it &mdash; is exactly
+    what would have been handed over in 2014 if the animation had been funded.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Demonstrator by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+</body>
+</html>
