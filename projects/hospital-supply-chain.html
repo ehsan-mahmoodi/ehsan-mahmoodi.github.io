@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hospital Emergency Department Simulation &amp; Efficiency Scoring | Ehsan Mahmoodi</title>
+  <meta name="description" content="Discrete-event simulation of a hospital emergency department, with ten capacity and policy scenarios scored on cost and patient outcomes together to find the one actually worth funding."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+    tr.lose td { background: rgba(248,81,73,0.06); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) tr.lose td { background: rgba(207,34,46,0.06); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Simulation &amp; Performance Evaluation Case Study</div>
+  <h1>Where a Hospital Emergency Department's Time Actually Goes</h1>
+  <p class="lede">
+    An emergency department is a supply chain like any other &mdash; patients arrive unpredictably,
+    move through shared resources under priority rules, and the question that actually matters is
+    where the time and money go, not which fix sounds most reasonable. This traces that question
+    from real patient data through a validated simulation to a ranked recommendation that treats
+    cost and patient outcomes as one problem, not two.
+  </p>
+</header>
+
+<section class="blk">
+  <h2>What the hospital actually needed</h2>
+  <div class="sub">2016&ndash;2018, Imam Khomeini Hospital Complex, Tehran &mdash; Iran's first hospital-based emergency department.</div>
+
+  <p>
+    The hospital's emergency department had grown into the busiest, most resource-constrained part
+    of the complex, and management was weighing several fixes at once: re-prioritising who gets
+    imaging first, or paying for another CT or MRI machine. Both cost something &mdash; staff time
+    and political capital for the first, real capital for the second &mdash; and nobody had a fair
+    way to compare a cheap partial fix against an expensive complete one. The engagement started
+    with the department's own patient-flow records and staff, not with a chosen technique.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Inside the department</h2>
+  <div class="sub">Five severity levels, two treatment units, one shared bottleneck.</div>
+
+  <p>
+    Every arriving patient is triaged into one of five severity levels (ESI 1&ndash;5). The most
+    critical 1.5% go straight to resuscitation; the next 14.7% and the following 30.4% are treated
+    in two dedicated units &mdash; a 22-bed unit for the more urgent cases and an 18-bed unit for the
+    next tier, each staffed by five doctors and five nurses per shift. The remaining roughly half of
+    all arrivals are low-acuity and routed to a fast-track outpatient clinic instead, seeing about
+    150 patients a day.
+  </p>
+  <p class="muted">
+    Two months of real patient-flow data &mdash; about 6,500 patients &mdash; were collected: 70% to
+    fit the service-time distributions feeding the model below, the remaining 30% held back purely
+    to check the model's output against what actually happened.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Where patients actually wait</h2>
+  <div class="sub">Not the doctor, not the bed &mdash; the scanner.</div>
+
+  <p>
+    Descriptively, the data shows that CT and MRI dominate a patient's time in the department: over
+    80% of admitted patients and over 85% of all arrivals need one or the other. Diagnostically, that's
+    also where the queue is &mdash; a patient in the more urgent of the two main units spends around
+    10 of their roughly 13.5 hours in the department queueing for a scan, not waiting for a doctor or
+    a bed. That single finding reframes the whole question: the department doesn't have a staffing
+    problem or a bed problem, it has an imaging-capacity problem.
+  </p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">6,500</div><div class="l">patients in the 2-month dataset</div></div>
+    <div class="kpi"><div class="v">85%</div><div class="l">of arrivals need CT or MRI</div></div>
+    <div class="kpi"><div class="v">~10 h</div><div class="l">of a 13.5 h stay spent queueing for a scan</div></div>
+    <div class="kpi"><div class="v">22 / 18</div><div class="l">beds, more-urgent / next-tier units</div></div>
+  </div>
+</section>
+
+<section class="blk">
+  <h2>A model worth trusting before acting on it</h2>
+  <div class="sub">Built in Arena, checked against the 30% of data held back for exactly this.</div>
+
+  <p>
+    The full patient journey &mdash; arrival, triage, resuscitation, the two main units, the shared
+    imaging queues, discharge or admission &mdash; was rebuilt as a discrete-event simulation. Run
+    forward under today's staffing and priority rules, it reproduces the real department closely: for
+    example, the more urgent unit's average length of stay comes out at 13.5 hours simulated against
+    14.7 hours measured, and every other severity group lands within a similar margin. That match is
+    what makes it safe to test changes on the model instead of on the department.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>Testing ten fixes, scored fairly</h2>
+  <div class="sub">Cost and patient outcomes, weighed together instead of argued about separately.</div>
+
+  <p>
+    Ten candidate changes were run through the model against the current baseline: three re-prioritise
+    who gets scanned first (no new spending), and seven add imaging capacity in different
+    combinations &mdash; one or two extra CT machines, an extra MRI machine, dedicated to the
+    emergency department or shared across the hospital. Each scenario has its own cost, its own effect
+    on queue time, and its own effect on how many patients of each severity get seen &mdash; which
+    means the ten options can't be honestly ranked by any single number. A cheap re-prioritisation
+    that helps one severity group can quietly make another group's wait worse; an expensive machine
+    that's shared hospital-wide may dilute its benefit to the emergency department specifically.
+  </p>
+  <p>
+    The scoring method used &mdash; a two-stage efficiency model related to data envelopment analysis
+    &mdash; handles exactly this: it treats each scenario's resource cost and its patient-outcome
+    payoff as two linked stages of the same process, and scores every option on both at once, the
+    same way you'd fairly judge a cheap partial fix against an expensive complete one.
+  </p>
+
+  <figure>
+<svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Efficiency score by scenario: baseline versus the best and worst of ten improvement options">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}.r{fill:var(--red)}
+</style>
+<text x="16" y="24" class="t" font-size="14" font-weight="600">Efficiency score (0&ndash;1) &mdash; cost and patient outcomes scored together</text>
+
+<line x1="330" y1="40" x2="330" y2="264" stroke="var(--line)"/>
+<text x="330" y="278" class="m" font-size="9" text-anchor="middle">0.90</text>
+<text x="600" y="278" class="m" font-size="9" text-anchor="middle">1.00 &mdash; fully efficient</text>
+<line x1="600" y1="40" x2="600" y2="264" stroke="var(--acc)" stroke-dasharray="3 3"/>
+
+<text x="180" y="62" class="t" font-size="10.5" text-anchor="end">+1 dedicated CT scanner</text>
+<rect x="188" y="48" width="412" height="24" fill="var(--grn)" opacity="0.7" rx="3"/>
+<text x="606" y="65" class="g" font-size="10" font-weight="600">1.000 &mdash; rank 1</text>
+
+<text x="180" y="100" class="t" font-size="10.5" text-anchor="end">+1 dedicated MRI scanner</text>
+<rect x="188" y="86" width="356" height="24" fill="var(--acc)" opacity="0.6" rx="3"/>
+<text x="550" y="103" class="a" font-size="10">0.978 &mdash; rank 2, 1/5 the cost</text>
+
+<text x="180" y="138" class="t" font-size="10.5" text-anchor="end">Today's policy (baseline)</text>
+<rect x="188" y="124" width="279" height="24" fill="var(--amb)" opacity="0.55" rx="3"/>
+<text x="473" y="141" class="w" font-size="10">0.938 &mdash; rank 4</text>
+
+<text x="180" y="176" class="t" font-size="10.5" text-anchor="end">Re-prioritise imaging queue only</text>
+<rect x="188" y="162" width="102" height="24" fill="var(--red)" opacity="0.55" rx="3"/>
+<text x="296" y="179" class="r" font-size="10">0.836 &mdash; rank 8, below baseline</text>
+
+<text x="180" y="214" class="t" font-size="10.5" text-anchor="end">+1 shared CT, +1 shared MRI</text>
+<rect x="188" y="200" width="10" height="24" fill="var(--red)" opacity="0.7" rx="3"/>
+<text x="204" y="217" class="r" font-size="10">0.761 &mdash; rank 11, worst of 11</text>
+
+<text x="188" y="250" class="m" font-size="9.5">Re-prioritising who gets scanned first, alone, scores below doing nothing &mdash; it only moves the</text>
+<text x="188" y="263" class="m" font-size="9.5">wait between patient groups. Only added imaging capacity genuinely improves the score.</text>
+</svg>
+    <figcaption>Efficiency scores for the current policy against the best and worst of the ten scenarios tested, out of eleven total.</figcaption>
+  </figure>
+
+  <table>
+    <thead><tr><th>Scenario</th><th class="num">Efficiency score</th><th class="num">Rank</th><th class="num">Cost</th></tr></thead>
+    <tbody>
+      <tr class="win"><td><strong>+1 dedicated CT scanner</strong></td><td class="num pos">1.000</td><td class="num">1 of 11</td><td class="num">&asymp;10 bn Toman</td></tr>
+      <tr><td>+1 dedicated MRI scanner</td><td class="num">0.978</td><td class="num">2 of 11</td><td class="num">&asymp;2 bn Toman</td></tr>
+      <tr><td>+2 dedicated CT scanners</td><td class="num">0.971</td><td class="num">3 of 11</td><td class="num">&asymp;20 bn Toman</td></tr>
+      <tr><td>Today's policy (baseline)</td><td class="num">0.938</td><td class="num">4 of 11</td><td class="num">&mdash;</td></tr>
+      <tr class="lose"><td>+1 shared CT, +1 shared MRI</td><td class="num neg">0.761</td><td class="num">11 of 11</td><td class="num">&asymp;12 bn Toman</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">
+    Doubling the CT investment doesn't beat a single dedicated scanner, and spreading the same money
+    across a shared CT and MRI &mdash; the most expensive scenario tested &mdash; scores dead last.
+    Cost alone predicts almost nothing here; what matters is whether the capacity is dedicated to
+    where the queue actually is.
+  </p>
+</section>
+
+<section class="blk">
+  <h2>What it's worth</h2>
+  <div class="sub">The cheap answer and the complete answer both beat guessing.</div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">#1 of 11</div><div class="l">dedicated CT scanner &mdash; only fully efficient option</div></div>
+    <div class="kpi"><div class="v">#2 of 11</div><div class="l">dedicated MRI &mdash; 98% as efficient at a fifth the cost</div></div>
+    <div class="kpi"><div class="v">3</div><div class="l">priority-only fixes tested, all scored below baseline</div></div>
+    <div class="kpi"><div class="v">11</div><div class="l">scenarios simulated and scored on cost and outcomes together</div></div>
+  </div>
+
+  <p>
+    The honest recommendation isn't "buy more equipment" &mdash; three of the ten alternatives tried
+    to fix the same problem for free, by changing who gets scanned first, and every one of them
+    scored worse than the current policy. Reallocating priority without adding capacity just moves
+    the queue from one patient group to another; it doesn't remove it. The department's money is best
+    spent on a dedicated CT scanner if the budget allows it, or a dedicated MRI &mdash; at a fifth of
+    the cost, for nearly the same efficiency score &mdash; if it doesn't. Either is a defensible,
+    evidence-based capital case; guessing at a priority-rule change is not.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>
