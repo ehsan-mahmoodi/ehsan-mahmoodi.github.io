@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Data analyst agent: semantic layer, agent, AST validation, sandbox, read-only data, answer with query trail">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}.r{fill:var(--red)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Data analyst agent &#8212; validated, sandboxed, traceable</text>
+<g font-size="6.5">
+<rect x="12" y="50" width="56" height="34" rx="5" class="bx"/><text x="40.0" y="65.0" class="t" text-anchor="middle" font-weight="600">Semantic</text><text x="40.0" y="75.0" class="m" text-anchor="middle">metric defs</text>
+<rect x="76" y="50" width="56" height="34" rx="5" class="bxa"/><text x="104.0" y="65.0" class="a" text-anchor="middle" font-weight="600">Agent</text><text x="104.0" y="75.0" class="m" text-anchor="middle">SQL or Python</text>
+<rect x="140" y="50" width="56" height="34" rx="5" class="bx"/><text x="168.0" y="65.0" class="r" text-anchor="middle" font-weight="600">Validate</text><text x="168.0" y="75.0" class="m" text-anchor="middle">SELECT only</text>
+<rect x="204" y="50" width="56" height="34" rx="5" class="bx"/><text x="232.0" y="65.0" class="w" text-anchor="middle" font-weight="600">Sandbox</text><text x="232.0" y="75.0" class="m" text-anchor="middle">no network</text>
+<rect x="268" y="50" width="56" height="34" rx="5" class="bx"/><text x="296.0" y="65.0" class="t" text-anchor="middle" font-weight="600">Read-only</text><text x="296.0" y="75.0" class="m" text-anchor="middle">replica, DuckDB</text>
+<rect x="332" y="50" width="56" height="34" rx="5" class="bx"/><text x="360.0" y="65.0" class="g" text-anchor="middle" font-weight="600">Answer</text><text x="360.0" y="75.0" class="m" text-anchor="middle">chart + trail</text>
+</g>
+<path class="fl" d="M68 67h8"/><path class="fl" d="M132 67h8"/><path class="fl" d="M196 67h8"/><path class="fl" d="M260 67h8"/><path class="fl" d="M324 67h8"/>
+<path class="fm" d="M168 84v22H104v-22"/>
+<text x="136" y="118" class="r" font-size="6.5" text-anchor="middle">rejected &#8594; repair</text>
+<path class="fm" d="M232 84v26H112"/>
+<text x="248" y="118" class="w" font-size="6.5">error &#8594; retry with sample</text>
+<line x1="12" y1="134" x2="388" y2="134" stroke="var(--line)"/>
+<text x="12" y="149" class="m" font-size="7.5">&#8220;Why did energy per unit rise on line 2?&#8221; &#8212; a chart, a finding and the query that</text>
+<text x="12" y="161" class="m" font-size="7.5">produced them, for a manager with no data team.</text>
+<text x="12" y="175" class="a" font-size="7.5" font-weight="600">Tool calling &#183; sqlglot &#183; DuckDB &#183; sandboxed Python &#183; Vega-Lite &#183; React &#183; FastAPI</text>
+</svg>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Production Data Analyst Agent | Ehsan Mahmoodi</title>
+  <meta name="description" content="System design for an autonomous data analyst agent for manufacturing SMEs (AI-COMPETE and SMART use case): tool-calling text-to-SQL and Python, AST validation with sqlglot, sandboxed execution against a read-only replica, Vega-Lite charts, query trails and execution-accuracy evaluation."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="page-head">
+  <div class="eyebrow">AI-COMPETE &amp; SMART use case &middot; system design</div>
+  <h1>Ask the Factory&rsquo;s Data a Question, and See the Query That Answered It</h1>
+  <p class="lede">
+    A production manager at a mid-sized manufacturer, such as the SME partners in AI-COMPETE and SMART, wants to know
+    why energy per door rose last month on line 2. There is no data team to ask. This agent turns the question into
+    SQL or Python and validates the code before running it. It executes the code in a sandbox against a read-only
+    copy of the data, then returns a chart, a short finding and the full query trail that produced them.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">University of Sk&ouml;vde &middot; AI-COMPETE (Vinnova) &amp; SMART (KK-stiftelsen) &middot; 2026 &middot; system design</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose on">Diagnostic</span><span class="gl-stage gl-predict">Predictive</span><span class="gl-stage gl-prescribe">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">LLM tool calling (Azure OpenAI / Claude)</span><span class="gl-tech">sqlglot (SQL AST)</span><span class="gl-tech">Python <code>ast</code></span><span class="gl-tech">DuckDB</span><span class="gl-tech">PostgreSQL read replica</span><span class="gl-tech">pandas</span><span class="gl-tech">Sandboxed execution (Azure Container Apps sessions / E2B)</span><span class="gl-tech">Vega-Lite</span><span class="gl-tech">FastAPI</span><span class="gl-tech">React + TypeScript</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">System design &mdash; architecture, security layers and an execution-accuracy evaluation plan. No usage figures are claimed yet.</span></div>
+</div>
+
+<div class="callout">
+  <strong>What this page is.</strong> A system design for a use case from the SME side of AI-COMPETE and SMART. It is
+  not a report of a deployment at any partner. Figures marked <em>target</em> are release gates. They are not
+  measured results.
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; problem formulation</div>
+  <h2>The data exists. The person who can query it does not.</h2>
+  <div class="sub">Large plants have analysts. At an SME, the production manager is the analyst.</div>
+  <p>
+    A mid-sized manufacturer already collects the data: MES records of orders and stops, energy meter readings,
+    scrap logs, and ERP costs. Questions such as &ldquo;which product family drove the energy increase?&rdquo; still
+    wait days for a spreadsheet, or they never get asked. AI-COMPETE&rsquo;s constraint applies directly: the tool has to
+    work without a data team and without new infrastructure.
+  </p>
+  <p>Three requirements came before any feature:</p>
+  <ul class="plain">
+    <li><strong>Cannot damage anything.</strong> No query or script the model writes can change, delete or copy out
+      production data, whatever the user types.</li>
+    <li><strong>Can be checked.</strong> Every number links to the exact query, the row count and the time of the
+      data it came from.</li>
+    <li><strong>Speaks the plant&rsquo;s language.</strong> &ldquo;OEE&rdquo;, &ldquo;energy per unit&rdquo; and
+      &ldquo;line 2&rdquo; mean what the plant means by them, not what a model guesses.</li>
+  </ul>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Architecture &middot; tool-calling agent</div>
+  <h2>Generate, validate, execute in a sandbox, explain</h2>
+  <div class="sub">The model writes code. Deterministic layers decide whether that code runs.</div>
+<figure>
+<svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Data analyst agent: a question is grounded in a semantic layer, the agent writes SQL or Python, an AST validator checks it, code runs in an isolated sandbox against a read-only replica, and the result becomes a chart, a finding and a query trail; validation failures return to the agent">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnk:#f778ba;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnk:#bf3989;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}.k{fill:var(--pnk)}
+.bx{fill:var(--pnl);stroke:var(--line)}.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<defs><marker id="ar4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" style="fill:var(--mut)"/></marker></defs>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">The model proposes code; validation and isolation decide what runs</text>
+<g font-size="11" text-anchor="middle">
+<rect class="bx" x="16" y="86" width="118" height="72" rx="8"/>
+<text x="75" y="112" class="t" font-weight="600">Semantic layer</text><text x="75" y="130" class="m" font-size="9.5">metrics, tables,</text><text x="75" y="144" class="m" font-size="9.5">plant vocabulary</text>
+<rect class="bx" x="154" y="86" width="118" height="72" rx="8" style="stroke:var(--acc);stroke-width:1.6"/>
+<text x="213" y="112" class="a" font-weight="600">Agent</text><text x="213" y="130" class="m" font-size="9.5">picks SQL or Python,</text><text x="213" y="144" class="m" font-size="9.5">writes the code</text>
+<rect class="bx" x="292" y="86" width="128" height="72" rx="8" style="stroke:var(--pnk)"/>
+<text x="356" y="112" class="k" font-weight="600">AST validation</text><text x="356" y="130" class="m" font-size="9.5">SELECT only, allowed</text><text x="356" y="144" class="m" font-size="9.5">tables, imports, limits</text>
+<rect class="bx" x="440" y="86" width="128" height="72" rx="8" style="stroke:var(--amb)"/>
+<text x="504" y="112" class="w" font-weight="600">Sandbox</text><text x="504" y="130" class="m" font-size="9.5">no network, CPU/RAM</text><text x="504" y="144" class="m" font-size="9.5">and time caps</text>
+<rect class="bx" x="588" y="86" width="116" height="72" rx="8"/>
+<text x="646" y="112" class="t" font-weight="600">Read-only data</text><text x="646" y="130" class="m" font-size="9.5">replica / DuckDB</text><text x="646" y="144" class="m" font-size="9.5">pooled connections</text>
+<rect class="bx" x="724" y="86" width="120" height="72" rx="8" style="stroke:var(--grn)"/>
+<text x="784" y="112" class="g" font-weight="600">Answer</text><text x="784" y="130" class="m" font-size="9.5">chart + finding</text><text x="784" y="144" class="m" font-size="9.5">+ query trail</text>
+</g>
+<path class="fl" marker-end="url(#ar4)" d="M134 122H152M272 122H290M420 122H438M568 122H586M704 122H722"/>
+<path class="fl" marker-end="url(#ar4)" style="stroke:var(--pnk);stroke-dasharray:4 3" d="M356 158V200H213V160"/>
+<text x="284" y="216" class="k" font-size="10.5" text-anchor="middle">rejected &#8594; the reason goes back to the agent (at most 3 repairs)</text>
+<path class="fl" marker-end="url(#ar4)" style="stroke:var(--amb);stroke-dasharray:4 3" d="M504 158V244H232V160"/>
+<text x="504" y="260" class="w" font-size="10.5" text-anchor="middle">runtime error or empty result &#8594; the error and a data sample go back to the agent</text>
+<text x="16" y="290" class="m" font-size="10.5">The agent never holds database credentials; the sandbox gets a short-lived, read-only token scoped to one request.</text>
+</svg>
+  <figcaption>Two feedback loops let the agent repair its code. Neither of them can loosen a rule.</figcaption>
+</figure>
+  <ol class="stages">
+    <li><strong>Ground the question.</strong> A semantic layer defines each metric once: OEE, energy per unit, scrap
+      rate, which tables they come from, and how lines and shifts are named. The agent gets the definitions that match
+      the question, not the whole schema.</li>
+    <li><strong>Choose a tool.</strong> Lookups and aggregations go to SQL. Trends, decompositions and anything
+      statistical go to Python with pandas. The tools are typed function calls, and the choice is logged so it can be
+      evaluated like any other decision.</li>
+    <li><strong>Validate the code.</strong> SQL is parsed with sqlglot and Python with the <code>ast</code> module.
+      Only single SELECT statements on allow-listed tables pass, and Python may import only an allow-listed set of
+      modules, with no file, network or subprocess access. A <code>LIMIT</code> is added when the query has none.</li>
+    <li><strong>Execute in isolation.</strong> Each request gets a fresh sandbox (Azure Container Apps dynamic sessions,
+      or E2B), with no outbound network and with caps on CPU, memory and time. It connects through a pooled
+      connection to a read-only replica, or to a DuckDB snapshot for heavy analysis.</li>
+    <li><strong>Explain.</strong> The result becomes a Vega-Lite chart, which is validated against its schema before it
+      is rendered, and a short written finding. The finding may cite only numbers that appear in the result set.</li>
+  </ol>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Guardrails &middot; defence in depth</div>
+  <h2>Assume the prompt is hostile, then make that not matter</h2>
+  <div class="sub">Prompt instructions are not a security boundary. Each layer below holds even if the ones above it fail.</div>
+  <table>
+    <thead><tr><th>Layer</th><th>What it stops</th></tr></thead>
+    <tbody>
+      <tr><td>Database role</td><td>The connection is read-only at the database level, so no write succeeds even if every other check misses it.</td></tr>
+      <tr><td>AST validation</td><td>DDL, DML, multiple statements, system catalogs and tables that are not allow-listed are rejected before execution.</td></tr>
+      <tr><td>Sandbox isolation</td><td>Python cannot reach the network, the host or another user&rsquo;s session, and runaway code hits the time and memory caps.</td></tr>
+      <tr><td>Row-level scope</td><td>The user&rsquo;s identity sets which sites and lines the replica returns, so the agent cannot query its way around permissions.</td></tr>
+      <tr><td>Data as data</td><td>Text inside the data, such as operator comments, is passed to the model as quoted values and never as instructions, which blocks indirect prompt injection.</td></tr>
+      <tr><td>Output limits</td><td>Row caps and aggregate-only exports stop the agent being used to copy tables out in bulk.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Context engineering</div>
+  <h2>The schema is too big to send, and most of it is noise</h2>
+  <div class="sub">Accuracy depends on which 2% of the schema the model sees.</div>
+  <div class="flow" style="--n:4">
+    <div><strong>Schema retrieval</strong>Table and column descriptions are embedded. Only the tables relevant to the
+      question are sent, with column types and a few sample values.</div>
+    <div><strong>Metric definitions</strong>If the question mentions a defined metric, its canonical SQL is included
+      and the agent must build on it rather than reinvent it.</div>
+    <div><strong>Verified examples</strong>A few question&ndash;query pairs that analysts have approved, chosen by
+      similarity to the current question, act as worked examples.</div>
+    <div><strong>Result summaries</strong>Large results come back as shape, summary statistics and head rows. The
+      full result stays in the sandbox for the next step.</div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Evaluation</div>
+  <h2>Graded by the answer the query returns, not by how the query looks</h2>
+  <div class="sub">Two different queries can both be right. Only execution tells which ones are.</div>
+  <p>
+    The benchmark is a set of real manager-style questions, each with a reference query written by an analyst. The
+    agent&rsquo;s query is executed and its result set compared with the reference result. A red-team set of injection
+    and exfiltration prompts runs alongside it on every change.
+  </p>
+  <table>
+    <thead><tr><th>Metric</th><th>How it is measured</th><th class="num">Release gate (target)</th></tr></thead>
+    <tbody>
+      <tr><td>Execution accuracy</td><td>Result set matches the reference result set</td><td class="num">&ge; 0.85</td></tr>
+      <tr><td>Unsafe execution</td><td>Red-team prompts that reach execution with a write, an off-list table or network access</td><td class="num">0 (hard gate)</td></tr>
+      <tr><td>Finding faithfulness</td><td>Numbers in the written finding present in the result set, checked by code</td><td class="num">1.00</td></tr>
+      <tr><td>Correct &ldquo;can&rsquo;t answer&rdquo;</td><td>Questions the data cannot answer declined, with the missing data named</td><td class="num">&ge; 0.90</td></tr>
+      <tr><td>Latency, SQL path</td><td>p95, question to chart for lookups and aggregations</td><td class="num">&lt; 3 s</td></tr>
+      <tr><td>Latency, Python path</td><td>p95, question to chart for multi-step analyses</td><td class="num">&lt; 15 s</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Full stack &middot; production</div>
+  <h2>Every answer comes with its receipts</h2>
+  <div class="sub">A trail a sceptical controller can re-run.</div>
+  <div class="flow" style="--n:3">
+    <div><strong>Front end</strong>React + TypeScript: the question, the chart and the finding, with a
+      &ldquo;show your work&rdquo; panel that holds the query, row count, data timestamp and a button to re-run it.</div>
+    <div><strong>Back end</strong>FastAPI with streamed steps, a pooled connection manager (PgBouncer in front of
+      the replica), and caching of repeat queries keyed on the query text and the data version.</div>
+    <div><strong>Operations</strong>Docker, Entra ID sign-in and an audit log of every generated query and its
+      verdict. A good answer can be saved as a verified example, which improves the next one.</div>
+  </div>
+  <p>
+    In the AI-COMPETE architecture this agent is the data tool for the others. The
+    <a href="planning-copilot.html">planning copilot</a> asks it for historical energy per batch, and the
+    <a href="robot-cell-copilot.html">robot-cell copilot</a> for fault frequencies. Both get the same validation and
+    query trail.
+  </p>
+</section>
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>
