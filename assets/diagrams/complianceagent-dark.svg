@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Compliance agent workflow: parser, grounding agent, calculation engine, validator, reviewer, datapoint, all written to an audit log">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}.r{fill:var(--red)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Compliance agent &#8212; ESRS E1 climate datapoints, audit-ready</text>
+<g font-size="6.5">
+<rect x="12" y="40" width="56" height="34" rx="5" class="bx"/><text x="40.0" y="55.0" class="t" text-anchor="middle" font-weight="600">Parse</text><text x="40.0" y="65.0" class="m" text-anchor="middle">typed request</text>
+<rect x="76" y="40" width="56" height="34" rx="5" class="bx"/><text x="104.0" y="55.0" class="a" text-anchor="middle" font-weight="600">Ground</text><text x="104.0" y="65.0" class="m" text-anchor="middle">ESRS, cited</text>
+<rect x="140" y="40" width="56" height="34" rx="5" class="bxa"/><text x="168.0" y="55.0" class="a" text-anchor="middle" font-weight="600">Calculate</text><text x="168.0" y="65.0" class="m" text-anchor="middle">code, no LLM</text>
+<rect x="204" y="40" width="56" height="34" rx="5" class="bx"/><text x="232.0" y="55.0" class="r" text-anchor="middle" font-weight="600">Validate</text><text x="232.0" y="65.0" class="m" text-anchor="middle">Pydantic</text>
+<rect x="268" y="40" width="56" height="34" rx="5" class="bx"/><text x="296.0" y="55.0" class="w" text-anchor="middle" font-weight="600">Review</text><text x="296.0" y="65.0" class="m" text-anchor="middle">human signs</text>
+<rect x="332" y="40" width="56" height="34" rx="5" class="bx"/><text x="360.0" y="55.0" class="g" text-anchor="middle" font-weight="600">Datapoint</text><text x="360.0" y="65.0" class="m" text-anchor="middle">evidence pack</text>
+</g>
+<path class="fl" d="M68 57h8"/><path class="fl" d="M132 57h8"/><path class="fl" d="M196 57h8"/><path class="fl" d="M260 57h8"/><path class="fl" d="M324 57h8"/>
+<rect x="12" y="96" width="376" height="20" rx="4" class="bx"/>
+<text x="200" y="109" class="t" font-size="6.5" text-anchor="middle" font-weight="600">Append-only, hash-chained audit log: inputs, prompts, tool results, verdicts, approvals</text>
+<path class="fm" d="M40 74v22M104 74v22M168 74v22M232 74v22M296 74v22M360 74v22"/>
+<line x1="12" y1="134" x2="388" y2="134" stroke="var(--line)"/>
+<text x="12" y="149" class="m" font-size="7.5">Energy and Scope 1&#8211;2 figures an auditor can trace back to the meter: models parse and ground,</text>
+<text x="12" y="161" class="m" font-size="7.5">code calculates, a named reviewer signs, and every step can be replayed.</text>
+<text x="12" y="175" class="a" font-size="7.5" font-weight="600">LangGraph &#183; Pydantic &#183; Instructor &#183; PostgreSQL &#183; FastAPI &#183; React &#183; Docker &#183; Azure</text>
+</svg>

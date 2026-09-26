@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Climate Reporting Compliance Agent | Ehsan Mahmoodi</title>
+  <meta name="description" content="System design for a multi-agent compliance system that prepares audited CSRD / ESRS E1 climate datapoints for large manufacturers (AI-COMPETE use case): LangGraph orchestration, Pydantic and Instructor structured outputs, a deterministic calculation engine, human sign-off and a hash-chained audit trail."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="page-head">
+  <div class="eyebrow">AI-COMPETE use case &middot; system design</div>
+  <h1>Climate Figures an Auditor Can Trace Back to the Meter</h1>
+  <p class="lede">
+    Large manufacturers, like the groups behind the AI-COMPETE and SMART partners, now report energy use and
+    greenhouse-gas emissions under the EU&rsquo;s Corporate Sustainability Reporting Directive (CSRD), and those
+    figures are audited. This multi-agent system prepares the climate datapoints of the ESRS E1 standard: energy
+    consumption and mix, and Scope 1 and 2 emissions. Each one is a validated, structured record that carries its
+    calculation, source data, emission-factor version, regulation clause and reviewer sign-off. The language models
+    parse, ground and explain. Code does the arithmetic.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">University of Sk&ouml;vde &middot; AI-COMPETE (Vinnova) &middot; 2026 &middot; system design</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose on">Diagnostic</span><span class="gl-stage gl-predict">Predictive</span><span class="gl-stage gl-prescribe">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">LangGraph (Postgres checkpointer)</span><span class="gl-tech">Pydantic v2</span><span class="gl-tech">Instructor</span><span class="gl-tech">Azure OpenAI (structured outputs)</span><span class="gl-tech">PostgreSQL</span><span class="gl-tech">FastAPI</span><span class="gl-tech">React review UI</span><span class="gl-tech">Docker</span><span class="gl-tech">Azure (Sweden Central)</span><span class="gl-tech">OpenTelemetry</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">System design &mdash; agent workflow, validation rules, human sign-off and audit trail. No reporting results are claimed yet.</span></div>
+</div>
+
+<div class="callout">
+  <strong>What this page is.</strong> A system design for a compliance use case from the AI-COMPETE programme. It is
+  not a report of a deployment at any partner, and it is not legal or assurance advice. Figures marked
+  <em>target</em> are release gates. They are not measured results.
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; problem formulation</div>
+  <h2>Every number is audited, and the rules keep moving</h2>
+  <div class="sub">Where a plausible answer is useless, because an auditor will ask how it was made.</div>
+  <p>
+    A climate datapoint such as &ldquo;Scope 2 emissions, market-based, for the reporting year&rdquo; looks like one
+    number. Producing it means pulling metered electricity for every site and month, matching each supply contract and
+    guarantee of origin, choosing the right emission factors, applying the GHG Protocol method that ESRS E1 refers
+    to, and explaining any gap. Today that is spreadsheets passed between sites. At audit time nobody can say which
+    version of which factor produced which cell.
+  </p>
+  <p>The requirements came from the sustainability controllers who sign the figures:</p>
+  <ul class="plain">
+    <li><strong>Structured, always.</strong> Output feeds the reporting database and a digital, tagged report, so it
+      has to validate against a schema every time. Nearly valid is not enough.</li>
+    <li><strong>Deterministic numbers.</strong> Running the same inputs again gives the same figure, to the last
+      digit.</li>
+    <li><strong>Grounded in the rule text.</strong> Every datapoint cites the ESRS paragraph and calculation method
+      it follows, and the version of the rule in force. The regulation is still being amended.</li>
+    <li><strong>A human signs.</strong> Nothing is final until a named reviewer approves it, and the approval is part
+      of the record.</li>
+    <li><strong>Everything logged.</strong> Every input, model call, tool result, edit and approval can be replayed
+      years later.</li>
+  </ul>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Architecture &middot; multi-agent workflow</div>
+  <h2>Five roles, one state machine, and one person with the final say</h2>
+  <div class="sub">LangGraph orchestrates the agents. Its state is saved to PostgreSQL after every step, so a workflow can wait days for a reviewer.</div>
+<figure>
+<svg viewBox="0 0 860 320" width="860" height="320" role="img" aria-label="Compliance agent workflow: a request parser, a knowledge-grounding agent, a deterministic calculation engine, a Pydantic validator and a human reviewer, with every step written to an append-only audit log; validation failures return to the engine and tool failures go to a fallback path">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnk:#f778ba;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnk:#bf3989;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}.k{fill:var(--pnk)}
+.bx{fill:var(--pnl);stroke:var(--line)}.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<defs><marker id="ar8" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" style="fill:var(--mut)"/></marker></defs>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">Parse, ground, calculate, validate, sign, all of it logged</text>
+<g font-size="11" text-anchor="middle">
+<rect class="bx" x="16" y="70" width="128" height="72" rx="8"/>
+<text x="80" y="96" class="t" font-weight="600">Request parser</text><text x="80" y="114" class="m" font-size="9.5">datapoint, period,</text><text x="80" y="128" class="m" font-size="9.5">sites in scope</text>
+<rect class="bx" x="162" y="70" width="128" height="72" rx="8" style="stroke:var(--acc)"/>
+<text x="226" y="96" class="a" font-weight="600">Grounding agent</text><text x="226" y="114" class="m" font-size="9.5">ESRS clause + method,</text><text x="226" y="128" class="m" font-size="9.5">versioned, cited</text>
+<rect class="bx" x="308" y="70" width="128" height="72" rx="8" style="stroke:var(--pur);stroke-width:1.6"/>
+<text x="372" y="96" class="p" font-weight="600">Calculation engine</text><text x="372" y="114" class="m" font-size="9.5">plain code, no LLM:</text><text x="372" y="128" class="m" font-size="9.5">activity &#215; factor</text>
+<rect class="bx" x="454" y="70" width="128" height="72" rx="8" style="stroke:var(--pnk)"/>
+<text x="518" y="96" class="k" font-weight="600">Validator</text><text x="518" y="114" class="m" font-size="9.5">Pydantic schema +</text><text x="518" y="128" class="m" font-size="9.5">business rules</text>
+<rect class="bx" x="600" y="70" width="112" height="72" rx="8" style="stroke:var(--amb)"/>
+<text x="656" y="96" class="w" font-weight="600">Reviewer</text><text x="656" y="114" class="m" font-size="9.5">approve, edit</text><text x="656" y="128" class="m" font-size="9.5">or reject</text>
+<rect class="bx" x="730" y="70" width="114" height="72" rx="8" style="stroke:var(--grn)"/>
+<text x="787" y="96" class="g" font-weight="600">Datapoint</text><text x="787" y="114" class="m" font-size="9.5">to reporting DB</text><text x="787" y="128" class="m" font-size="9.5">+ evidence pack</text>
+</g>
+<path class="fl" marker-end="url(#ar8)" d="M144 106H160M290 106H306M436 106H452M582 106H598M712 106H728"/>
+<path class="fl" marker-end="url(#ar8)" style="stroke:var(--pnk);stroke-dasharray:4 3" d="M518 142V172H372V144"/>
+<text x="445" y="188" class="k" font-size="10" text-anchor="middle">rule broken &#8594; engine re-runs or flags the gap</text>
+<path class="fl" marker-end="url(#ar8)" style="stroke:var(--amb);stroke-dasharray:4 3" d="M656 70V50H226V68"/>
+<text x="441" y="44" class="w" font-size="10" text-anchor="middle">rejected with a reason &#8594; back into the workflow, state preserved</text>
+<rect x="16" y="222" width="828" height="40" rx="8" class="bx" style="stroke:var(--line)"/>
+<text x="430" y="240" class="t" font-size="11" font-weight="600" text-anchor="middle">Compliance audit log &#8212; append-only, hash-chained</text>
+<text x="430" y="254" class="m" font-size="9.5" text-anchor="middle">every input, prompt, model version, tool result, validation verdict, edit and approval</text>
+<path class="fl" style="stroke-dasharray:2 3" d="M80 142V222M226 142V222M372 142V222M518 200V222M656 142V222M787 142V222"/>
+<text x="16" y="296" class="m" font-size="10.5">Tool failures take a deterministic fallback path: retry with backoff, then flag the gap as data missing. The engine never guesses a default value.</text>
+</svg>
+  <figcaption>Language models sit at the edges, parsing requests and grounding rules. The number itself is produced by code that an auditor can read.</figcaption>
+</figure>
+  <ol class="stages">
+    <li><strong>Request parser.</strong> Turns &ldquo;prepare E1-6 Scope 2 for 2025, all Swedish sites&rdquo; into a
+      typed request: datapoint ID, reporting period, organisational boundary and sites. Instructor with a Pydantic
+      model makes the output a valid object or an explicit error, never loose text.</li>
+    <li><strong>Knowledge-grounding agent.</strong> Retrieves the ESRS E1 paragraphs and the GHG Protocol method for the
+      datapoint from a versioned rule library, and returns the method as a structured specification with citations,
+      tagged with the rule version it relies on.</li>
+    <li><strong>Calculation engine.</strong> Plain, tested Python, not a model. It pulls activity data (metered energy,
+      fuel purchases, supply contracts) through read-only queries. It applies emission factors from a versioned factor
+      table, computing both location-based and market-based Scope 2, and returns the figure with a line-by-line
+      calculation trace.</li>
+    <li><strong>Validator.</strong> Pydantic v2 models enforce the schema, units and allowed values. Business rules
+      then check that all sites are covered for all months, that totals match their parts, that the energy mix adds
+      up, and that large year-on-year jumps carry an explanation before review.</li>
+    <li><strong>Reviewer and audit logger.</strong> A sustainability controller sees the figure, the trace, the
+      sources and the cited rule, then approves, edits with a reason, or rejects. Every step, before and after, is
+      written to the audit log.</li>
+  </ol>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Engineering &middot; guarantees</div>
+  <h2>What the system promises, and how each promise is kept</h2>
+  <div class="sub">Each guarantee has a mechanism in code, not a sentence in a prompt.</div>
+  <table>
+    <thead><tr><th>Guarantee</th><th>Mechanism</th></tr></thead>
+    <tbody>
+      <tr><td>Always schema-valid</td><td>Provider structured outputs constrain the model to the JSON schema. Instructor re-asks with the validation error if a field fails a Pydantic rule. After a set number of tries the step fails loudly instead of passing a near-miss downstream.</td></tr>
+      <tr><td>Reproducible figures</td><td>Calculations in versioned code, with exact decimal arithmetic. The inputs, factor-table version and code version are stored with each result, so a re-run gives an identical number.</td></tr>
+      <tr><td>No silent defaults</td><td>A missing meter, contract or factor becomes an explicit gap. Estimation is allowed only by a named, disclosed method, and it is flagged on the datapoint.</td></tr>
+      <tr><td>Graceful tool failure</td><td>Idempotent tool calls with retries and backoff, a circuit breaker on each data source, and a dead-letter queue for steps a person must resolve. The workflow pauses; it does not improvise.</td></tr>
+      <tr><td>Persistent state</td><td>LangGraph checkpoints in PostgreSQL after every node. A workflow waiting on a reviewer survives restarts and deploys, and resumes exactly where it stopped.</td></tr>
+      <tr><td>Tamper-evident log</td><td>Append-only audit table in which each entry carries the hash of the previous one. The chain is verified nightly, and any gap or edit breaks it visibly.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Security &amp; compliance</div>
+  <h2>Built to be questioned by an auditor and attacked by a document</h2>
+  <div class="sub">The threats are a wrong number that looks right, and text that tries to give orders.</div>
+  <div class="two-col">
+    <div>
+      <h3>Controls</h3>
+      <ul class="plain">
+        <li>Role-based access: preparers, reviewers and auditors get different views and different actions. Four-eyes
+          approval is required for material datapoints.</li>
+        <li>Read-only credentials to source systems, scoped to one workflow run and short-lived.</li>
+        <li>All data, models and logs in Azure&rsquo;s Sweden Central region, with encryption at rest and customer-managed
+          keys.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Threats handled</h3>
+      <ul class="plain">
+        <li><strong>Prompt injection</strong> from supplier invoices and contracts: document text is passed to the model as
+          quoted data, and a document can never trigger a tool call.</li>
+        <li><strong>Hallucinated citations</strong>: every cited ESRS paragraph ID is checked against the rule library
+          before the output is accepted.</li>
+        <li><strong>Rule drift</strong>: when the rule library gets a new version, the datapoints that cite a changed
+          paragraph are flagged for re-review.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Evaluation</div>
+  <h2>Back-tested against a year that was already reported and audited</h2>
+  <div class="sub">The best test set is last year&rsquo;s signed-off figures.</div>
+  <p>
+    The system recomputes a previously reported year from the raw source data. Its figures and evidence are compared
+    with the audited report, and every difference is explained or traced to a data or method correction.
+  </p>
+  <table>
+    <thead><tr><th>Metric</th><th>How it is measured</th><th class="num">Release gate (target)</th></tr></thead>
+    <tbody>
+      <tr><td>Schema validity</td><td>Outputs that validate against the Pydantic models, at every stage</td><td class="num">100% (hard gate)</td></tr>
+      <tr><td>Reproducibility</td><td>Re-runs from stored inputs that give an identical figure</td><td class="num">100% (hard gate)</td></tr>
+      <tr><td>Citation validity</td><td>Cited rule paragraphs that exist in the library version used</td><td class="num">100%</td></tr>
+      <tr><td>Back-test agreement</td><td>Datapoints within tolerance of the audited figure, or with a documented reason</td><td class="num">100% explained</td></tr>
+      <tr><td>Reviewer rework</td><td>Datapoints a reviewer had to edit or reject</td><td class="num">tracked, falling per cycle</td></tr>
+      <tr><td>Audit-chain integrity</td><td>Nightly hash-chain verification</td><td class="num">0 breaks</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Production</div>
+  <h2>From a workflow engine to a tool controllers use at year-end</h2>
+  <div class="sub">Containerised, observable, and hosted on the shared platform.</div>
+  <div class="flow" style="--n:3">
+    <div><strong>Review UI</strong>React: a queue of datapoints awaiting review, each with its figure, calculation
+      trace, source records, cited rule and history, plus one-click export of the evidence pack for the auditor.</div>
+    <div><strong>Services</strong>FastAPI running the LangGraph workflows in Docker on Azure Container Apps, with
+      PostgreSQL for checkpoints, results and the audit chain, and OpenTelemetry tracing each node.</div>
+    <div><strong>Platform</strong>Hosted as a workspace on the <a href="genai-platform.html">multi-tenant GenAI
+      platform</a>. Activity data comes through the <a href="data-analyst-agent.html">data analyst agent</a>&rsquo;s
+      validated, read-only query layer.</div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -798,7 +798,7 @@
     <div class="type-card type-agents">
       <h3>Agentic &amp; generative AI</h3>
       <p>Multi-agent systems that negotiate trade-offs, and language-model layers that explain a recommendation.</p>
-      <div class="type-eg"><a href="#p-plant-rag">Plant Knowledge Assistant (Agentic RAG)</a> &middot; <a href="#p-robot-copilot">Robot Cell Troubleshooting Copilot</a> &middot; <a href="#p-planning-copilot">Energy-Aware Planning Copilot</a> &middot; <a href="#p-data-agent">Production Data Analyst Agent</a> &middot; <a href="#p-maint-llm">Maintenance Language Model (fine-tuning)</a> &middot; <a href="#p-genai-platform">Multi-Tenant GenAI Platform</a> &middot; <a href="#p-llm-toolkit">Context Engineering &amp; LLM Cost Toolkit</a> &middot; <a href="#p-ai-compete">Multi-Agent AI for Sustainable Manufacturing</a> &middot; <a href="#p-smart">Resilience-Driven Manufacturing</a></div>
+      <div class="type-eg"><a href="#p-plant-rag">Plant Knowledge Assistant (Agentic RAG)</a> &middot; <a href="#p-robot-copilot">Robot Cell Troubleshooting Copilot</a> &middot; <a href="#p-planning-copilot">Energy-Aware Planning Copilot</a> &middot; <a href="#p-data-agent">Production Data Analyst Agent</a> &middot; <a href="#p-maint-llm">Maintenance Language Model (fine-tuning)</a> &middot; <a href="#p-genai-platform">Multi-Tenant GenAI Platform</a> &middot; <a href="#p-llm-toolkit">Context Engineering &amp; LLM Cost Toolkit</a> &middot; <a href="#p-compliance-agent">Climate Reporting Compliance Agent</a> &middot; <a href="#p-ai-compete">Multi-Agent AI for Sustainable Manufacturing</a> &middot; <a href="#p-smart">Resilience-Driven Manufacturing</a></div>
       <div class="fit-proof"><span class="fp-v">SEK 17.5M</span><span class="fp-l">multi-agent AI programmes with Volvo Penta, Scania, ABB</span></div>
     </div>
     <div class="type-card type-business">
@@ -810,7 +810,7 @@
   </div>
 
   <div class="sector-row">
-    <span class="sector-label">Across sectors</span><button type="button" class="sector-jump" data-sector="manufacturing">Manufacturing<span>14</span></button><button type="button" class="sector-jump" data-sector="energy">Energy<span>4</span></button><button type="button" class="sector-jump" data-sector="healthcare">Healthcare<span>3</span></button><button type="button" class="sector-jump" data-sector="logistics">Logistics &amp; maritime<span>2</span></button><button type="button" class="sector-jump" data-sector="telecom">Telecom &amp; IT<span>3</span></button><button type="button" class="sector-jump" data-sector="construction">Construction<span>1</span></button><button type="button" class="sector-jump" data-sector="public">Public sector<span>1</span></button>
+    <span class="sector-label">Across sectors</span><button type="button" class="sector-jump" data-sector="manufacturing">Manufacturing<span>15</span></button><button type="button" class="sector-jump" data-sector="energy">Energy<span>4</span></button><button type="button" class="sector-jump" data-sector="healthcare">Healthcare<span>3</span></button><button type="button" class="sector-jump" data-sector="logistics">Logistics &amp; maritime<span>2</span></button><button type="button" class="sector-jump" data-sector="telecom">Telecom &amp; IT<span>3</span></button><button type="button" class="sector-jump" data-sector="construction">Construction<span>1</span></button><button type="button" class="sector-jump" data-sector="public">Public sector<span>1</span></button>
   </div>
 
   <div class="chain-head">
@@ -1080,6 +1080,28 @@
             </div>
           </div>
           <div class="card-links"><a href="projects/genai-platform.html" class="card-link">Read the system design &rarr;</a></div>
+        </div>
+      </article>
+      <article class="tl-card" id="p-compliance-agent" data-capability="fullstack" data-sector="manufacturing" data-type="research" data-stages="engage describe diagnose">
+        <div class="tl-media"><img src="assets/diagrams/complianceagent.svg" alt="Compliance agent workflow: parse, ground in ESRS, calculate in code, validate with Pydantic, human review, datapoint with evidence pack, all written to a hash-chained audit log" class="project-card-image" loading="lazy"></div>
+        <div class="tl-body">
+          <header class="tl-head">
+            <div class="tl-title"><h3>Climate Reporting Compliance Agent (CSRD / ESRS E1)</h3><div class="card-meta">2026 &middot; University of Sk&ouml;vde &middot; AI-COMPETE use case, large manufacturers</div></div>
+            <div class="rt-badges"><span class="rt-badge program">AI-COMPETE</span><span class="rt-badge">System design</span><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge">Manufacturing</span></div>
+          </header>
+          <p class="tl-problem">Energy and emissions figures under the EU&rsquo;s CSRD are audited, so a plausible answer is useless. Agents parse the request and ground it in the ESRS rules, code calculates, Pydantic validates, a named reviewer signs, and every step is written to a tamper-evident audit log.</p>
+          <div class="tl-grid">
+            <div class="tl-left">
+              <div class="outcome"><div class="oc"><span class="oc-v">100%</span><span class="oc-l">schema-valid and reproducible figures (hard gates)</span></div><div class="oc"><span class="oc-v">0</span><span class="oc-l">reported numbers computed by a language model</span></div></div>
+              <div class="tl-value"><span class="vlabel biz">Business value</span>Year-end climate reporting moves from spreadsheets passed between sites to figures that come with their own evidence pack, ready for the auditor.</div>
+              <div class="tl-stack"><span class="tl-row-label">Designed with</span><span class="card-tag">LangGraph</span><span class="card-tag">Pydantic v2</span><span class="card-tag">Instructor</span><span class="card-tag">Azure OpenAI (structured outputs)</span><span class="card-tag">PostgreSQL</span><span class="card-tag">FastAPI</span><span class="card-tag">React</span><span class="card-tag">Docker</span><span class="card-tag">Azure</span><span class="card-tag">OpenTelemetry</span></div>
+            </div>
+            <div class="tl-right">
+              <div class="stage-meter" aria-label="Analytics stages covered"><span class="sm sm-engage on" title="Qualitative">Engage</span><span class="sm sm-describe on" title="Descriptive">Describe</span><span class="sm sm-diagnose on" title="Diagnostic">Diagnose</span><span class="sm sm-predict" title="Predictive — not part of this project">Predict</span><span class="sm sm-prescribe" title="Prescriptive — not part of this project">Prescribe</span></div>
+              <ul class="stage-list"><li class="st st-engage"><span class="st-name">Engage</span><span class="st-text">Requirements from the controllers who sign: structured, deterministic, grounded in versioned rules, human-approved, fully logged.</span></li><li class="st st-describe"><span class="st-name">Describe</span><span class="st-text">Metered energy, fuel and supply contracts pulled read-only; location- and market-based Scope 2 from a versioned factor table.</span></li><li class="st st-diagnose"><span class="st-name">Diagnose</span><span class="st-text">Pydantic schema and business-rule validation, plus a back-test against a previously audited reporting year.</span></li><li class="st st-deliver"><span class="st-name">Audit</span><span class="st-text">LangGraph state persisted in PostgreSQL across review pauses; append-only, hash-chained log of every step.</span></li></ul>
+            </div>
+          </div>
+          <div class="card-links"><a href="projects/compliance-agent.html" class="card-link">Read the system design &rarr;</a></div>
         </div>
       </article>
       </div>
@@ -1715,6 +1737,7 @@ document.querySelectorAll('.sector-jump').forEach(function (b) {
         <span class="sc-tag">Ray</span><span class="sc-tag">LLMOps / MLOps</span>
         <span class="sc-tag">Multi-tenant SaaS architecture</span><span class="sc-tag">Streaming (SSE)</span><span class="sc-tag">Usage metering &amp; rate limiting</span>
         <span class="sc-tag">Token budgeting &amp; model routing</span><span class="sc-tag">Semantic &amp; prompt caching</span><span class="sc-tag">OpenTelemetry (GenAI)</span>
+        <span class="sc-tag">Structured outputs (Pydantic, Instructor)</span><span class="sc-tag">Human-in-the-loop workflows</span><span class="sc-tag">Audit trails &amp; CSRD / ESRS</span>
         <span class="sc-tag">PyTorch</span><span class="sc-tag">MLflow</span>
         <span class="sc-tag">Explainable AI</span>
       </div>
