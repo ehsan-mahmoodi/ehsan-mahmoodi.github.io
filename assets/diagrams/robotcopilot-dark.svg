@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Troubleshooting copilot: agent calling manuals, history and incident tools with a safety guard">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}.r{fill:var(--red)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Robot-cell copilot &#8212; fault code to diagnosis card</text>
+<g font-size="6.5">
+<rect x="12" y="58" width="64" height="34" rx="5" class="bx"/><text x="44.0" y="73.0" class="t" text-anchor="middle" font-weight="600">Event log</text><text x="44.0" y="83.0" class="m" text-anchor="middle">fault code + note</text>
+<rect x="100" y="58" width="60" height="34" rx="5" class="bxa"/><text x="130.0" y="73.0" class="a" text-anchor="middle" font-weight="600">Agent</text><text x="130.0" y="83.0" class="m" text-anchor="middle">plans tool calls</text>
+<rect x="186" y="32" width="86" height="24" rx="5" class="bx"/><text x="229.0" y="42.0" class="t" text-anchor="middle" font-weight="600">Manuals</text><text x="229.0" y="52.0" class="m" text-anchor="middle">pgvector search</text>
+<rect x="186" y="63" width="86" height="24" rx="5" class="bx"/><text x="229.0" y="73.0" class="t" text-anchor="middle" font-weight="600">History</text><text x="229.0" y="83.0" class="m" text-anchor="middle">read-only SQL</text>
+<rect x="186" y="94" width="86" height="24" rx="5" class="bx"/><text x="229.0" y="104.0" class="t" text-anchor="middle" font-weight="600">Past incidents</text><text x="229.0" y="114.0" class="m" text-anchor="middle">similar fixes</text>
+<rect x="296" y="58" width="40" height="34" rx="5" class="bx"/><text x="316.0" y="73.0" class="r" text-anchor="middle" font-weight="600">Safety</text><text x="316.0" y="83.0" class="m" text-anchor="middle">verbatim</text>
+<rect x="344" y="58" width="44" height="34" rx="5" class="bx"/><text x="366.0" y="73.0" class="g" text-anchor="middle" font-weight="600">Card</text><text x="366.0" y="83.0" class="m" text-anchor="middle">top causes</text>
+</g>
+<path class="fl" d="M76 75h24M160 70l26-26M160 75h26M160 80l26 26M272 75h24M336 75h8"/>
+<path class="fm" d="M366 92v30H229v-4"/>
+<text x="300" y="130" class="g" font-size="6.5" text-anchor="middle">confirmed fix written back</text>
+<line x1="12" y1="138" x2="388" y2="138" stroke="var(--line)"/>
+<text x="12" y="152" class="m" font-size="7.5">Recovery time is mostly search time. Safety steps are quoted from the approved procedure,</text>
+<text x="12" y="163" class="m" font-size="7.5">never paraphrased.</text>
+<text x="12" y="176" class="a" font-size="7.5" font-weight="600">LangGraph &#183; PostgreSQL + pgvector &#183; text-to-SQL &#183; React &#183; FastAPI &#183; SMART</text>
+</svg>

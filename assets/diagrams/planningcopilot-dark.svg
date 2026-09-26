@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Planning copilot: orchestrator agent calling documents, prices, MILP scheduler and simulation twin">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}.r{fill:var(--red)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Planning copilot &#8212; the model orchestrates, solvers compute</text>
+<g font-size="6.5">
+<rect x="12" y="58" width="60" height="34" rx="5" class="bx"/><text x="42.0" y="73.0" class="t" text-anchor="middle" font-weight="600">Planner</text><text x="42.0" y="83.0" class="m" text-anchor="middle">what-if question</text>
+<rect x="96" y="58" width="64" height="34" rx="5" class="bxa"/><text x="128.0" y="73.0" class="a" text-anchor="middle" font-weight="600">Orchestrator</text><text x="128.0" y="83.0" class="m" text-anchor="middle">tool calls</text>
+<rect x="186" y="30" width="92" height="22" rx="5" class="bx"/><text x="232.0" y="39.0" class="t" text-anchor="middle" font-weight="600">Documents</text><text x="232.0" y="49.0" class="m" text-anchor="middle">AI Search</text>
+<rect x="186" y="56" width="92" height="22" rx="5" class="bx"/><text x="232.0" y="65.0" class="w" text-anchor="middle" font-weight="600">Prices + carbon</text><text x="232.0" y="75.0" class="m" text-anchor="middle">day-ahead SE3</text>
+<rect x="186" y="82" width="92" height="22" rx="5" class="bx"/><text x="232.0" y="91.0" class="g" text-anchor="middle" font-weight="600">MILP scheduler</text><text x="232.0" y="101.0" class="m" text-anchor="middle">cost / CO&#8322; / lateness</text>
+<rect x="186" y="108" width="92" height="22" rx="5" class="bx"/><text x="232.0" y="117.0" class="t" text-anchor="middle" font-weight="600">Simulation twin</text><text x="232.0" y="127.0" class="m" text-anchor="middle">under variability</text>
+<rect x="302" y="58" width="86" height="34" rx="5" class="bx"/><text x="345.0" y="73.0" class="g" text-anchor="middle" font-weight="600">Trade-off table</text><text x="345.0" y="83.0" class="m" text-anchor="middle">numbers code-checked</text>
+</g>
+<path class="fl" d="M72 75h24M160 70l26-29M160 73l26-6M160 77l26 16M160 80l26 38M278 75h24"/>
+<line x1="12" y1="138" x2="388" y2="138" stroke="var(--line)"/>
+<text x="12" y="152" class="m" font-size="7.5">&#8220;Move Thursday&#8217;s heat-treatment batch to the night?&#8221; &#8212; answered with cost, carbon</text>
+<text x="12" y="163" class="m" font-size="7.5">and due-date impact, and approved by a person.</text>
+<text x="12" y="176" class="a" font-size="7.5" font-weight="600">LangGraph &#183; Azure AI Search &#183; MILP &#183; DES &#183; React &#183; FastAPI &#183; Bicep</text>
+</svg>

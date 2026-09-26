@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plant Knowledge Assistant (Agentic RAG) | Ehsan Mahmoodi</title>
+  <meta name="description" content="System design for an agentic RAG assistant in an engine plant (AI-COMPETE use case): hybrid dense + BM25 retrieval in Qdrant, cross-encoder re-ranking, claim-level citation verification, context engineering and RAG-triad release gates, served with FastAPI streaming on Azure."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="page-head">
+  <div class="eyebrow">AI-COMPETE use case &middot; system design</div>
+  <h1>A Plant Assistant That Cites Its Sources or Says &ldquo;I Don&rsquo;t Know&rdquo;</h1>
+  <p class="lede">
+    An agentic retrieval-augmented generation (RAG) system for an engine plant of the kind AI-COMPETE works with at Volvo Penta and Scania.
+    Engineers and operators ask questions in Swedish or English about procedures, machines and energy rules. Every
+    sentence of the answer points to a document and revision, a verifier checks each claim before it is shown, and
+    a question the documents cannot answer is refused.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">University of Sk&ouml;vde &middot; AI-COMPETE (Vinnova) &middot; 2026 &middot; system design</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose on">Diagnostic</span><span class="gl-stage gl-predict">Predictive</span><span class="gl-stage gl-prescribe">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">LangGraph</span><span class="gl-tech">Qdrant (hybrid dense + BM25)</span><span class="gl-tech">Azure OpenAI</span><span class="gl-tech">Cross-encoder re-ranker</span><span class="gl-tech">FastAPI (SSE streaming)</span><span class="gl-tech">Redis</span><span class="gl-tech">Docker</span><span class="gl-tech">Azure Container Apps</span><span class="gl-tech">OpenTelemetry</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">System design &mdash; architecture, indexing strategy and an evaluation harness with release gates. No production figures are claimed yet.</span></div>
+</div>
+
+<div class="callout">
+  <strong>What this page is.</strong> A system design for a use case that comes out of the AI-COMPETE programme. It is
+  not a report of a deployment at a partner site. Numbers marked <em>target</em> are release gates the system has to
+  pass. They are not measured results.
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; problem formulation</div>
+  <h2>A plausible wrong answer costs more than no answer</h2>
+  <div class="sub">Thousands of pages under revision control, and nobody has time to read them at the line.</div>
+  <p>
+    An engine plant runs on documents: work instructions, machine manuals, maintenance procedures, energy and carbon
+    reporting rules, quality deviations. They come in two languages, and every one of them has revisions. Engineers
+    search shared drives and ask whoever has been there longest. A general-purpose chatbot is worse, because it answers
+    every question fluently whether or not the answer is in the documents.
+  </p>
+  <p>The requirements came from the people who would be blamed for a wrong answer:</p>
+  <ul class="plain">
+    <li><strong>Traceable.</strong> Every sentence links to the document, section and revision it came from.</li>
+    <li><strong>Current.</strong> A superseded revision is never used unless someone asks for it by name.</li>
+    <li><strong>Honest.</strong> If the documents do not support an answer, the assistant says so and names the nearest
+      sources.</li>
+    <li><strong>Permission-aware.</strong> A user never gets an answer built from a document they are not allowed to open.</li>
+    <li><strong>In-tenant.</strong> Documents, embeddings and prompts stay inside the plant&rsquo;s own Azure tenant.</li>
+  </ul>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Architecture &middot; agentic RAG</div>
+  <h2>Retrieve, draft, verify, and loop back when a claim is unsupported</h2>
+  <div class="sub">A LangGraph state machine rather than a single prompt, so each step can be tested and traced on its own.</div>
+<figure>
+<svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Agentic RAG pipeline: the question is decomposed, hybrid retrieval runs in Qdrant, results are re-ranked, a draft answer is written with citations, each claim is verified, unsupported claims loop back to retrieval, and the verified answer is streamed">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnk:#f778ba;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnk:#bf3989;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}.k{fill:var(--pnk)}
+.bx{fill:var(--pnl);stroke:var(--line)}.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<defs><marker id="ar1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" style="fill:var(--mut)"/></marker></defs>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">One question, six testable steps, one verified answer</text>
+<g font-size="11" text-anchor="middle">
+<rect class="bx" x="16" y="86" width="104" height="72" rx="8"/>
+<text x="68" y="112" class="t" font-weight="600">Decompose</text><text x="68" y="130" class="m" font-size="9.5">sub-questions,</text><text x="68" y="144" class="m" font-size="9.5">filters from intent</text>
+<rect class="bx" x="140" y="86" width="124" height="72" rx="8" style="stroke:var(--acc)"/>
+<text x="202" y="112" class="a" font-weight="600">Hybrid retrieve</text><text x="202" y="130" class="m" font-size="9.5">Qdrant dense + BM25</text><text x="202" y="144" class="m" font-size="9.5">RRF, metadata + ACL</text>
+<rect class="bx" x="284" y="86" width="104" height="72" rx="8"/>
+<text x="336" y="112" class="t" font-weight="600">Re-rank</text><text x="336" y="130" class="m" font-size="9.5">cross-encoder,</text><text x="336" y="144" class="m" font-size="9.5">top 50 &#8594; top 8</text>
+<rect class="bx" x="408" y="86" width="116" height="72" rx="8"/>
+<text x="466" y="112" class="t" font-weight="600">Draft</text><text x="466" y="130" class="m" font-size="9.5">every sentence</text><text x="466" y="144" class="m" font-size="9.5">carries [doc&#183;rev&#183;&#167;]</text>
+<rect class="bx" x="544" y="86" width="124" height="72" rx="8" style="stroke:var(--amb)"/>
+<text x="606" y="112" class="w" font-weight="600">Verify claims</text><text x="606" y="130" class="m" font-size="9.5">each claim entailed</text><text x="606" y="144" class="m" font-size="9.5">by its cited chunk?</text>
+<rect class="bx" x="688" y="86" width="156" height="72" rx="8" style="stroke:var(--grn)"/>
+<text x="766" y="112" class="g" font-weight="600">Stream answer</text><text x="766" y="130" class="m" font-size="9.5">SSE, clickable citations</text><text x="766" y="144" class="m" font-size="9.5">to the source page</text>
+</g>
+<path class="fl" marker-end="url(#ar1)" d="M120 122H138M264 122H282M388 122H406M524 122H542M668 122H686"/>
+<path class="fl" marker-end="url(#ar1)" style="stroke:var(--amb);stroke-dasharray:4 3" d="M606 158V204H202V160"/>
+<text x="404" y="222" class="w" font-size="10.5" text-anchor="middle">unsupported claim &#8594; rewrite the query and retrieve again (at most twice)</text>
+<path class="fl" marker-end="url(#ar1)" style="stroke:var(--pnk);stroke-dasharray:4 3" d="M644 158V246H686"/>
+<text x="692" y="250" class="k" font-size="10.5">still unsupported &#8594; refuse,</text>
+<text x="692" y="264" class="k" font-size="10.5">name the nearest sources</text>
+<text x="16" y="290" class="m" font-size="10.5">Question in Swedish or English &#183; answer in the language of the question &#183; the citation always points to the original text.</text>
+</svg>
+  <figcaption>Each box is a node in the graph with its own inputs, outputs, trace span and test set.</figcaption>
+</figure>
+  <ol class="stages">
+    <li><strong>Decompose.</strong> A question like &ldquo;what changed in the hardening furnace start-up procedure, and does
+      it affect the energy log?&rdquo; becomes two sub-questions. Named machines, lines and document types become metadata
+      filters instead of search terms.</li>
+    <li><strong>Hybrid retrieve.</strong> Dense vectors find paraphrases. BM25 finds exact part numbers, fault codes
+      and clause numbers, which embeddings handle badly. Reciprocal rank fusion merges the two lists inside Qdrant,
+      and access-control filters are applied in the query itself, not after it.</li>
+    <li><strong>Re-rank.</strong> A cross-encoder rescores the 50 candidates and keeps 8, which is enough to answer and
+      small enough to verify.</li>
+    <li><strong>Draft with a citation contract.</strong> The model may use only the chunks it has been given, and each
+      sentence has to end with its source ID. A sentence with no source ID is removed.</li>
+    <li><strong>Verify.</strong> The draft is split into claims, and each claim is checked for entailment against the
+      chunk it cites. An unsupported claim sends the graph back to retrieval with a rewritten query. After two failed
+      tries it refuses.</li>
+    <li><strong>Stream.</strong> Server-sent events stream the verified answer as it is written. Each citation opens the
+      source PDF at the cited page and highlights the passage.</li>
+  </ol>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-describe">Vector database &middot; indexing strategy</div>
+  <h2>Retrieval quality is decided at indexing time</h2>
+  <div class="sub">Most RAG failures are chunking failures that only show up later.</div>
+  <div class="two-col">
+    <div>
+      <h3>Chunking that respects the document</h3>
+      <ul class="plain">
+        <li>Split on headings, never inside a numbered procedure. Step 4 without steps 1&ndash;3 is dangerous.</li>
+        <li>Tables are kept whole and also indexed as row-level text, so &ldquo;torque for M12&rdquo; hits the right row.</li>
+        <li>Parent&ndash;child chunks: small chunks are retrieved for precision, and the parent section is expanded into
+          the context for completeness.</li>
+        <li>Scanned PDFs are OCR&rsquo;d with layout detection. Pages with low OCR confidence are flagged for review
+          instead of being indexed silently.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Metadata that does the filtering</h3>
+      <ul class="plain">
+        <li>Every chunk carries document type, line, machine ID, revision, effective date, language and an
+          access-control group, all as indexed payload fields in Qdrant.</li>
+        <li>New revisions are ingested and the old ones are marked superseded, so an answer can never mix two
+          revisions of one procedure.</li>
+        <li>Content hashes skip unchanged pages when re-indexing, so a nightly sync takes minutes.</li>
+        <li>Multilingual embeddings: a question in English retrieves a Swedish work instruction.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Context engineering</div>
+  <h2>What reaches the model matters as much as which model</h2>
+  <div class="sub">A token budget decides what goes in, in what order, and what is left out.</div>
+  <div class="flow" style="--n:4">
+    <div><strong>Budget</strong>A fixed share of the window each for system rules, retrieved evidence, conversation
+      and answer, so a long chat never pushes the evidence out.</div>
+    <div><strong>Order</strong>The strongest evidence goes first and last, where models attend best. Near-duplicate
+      chunks are merged before they take up space.</div>
+    <div><strong>Memory</strong>Earlier turns are compressed into a running summary. The facts the user has confirmed
+      are kept word for word.</div>
+    <div><strong>Contract</strong>The system prompt is short, versioned and tested. It sets citation format, the
+      refusal rule and the answer language, and it holds no domain knowledge.</div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Evaluation &middot; RAG triad</div>
+  <h2>Every change passes the same exam before it ships</h2>
+  <div class="sub">A golden set written with process engineers, including questions that have no answer.</div>
+  <p>
+    The golden set is planned at around 300 question&ndash;answer pairs, each tagged with the chunks that answer it,
+    with about a fifth deliberately unanswerable from the corpus. The same suite runs in CI on every change to a prompt, the chunker, the
+    embedding model or the re-ranker, and a change that drops any gate below target does not merge.
+  </p>
+  <table>
+    <thead><tr><th>Metric</th><th>How it is measured</th><th class="num">Release gate (target)</th></tr></thead>
+    <tbody>
+      <tr><td>Context relevance</td><td>Share of retrieved chunks that are relevant to the question (LLM judge, spot-checked by hand)</td><td class="num">&ge; 0.85</td></tr>
+      <tr><td>Groundedness</td><td>Share of answer claims entailed by their cited chunk</td><td class="num">&ge; 0.95</td></tr>
+      <tr><td>Answer relevance</td><td>Whether the answer addresses the question that was asked</td><td class="num">&ge; 0.90</td></tr>
+      <tr><td>Retrieval recall@8</td><td>Gold chunk present among the 8 chunks passed to the model</td><td class="num">&ge; 0.90</td></tr>
+      <tr><td>Correct refusal</td><td>Unanswerable questions refused, not answered</td><td class="num">&ge; 0.95</td></tr>
+      <tr><td>Retrieval latency</td><td>p95, hybrid query plus re-rank, warm cache excluded</td><td class="num">&lt; 300 ms</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">Judges are cross-checked against a hand-labelled sample, because a judge nobody has validated is just
+    a second model to trust.</p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Production stack</div>
+  <h2>Built to be used by a shift, not only demonstrated</h2>
+  <div class="sub">Containerised, observable and deployed inside the plant&rsquo;s own cloud tenant.</div>
+  <div class="flow" style="--n:3">
+    <div><strong>Serving</strong>FastAPI with server-sent-event streaming and Entra ID sign-in. The user&rsquo;s groups
+      flow into the retrieval filter, so security trimming happens in the vector query.</div>
+    <div><strong>Caching</strong>Redis caches embeddings by content hash and exact-match answers keyed to the index
+      version, so a re-index invalidates cached answers automatically.</div>
+    <div><strong>Operations</strong>Docker images on Azure Container Apps with Qdrant alongside. OpenTelemetry traces
+      every graph node, and a thumbs-down on an answer adds that question to the golden set.</div>
+  </div>
+  <p>
+    Where it goes next: the same retrieval layer becomes the document tool that AI-COMPETE&rsquo;s scheduling and carbon
+    agents call when they need a rule, a machine limit or a reporting requirement. The agents then get the same
+    citation guarantee the people do.
+  </p>
+</section>
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>

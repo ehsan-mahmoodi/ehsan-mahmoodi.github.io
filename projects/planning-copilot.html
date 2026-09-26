@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Energy-Aware Planning Copilot | Ehsan Mahmoodi</title>
+  <meta name="description" content="System design for an energy-aware production planning copilot (AI-COMPETE and SMART use case): an LLM agent orchestrating document search in Azure AI Search, day-ahead prices, a MILP scheduler and a simulation twin, with code-checked numeric faithfulness and a full-stack React and FastAPI app."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="page-head">
+  <div class="eyebrow">AI-COMPETE &amp; SMART use case &middot; system design</div>
+  <h1>Ask the Plan a Question: An Energy-Aware Planning Copilot</h1>
+  <p class="lede">
+    A production planner asks in plain language: &ldquo;If we move Thursday&rsquo;s heat-treatment batch to the night, what
+    happens to cost, carbon and due dates?&rdquo; The copilot reads the plant&rsquo;s constraints from its documents,
+    fetches tomorrow&rsquo;s electricity prices and grid carbon intensity, runs the scheduling optimiser, checks the result
+    on a simulation of the line, and returns a trade-off table the planner approves or rejects.
+    The language model decides which tools to call. The optimiser and the simulation produce every number.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">University of Sk&ouml;vde &middot; AI-COMPETE (Vinnova) &amp; SMART (KK-stiftelsen) &middot; 2026 &middot; system design</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose">Diagnostic</span><span class="gl-stage gl-predict on">Predictive</span><span class="gl-stage gl-prescribe on">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">LangGraph</span><span class="gl-tech">Azure OpenAI (structured outputs)</span><span class="gl-tech">Azure AI Search (hybrid + semantic ranker)</span><span class="gl-tech">MILP (Gurobi / HiGHS)</span><span class="gl-tech">Discrete-event simulation</span><span class="gl-tech">FastAPI</span><span class="gl-tech">React + TypeScript</span><span class="gl-tech">PostgreSQL</span><span class="gl-tech">Bicep + GitHub Actions</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">System design &mdash; architecture, tool contracts and a scenario-based evaluation plan. No plant results are claimed yet.</span></div>
+</div>
+
+<div class="callout">
+  <strong>What this page is.</strong> A system design that joins the two programmes: AI-COMPETE&rsquo;s coordinated
+  agents and SMART&rsquo;s energy-resilience strand, with the problem shaped by engine plants such as Volvo Penta&rsquo;s and
+  Scania&rsquo;s. It is not a report of a partner deployment. Figures marked <em>target</em> are release gates. They are
+  not measured results.
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; problem formulation</div>
+  <h2>The optimiser exists. The planner cannot talk to it.</h2>
+  <div class="sub">Energy-aware scheduling works on paper, but it rarely reaches the planner&rsquo;s desk.</div>
+  <p>
+    Energy-intensive steps such as heat treatment can be moved to cheaper, lower-carbon hours. The optimisation
+    models to do this exist, including this group&rsquo;s own work on energy-aware batch scheduling under spot prices
+    (Applied Energy, 2026). The gap is access. Running a scenario takes a specialist, a data export and a day, so
+    planners stay with the schedule they know and the savings never happen.
+  </p>
+  <p>
+    The design goal is to make a what-if question as cheap as asking a colleague, without letting a language model
+    near the arithmetic.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-prescribe">Architecture &middot; agent over solvers</div>
+  <h2>The model orchestrates, the solvers compute</h2>
+  <div class="sub">Every number in the answer comes from a tool output, and that is checked by code.</div>
+<figure>
+<svg viewBox="0 0 860 320" width="860" height="320" role="img" aria-label="Planning copilot: a planner question goes to an orchestrator agent, which calls document search in Azure AI Search, price and carbon data, the MILP scheduler and a discrete-event simulation twin; results go through a numeric faithfulness check to a trade-off table that the planner approves, and every recommendation is logged">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnk:#f778ba;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnk:#bf3989;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}.k{fill:var(--pnk)}
+.bx{fill:var(--pnl);stroke:var(--line)}.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<defs><marker id="ar3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" style="fill:var(--mut)"/></marker></defs>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">Question in, trade-off table out, planner decides</text>
+<g font-size="11" text-anchor="middle">
+<rect class="bx" x="16" y="124" width="120" height="64" rx="8"/>
+<text x="76" y="150" class="t" font-weight="600">Planner</text><text x="76" y="168" class="m" font-size="9.5">what-if in plain words</text>
+<rect class="bx" x="176" y="124" width="130" height="64" rx="8" style="stroke:var(--acc);stroke-width:1.6"/>
+<text x="241" y="150" class="a" font-weight="600">Orchestrator</text><text x="241" y="168" class="m" font-size="9.5">plans tool calls</text>
+<rect class="bx" x="356" y="44" width="200" height="46" rx="8"/>
+<text x="456" y="64" class="t" font-weight="600">Plant documents</text><text x="456" y="80" class="m" font-size="9.5">Azure AI Search, hybrid + semantic</text>
+<rect class="bx" x="356" y="100" width="200" height="46" rx="8" style="stroke:var(--amb)"/>
+<text x="456" y="120" class="w" font-weight="600">Prices &amp; grid carbon</text><text x="456" y="136" class="m" font-size="9.5">day-ahead, SE3 bidding zone</text>
+<rect class="bx" x="356" y="156" width="200" height="46" rx="8" style="stroke:var(--grn)"/>
+<text x="456" y="176" class="g" font-weight="600">Scheduler (MILP)</text><text x="456" y="192" class="m" font-size="9.5">cost, carbon, due-date objectives</text>
+<rect class="bx" x="356" y="212" width="200" height="46" rx="8" style="stroke:var(--pur)"/>
+<text x="456" y="232" class="p" font-weight="600">Simulation twin</text><text x="456" y="248" class="m" font-size="9.5">tests the plan under variability</text>
+<rect class="bx" x="606" y="124" width="104" height="64" rx="8" style="stroke:var(--pnk)"/>
+<text x="658" y="150" class="k" font-weight="600">Number check</text><text x="658" y="168" class="m" font-size="9.5">every figure traced</text>
+<rect class="bx" x="730" y="124" width="114" height="64" rx="8" style="stroke:var(--grn)"/>
+<text x="787" y="150" class="g" font-weight="600">Trade-off table</text><text x="787" y="168" class="m" font-size="9.5">approve / reject</text>
+</g>
+<path class="fl" marker-end="url(#ar3)" d="M136 156H174M306 146L354 70M306 152L354 124M306 160L354 178M306 166L354 234M556 156H604M710 156H728"/>
+<path class="fl" style="stroke-dasharray:3 3" d="M556 70Q580 110 590 150M556 124Q575 140 590 152M556 178Q575 170 590 160M556 234Q580 200 590 162"/>
+<path class="fl" marker-end="url(#ar3)" style="stroke:var(--mut);stroke-dasharray:4 3" d="M787 188V290H76V190"/>
+<text x="432" y="306" class="m" font-size="10.5" text-anchor="middle">decision, inputs, tool outputs and model version written to an audit log; nothing reaches the MES without a human</text>
+</svg>
+  <figcaption>Four tools behind typed contracts. The model can call them but cannot change what they return.</figcaption>
+</figure>
+  <ol class="stages">
+    <li><strong>Read the constraints.</strong> Furnace capacity, shift rules, quality holds and customer commitments
+      live in documents. Hybrid search in Azure AI Search, with its semantic ranker, returns the relevant clauses as
+      citations and as typed constraints for the optimiser.</li>
+    <li><strong>Fetch the market.</strong> Day-ahead prices for the SE3 bidding zone and a grid carbon-intensity
+      forecast, cached per delivery day.</li>
+    <li><strong>Optimise.</strong> The scheduler runs the baseline and the planner&rsquo;s scenario and returns both
+      plans with cost, emissions and lateness per order.</li>
+    <li><strong>Test on the twin.</strong> The simulation replays the proposed plan with breakdowns and processing-time
+      variation, so a plan that only works on average gets flagged.</li>
+    <li><strong>Check every number.</strong> Before the answer is shown, code confirms that each figure in the text
+      appears in a tool output. If one does not, the answer is regenerated with the numbers supplied as data.</li>
+  </ol>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Context engineering &middot; tool design</div>
+  <h2>Give the model the difference, not the schedule</h2>
+  <div class="sub">A week&rsquo;s schedule is thousands of rows. The decision depends on a few dozen.</div>
+  <div class="flow" style="--n:4">
+    <div><strong>Plan diffs</strong>Tools return what changed between baseline and scenario: moved batches, affected
+      orders and deltas. The full schedule stays in the database, one call away.</div>
+    <div><strong>Typed contracts</strong>Every tool has a Pydantic schema, and the model&rsquo;s calls are validated
+      before anything runs. A bad argument returns an error message the model can act on, not a crash.</div>
+    <div><strong>Units in the data</strong>Money in SEK, energy in kWh, carbon in kg CO&#8322;e, time in the plant&rsquo;s
+      local zone. Units are written into every field name, so the model has nothing to convert.</div>
+    <div><strong>Session state</strong>The scenarios a planner has already tried are kept in structured state, so
+      &ldquo;and what if we also delay order 4471?&rdquo; builds on the last plan instead of starting over.</div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Evaluation &middot; scenario suite</div>
+  <h2>Graded against the solver, not against a judge&rsquo;s opinion</h2>
+  <div class="sub">Every test question has a right answer that the optimiser can compute on its own.</div>
+  <p>
+    The suite pairs planner-style questions with scenarios whose correct outcome is computed by calling the
+    optimiser directly, without the language model. That makes most of the grading exact.
+  </p>
+  <table>
+    <thead><tr><th>Metric</th><th>How it is measured</th><th class="num">Release gate (target)</th></tr></thead>
+    <tbody>
+      <tr><td>Numeric faithfulness</td><td>Figures in the answer that match a tool output, checked by code</td><td class="num">1.00 (hard gate)</td></tr>
+      <tr><td>Scenario fidelity</td><td>The scenario the agent sent to the solver matches the one the question asked for</td><td class="num">&ge; 0.95</td></tr>
+      <tr><td>Constraint citations</td><td>Constraints used by the solver traced to a cited document clause</td><td class="num">&ge; 0.95</td></tr>
+      <tr><td>Infeasible plans shown</td><td>Plans that break a hard constraint and reach the planner</td><td class="num">0</td></tr>
+      <tr><td>Time to answer</td><td>p95, question to trade-off table, typical weekly horizon</td><td class="num">&lt; 60 s</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Full stack &middot; production</div>
+  <h2>A web app a planner opens, not a notebook a researcher runs</h2>
+  <div class="sub">Infrastructure as code, with the evaluation suite as the deploy gate.</div>
+  <div class="flow" style="--n:3">
+    <div><strong>Front end</strong>React + TypeScript: a chat panel beside a Gantt view where the scenario appears as a
+      diff over the current plan, with an approve button that requires a named user.</div>
+    <div><strong>Back end</strong>FastAPI with streamed progress (&ldquo;fetching prices&hellip; solving&hellip;
+      simulating&hellip;&rdquo;), long solves run as background jobs, and PostgreSQL keeps the audit log and scenario
+      history.</div>
+    <div><strong>Delivery</strong>Docker images and Azure resources defined in Bicep, with Entra ID role-based access.
+      GitHub Actions runs unit tests and the scenario suite, and a regression blocks the deploy.</div>
+  </div>
+  <p>
+    This is where the other two designs meet. The <a href="plant-knowledge-rag.html">plant knowledge assistant</a>
+    supplies the cited constraints, and the fault history behind the
+    <a href="robot-cell-copilot.html">robot-cell copilot</a> gives the simulation twin realistic breakdown scenarios.
+  </p>
+</section>
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>
