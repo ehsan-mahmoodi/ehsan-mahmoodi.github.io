@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Production Data Analyst Agent | Ehsan Mahmoodi</title>
-  <meta name="description" content="System design for an autonomous data analyst agent for manufacturing SMEs (AI-COMPETE and SMART use case): tool-calling text-to-SQL and Python, AST validation with sqlglot, sandboxed execution against a read-only replica, Vega-Lite charts, query trails and execution-accuracy evaluation."/>
+  <meta name="description" content="System design for an autonomous data analyst agent for large multi-site manufacturers (AI-COMPETE and SMART use case): tool-calling text-to-SQL and Python, AST validation with sqlglot, sandboxed execution against a read-only replica, Vega-Lite charts, query trails and execution-accuracy evaluation."/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -218,8 +218,9 @@
   <div class="eyebrow">AI-COMPETE &amp; SMART use case &middot; system design</div>
   <h1>Ask the Factory&rsquo;s Data a Question, and See the Query That Answered It</h1>
   <p class="lede">
-    A production manager at a mid-sized manufacturer, such as the SME partners in AI-COMPETE and SMART, wants to know
-    why energy per door rose last month on line 2. There is no data team to ask. This agent turns the question into
+    A production manager at a large multi-site manufacturer, like the Volvo Penta, Scania and ABB plants in
+    AI-COMPETE and SMART, wants to know why energy per engine rose last month on line 2 and whether the sister plant
+    sees the same. The data team&rsquo;s backlog is weeks long. This agent turns the question into
     SQL or Python and validates the code before running it. It executes the code in a sandbox against a read-only
     copy of the data, then returns a chart, a short finding and the full query trail that produced them.
   </p>
@@ -233,20 +234,25 @@
 </div>
 
 <div class="callout">
-  <strong>What this page is.</strong> A system design for a use case from the SME side of AI-COMPETE and SMART. It is
+  <strong>What this page is.</strong> A system design for a use case from the industrial partners of AI-COMPETE and SMART. It is
   not a report of a deployment at any partner. Figures marked <em>target</em> are release gates. They are not
   measured results.
 </div>
 
 <section class="blk">
   <div class="stage-tag st-engage">Stakeholder engagement &middot; problem formulation</div>
-  <h2>The data exists. The person who can query it does not.</h2>
-  <div class="sub">Large plants have analysts. At an SME, the production manager is the analyst.</div>
+  <h2>The data exists. The queue to query it is the problem.</h2>
+  <div class="sub">Large manufacturers have data teams and data platforms. Their analysts are the bottleneck.</div>
   <p>
-    A mid-sized manufacturer already collects the data: MES records of orders and stops, energy meter readings,
-    scrap logs, and ERP costs. Questions such as &ldquo;which product family drove the energy increase?&rdquo; still
-    wait days for a spreadsheet, or they never get asked. AI-COMPETE&rsquo;s constraint applies directly: the tool has to
-    work without a data team and without new infrastructure.
+    An established manufacturer collects everything: MES records of orders and stops, energy metering per line,
+    scrap and quality logs, and ERP costs, across several plants. The data platform and the analysts exist, but every
+    ad-hoc question joins their queue. &ldquo;Which product variant drove the energy increase, and is it the same in
+    the other plant?&rdquo; waits weeks, or it never gets asked.
+  </p>
+  <p>
+    Scale adds two problems that a single-site tool never meets. Plants define the same metric differently, so two
+    OEE figures may not be comparable. And thousands of potential users with different rights mean governance has
+    to sit in the architecture, not in a policy document.
   </p>
   <p>Three requirements came before any feature:</p>
   <ul class="plain">
@@ -254,8 +260,9 @@
       production data, whatever the user types.</li>
     <li><strong>Can be checked.</strong> Every number links to the exact query, the row count and the time of the
       data it came from.</li>
-    <li><strong>Speaks the plant&rsquo;s language.</strong> &ldquo;OEE&rdquo;, &ldquo;energy per unit&rdquo; and
-      &ldquo;line 2&rdquo; mean what the plant means by them, not what a model guesses.</li>
+    <li><strong>One definition per metric.</strong> &ldquo;OEE&rdquo;, &ldquo;energy per unit&rdquo; and
+      &ldquo;line 2&rdquo; mean the governed company definition, the same in every plant, not what a model
+      guesses.</li>
   </ul>
 </section>
 
@@ -299,7 +306,7 @@ text{font-family:Inter,system-ui,sans-serif}
 </figure>
   <ol class="stages">
     <li><strong>Ground the question.</strong> A semantic layer defines each metric once: OEE, energy per unit, scrap
-      rate, which tables they come from, and how lines and shifts are named. The agent gets the definitions that match
+      rate, which tables they come from, and how lines and shifts are named in each plant. The agent gets the definitions that match
       the question, not the whole schema.</li>
     <li><strong>Choose a tool.</strong> Lookups and aggregations go to SQL. Trends, decompositions and anything
       statistical go to Python with pandas. The tools are typed function calls, and the choice is logged so it can be

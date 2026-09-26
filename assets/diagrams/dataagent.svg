@@ -23,7 +23,7 @@ text{font-family:Inter,system-ui,-apple-system,sans-serif}
 <path class="fm" d="M232 84v26H112"/>
 <text x="248" y="118" class="w" font-size="6.5">error &#8594; retry with sample</text>
 <line x1="12" y1="134" x2="388" y2="134" stroke="var(--line)"/>
-<text x="12" y="149" class="m" font-size="7.5">&#8220;Why did energy per unit rise on line 2?&#8221; &#8212; a chart, a finding and the query that</text>
-<text x="12" y="161" class="m" font-size="7.5">produced them, for a manager with no data team.</text>
+<text x="12" y="149" class="m" font-size="7.5">&#8220;Why did energy per engine rise on line 2 &#8212; and in the sister plant?&#8221;</text>
+<text x="12" y="161" class="m" font-size="7.5">A chart, a finding and the query that produced them, without the analyst queue.</text>
 <text x="12" y="175" class="a" font-size="7.5" font-weight="600">Tool calling &#183; sqlglot &#183; DuckDB &#183; sandboxed Python &#183; Vega-Lite &#183; React &#183; FastAPI</text>
 </svg>
