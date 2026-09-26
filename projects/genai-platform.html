@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multi-Tenant GenAI Platform | Ehsan Mahmoodi</title>
+  <meta name="description" content="System design for the multi-tenant GenAI platform that hosts the AI-COMPETE and SMART tools: Next.js with SSE streaming, FastAPI, PostgreSQL row-level security and pgvector, Redis rate limiting, Entra ID single sign-on, workspace API keys, token metering ledger and Azure hosting in Sweden Central."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="page-head">
+  <div class="eyebrow">AI-COMPETE &amp; SMART platform &middot; system design</div>
+  <h1>One Platform, Many Partners, and No Way to See Each Other&rsquo;s Data</h1>
+  <p class="lede">
+    The AI tools on this site (plant knowledge assistant, robot-cell copilot, data analyst agent, planning copilot and
+    maintenance language model) only matter if people at the partner companies can sign in and use them. This is the
+    multi-tenant GenAI platform that hosts them. It gives each partner an isolated workspace with its own sign-in,
+    streaming chat and tools, API keys for its own systems, and a usage meter that shows exactly what each partner
+    consumed. The partners include competitors, so isolation between tenants is the first requirement, not a feature.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">University of Sk&ouml;vde &middot; AI-COMPETE (Vinnova) &amp; SMART (KK-stiftelsen) &middot; 2026 &middot; system design</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe">Descriptive</span><span class="gl-stage gl-diagnose">Diagnostic</span><span class="gl-stage gl-predict">Predictive</span><span class="gl-stage gl-prescribe">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Next.js (App Router, SSR)</span><span class="gl-tech">React + TypeScript</span><span class="gl-tech">Server-sent events</span><span class="gl-tech">FastAPI</span><span class="gl-tech">PostgreSQL (row-level security) + pgvector</span><span class="gl-tech">Redis</span><span class="gl-tech">Azure API Management</span><span class="gl-tech">Microsoft Entra ID (OIDC)</span><span class="gl-tech">Azure OpenAI</span><span class="gl-tech">Azure Container Apps</span><span class="gl-tech">OpenTelemetry</span><span class="gl-tech">Playwright</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">System design &mdash; product scope, tenancy model, gateway, metering and hosting. No usage figures are claimed yet.</span></div>
+</div>
+
+<div class="callout">
+  <strong>What this page is.</strong> A system design for the platform layer of AI-COMPETE and SMART. It is not a
+  report of a deployment at any partner. Figures marked <em>target</em> are release gates. They are not measured
+  results.
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; product scope</div>
+  <h2>A research prototype that partners can actually log into</h2>
+  <div class="sub">Most programme software dies as a notebook on one researcher&rsquo;s laptop.</div>
+  <p>
+    Industry&ndash;academia programmes often end with working models that no partner employee ever used, because
+    running them needed the researcher. The platform closes that gap. Engineers at each partner sign in with their
+    own company account, use the AI tools in a browser, and connect their own systems through an API. The programme
+    can also see who used what, so the partners&rsquo; in-kind hours and the cloud bill can be tied to actual use.
+  </p>
+  <div class="flow" style="--n:5">
+    <div><strong>Sign-in</strong>Single sign-on with each partner&rsquo;s own Entra ID tenant, with no new passwords.</div>
+    <div><strong>Workspaces</strong>One per partner, and optionally per plant, with its own documents, data
+      connections and members.</div>
+    <div><strong>Streaming chat</strong>Token-by-token answers, tool steps shown live, and sessions that persist
+      across devices.</div>
+    <div><strong>API keys</strong>Workspace-scoped keys so a partner&rsquo;s MES or BI tool can call the agents
+      directly.</div>
+    <div><strong>Usage</strong>Tokens, tool calls and GPU seconds per workspace, user and tool, shown on a live
+      dashboard.</div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Architecture</div>
+  <h2>Every request crosses the same four checkpoints</h2>
+  <div class="sub">Identity, gateway, tenant-scoped data and the metering ledger.</div>
+<figure>
+<svg viewBox="0 0 860 320" width="860" height="320" role="img" aria-label="Platform architecture: browser running Next.js and partner systems with API keys go through an API gateway handling authentication, keys and rate limits, to a FastAPI orchestrator that routes to the AI tools and Azure OpenAI; PostgreSQL with row-level security and pgvector, Redis, and a metering ledger sit underneath">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnk:#f778ba;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnk:#bf3989;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}.k{fill:var(--pnk)}
+.bx{fill:var(--pnl);stroke:var(--line)}.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<defs><marker id="ar6" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" style="fill:var(--mut)"/></marker></defs>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">Two ways in, one gateway, tenant-scoped everything</text>
+<g font-size="11" text-anchor="middle">
+<rect class="bx" x="16" y="52" width="150" height="56" rx="8"/>
+<text x="91" y="76" class="t" font-weight="600">Browser &#183; Next.js</text><text x="91" y="94" class="m" font-size="9.5">SSR, SSE streaming</text>
+<rect class="bx" x="16" y="126" width="150" height="56" rx="8"/>
+<text x="91" y="150" class="t" font-weight="600">Partner systems</text><text x="91" y="168" class="m" font-size="9.5">MES / BI via API key</text>
+<rect class="bx" x="210" y="80" width="150" height="74" rx="8" style="stroke:var(--pnk)"/>
+<text x="285" y="104" class="k" font-weight="600">API gateway</text><text x="285" y="122" class="m" font-size="9.5">Entra ID / key auth,</text><text x="285" y="136" class="m" font-size="9.5">tiered rate limits</text>
+<rect class="bx" x="404" y="80" width="150" height="74" rx="8" style="stroke:var(--acc);stroke-width:1.6"/>
+<text x="479" y="104" class="a" font-weight="600">Orchestrator</text><text x="479" y="122" class="m" font-size="9.5">FastAPI, sessions,</text><text x="479" y="136" class="m" font-size="9.5">context, streaming</text>
+<rect class="bx" x="598" y="52" width="246" height="56" rx="8"/>
+<text x="721" y="76" class="t" font-weight="600">AI tools</text><text x="721" y="94" class="m" font-size="9.5">RAG &#183; copilots &#183; data agent &#183; fine-tuned model</text>
+<rect class="bx" x="598" y="126" width="246" height="56" rx="8"/>
+<text x="721" y="150" class="t" font-weight="600">Model endpoints</text><text x="721" y="168" class="m" font-size="9.5">Azure OpenAI &#183; vLLM (in-tenant)</text>
+<rect class="bx" x="210" y="226" width="196" height="56" rx="8" style="stroke:var(--grn)"/>
+<text x="308" y="250" class="g" font-weight="600">PostgreSQL</text><text x="308" y="268" class="m" font-size="9.5">row-level security per tenant, pgvector</text>
+<rect class="bx" x="426" y="226" width="150" height="56" rx="8"/>
+<text x="501" y="250" class="t" font-weight="600">Redis</text><text x="501" y="268" class="m" font-size="9.5">rate buckets, stream resume</text>
+<rect class="bx" x="596" y="226" width="248" height="56" rx="8" style="stroke:var(--amb)"/>
+<text x="720" y="250" class="w" font-weight="600">Metering ledger</text><text x="720" y="268" class="m" font-size="9.5">append-only usage events &#8594; dashboards, budgets</text>
+</g>
+<path class="fl" marker-end="url(#ar6)" d="M166 80L208 106M166 154L208 128M360 117H402M554 104L596 80M554 130L596 154"/>
+<path class="fl" style="stroke-dasharray:3 3" d="M479 154V206H308V224M479 206H501V224M479 206H720V224"/>
+<text x="16" y="306" class="m" font-size="10.5">The tenant ID comes from the verified token or key, never from the request body. The database enforces it again with row-level security.</text>
+</svg>
+  <figcaption>The gateway decides who you are, the database decides what you can see, and the ledger records what you used.</figcaption>
+</figure>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Front end</div>
+  <h2>Fast to first paint, and fast to first token</h2>
+  <div class="sub">Next.js with server rendering for the frame and streaming for the answer.</div>
+  <ul class="plain">
+    <li><strong>Server-rendered shell.</strong> The App Router renders the workspace, session list and dashboard on the
+      server, with the user&rsquo;s session already resolved, so the page is usable before any client JavaScript
+      runs.</li>
+    <li><strong>SSE token streaming.</strong> Answers stream as server-sent events: tokens, tool-step events (&ldquo;querying
+      maintenance history&hellip;&rdquo;) and a final usage event. The event IDs let a dropped connection resume from
+      the last one received instead of starting over.</li>
+    <li><strong>Optimistic UI.</strong> Messages, renames and workspace switches update locally at once and reconcile
+      with the server afterwards. That is what makes the interface feel faster than the model.</li>
+    <li><strong>Live usage dashboard.</strong> Per-workspace charts of tokens, cost and tool calls, updated from the
+      same event stream the ledger writes.</li>
+    <li><strong>Tested like a product.</strong> Playwright end-to-end tests cover sign-in, streaming, tenant switching
+      and key management on every pull request.</li>
+  </ul>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Multi-tenancy &middot; security</div>
+  <h2>Isolation enforced in three layers, and tested on every deploy</h2>
+  <div class="sub">If one layer has a bug, the next one still stops the leak.</div>
+  <table>
+    <thead><tr><th>Layer</th><th>How tenancy is enforced</th></tr></thead>
+    <tbody>
+      <tr><td>Identity</td><td>A multi-tenant Entra ID app. The partner&rsquo;s tenant ID in the signed token maps to a platform tenant, and there is no self-registration.</td></tr>
+      <tr><td>Application</td><td>Every service call carries a tenant context taken from the verified identity. Queries without one fail closed.</td></tr>
+      <tr><td>Database</td><td>PostgreSQL row-level security on every tenant table, including the pgvector embeddings, so a missing <code>WHERE</code> clause returns nothing rather than someone else&rsquo;s rows.</td></tr>
+      <tr><td>Retrieval &amp; caches</td><td>Vector search, Redis keys and prompt caches are all namespaced by tenant, so a cached answer can never cross companies.</td></tr>
+      <tr><td>API keys</td><td>Shown once, then stored only as a hash. Each key has a visible prefix, workspace and scope limits, an expiry and one-click rotation, and every use is logged.</td></tr>
+    </tbody>
+  </table>
+  <p>
+    An automated isolation suite runs on every deploy. It creates two tenants, seeds each with marked data, then
+    tries every endpoint, search and cache path from one tenant to read the other. Any hit blocks the release.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Gateway, rate limits &amp; metering</div>
+  <h2>Know who used what, and stop anyone using too much</h2>
+  <div class="sub">Model calls are metered precisely, because shared cloud credit is shared money.</div>
+  <div class="two-col">
+    <div>
+      <h3>Rate limiting</h3>
+      <ul class="plain">
+        <li>Azure API Management handles authentication and coarse per-key limits at the edge.</li>
+        <li>Redis token buckets in FastAPI apply tiered limits per workspace and per user, counted in model tokens
+          rather than requests, since one long analysis costs as much as a hundred short questions.</li>
+        <li>Limits return <code>429</code> with a <code>Retry-After</code> header and show in the UI as a friendly
+          countdown, not an error.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Token metering</h3>
+      <ul class="plain">
+        <li>Before a call, a tokenizer-based estimate is checked against the workspace&rsquo;s remaining budget.</li>
+        <li>After the call, the provider&rsquo;s reported usage is authoritative. It is written as an idempotent,
+          append-only ledger event: tenant, user, tool, model, tokens in and out, GPU seconds and cost.</li>
+        <li>An outbox pattern guarantees every completed call is metered exactly once, even if a worker crashes
+          mid-stream.</li>
+        <li>The ledger is billing-ready. The same events could drive Stripe usage-based billing through a webhook
+          if the platform is commercialised after the programme.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Context engineering across sessions</div>
+  <h2>Long conversations, bounded context</h2>
+  <div class="sub">A session can run for weeks. The prompt cannot grow with it.</div>
+  <div class="flow" style="--n:4">
+    <div><strong>Session store</strong>Every message, tool call and result is kept in PostgreSQL, so a session opens
+      exactly where it was left, on any device.</div>
+    <div><strong>Rolling summary</strong>Older turns are compressed into a summary. Facts the user confirmed and
+      decisions they approved are pinned word for word.</div>
+    <div><strong>Workspace memory</strong>Plant names, line codes and preferred units are stored per workspace, so
+      every new session starts already knowing them.</div>
+    <div><strong>Prompt caching</strong>Stable system prompts and workspace context come first, so the provider&rsquo;s
+      prompt cache cuts cost and time to first token on repeat turns.</div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Hosting &amp; release gates</div>
+  <h2>Hosted where the partners&rsquo; data is allowed to be</h2>
+  <div class="sub">Azure in Sweden Central, defined in Bicep and deployed by GitHub Actions.</div>
+  <p>
+    Next.js and FastAPI run as containers on Azure Container Apps, next to managed PostgreSQL, Azure Cache for Redis
+    and the API gateway, all in the Sweden Central region. Partners&rsquo; data stays in the EU, and they already trust
+    Azure. A Vercel-style edge platform would be simpler to host, but it would put a third party between the partners
+    and their data. OpenTelemetry traces follow one request from the browser to the model and back, with a tenant ID
+    on every span.
+  </p>
+  <table>
+    <thead><tr><th>Metric</th><th>How it is measured</th><th class="num">Release gate (target)</th></tr></thead>
+    <tbody>
+      <tr><td>Cross-tenant reads</td><td>Isolation suite on every deploy</td><td class="num">0 (hard gate)</td></tr>
+      <tr><td>Metering completeness</td><td>Ledger events compared with provider usage, reconciled daily</td><td class="num">100%</td></tr>
+      <tr><td>Time to first token</td><td>p95, from send to first streamed token, chat without tools</td><td class="num">&lt; 1.5 s</td></tr>
+      <tr><td>UI interaction latency</td><td>p95, from click to visual update, measured in the browser</td><td class="num">&lt; 100 ms</td></tr>
+      <tr><td>Gateway overhead</td><td>p95 added by authentication, rate limiting and metering</td><td class="num">&lt; 30 ms</td></tr>
+    </tbody>
+  </table>
+  <p>
+    The tools it hosts: <a href="plant-knowledge-rag.html">plant knowledge assistant</a> &middot;
+    <a href="robot-cell-copilot.html">robot-cell copilot</a> &middot;
+    <a href="data-analyst-agent.html">data analyst agent</a> &middot;
+    <a href="planning-copilot.html">planning copilot</a> &middot;
+    <a href="maintenance-llm-finetuning.html">maintenance language model</a>.
+  </p>
+</section>
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>
