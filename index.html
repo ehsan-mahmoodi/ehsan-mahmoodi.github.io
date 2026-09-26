@@ -1059,28 +1059,6 @@
           <div class="card-links"><a href="projects/planning-copilot.html" class="card-link">Read the system design &rarr;</a></div>
         </div>
       </article>
-      <article class="tl-card" id="p-maint-llm" data-capability="fullstack" data-sector="manufacturing" data-type="research" data-stages="engage describe diagnose">
-        <div class="tl-media"><img src="assets/diagrams/maintllm.svg" alt="Fine-tuning pipeline: curate, QLoRA train, evaluate against baselines, register, quantise and serve with vLLM, producing structured failure records; engineer corrections feed the next round" class="project-card-image" loading="lazy"></div>
-        <div class="tl-body">
-          <header class="tl-head">
-            <div class="tl-title"><h3>Maintenance Language Model &mdash; LLM Fine-Tuning &amp; MLOps</h3><div class="card-meta">2026 &middot; University of Sk&ouml;vde &middot; SMART &amp; AI-COMPETE use case, multi-site manufacturers</div></div>
-            <div class="rt-badges"><span class="rt-badge program">SMART</span><span class="rt-badge program">AI-COMPETE</span><span class="rt-badge">System design</span><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge">Manufacturing</span></div>
-          </header>
-          <p class="tl-problem">Years of failure history sit in work orders written in Swedish shop-floor shorthand that no model was trained on. An open-weights model fine-tuned with QLoRA turns each one into a structured failure record, served with vLLM inside the company&rsquo;s own tenant.</p>
-          <div class="tl-grid">
-            <div class="tl-left">
-              <div class="outcome"><div class="oc"><span class="oc-v">4</span><span class="oc-l">systems compared: 2 prompted baselines, a hosted model, the fine-tune</span></div><div class="oc"><span class="oc-v">1.00</span><span class="oc-l">schema-valid output via guided decoding (gate)</span></div></div>
-              <div class="tl-value"><span class="vlabel biz">Business value</span>Turns an archive nobody can analyse into labelled failure history for resilience models, at a batch cost well below a hosted model, with the data staying in-tenant.</div>
-              <div class="tl-stack"><span class="tl-row-label">Designed with</span><span class="card-tag">PyTorch</span><span class="card-tag">Hugging Face (Transformers, PEFT, TRL)</span><span class="card-tag">Unsloth</span><span class="card-tag">QLoRA</span><span class="card-tag">FlashAttention-2</span><span class="card-tag">DeepSpeed</span><span class="card-tag">Ray Tune</span><span class="card-tag">MLflow</span><span class="card-tag">vLLM</span><span class="card-tag">AWQ / FP8</span><span class="card-tag">Azure ML</span><span class="card-tag">GitHub Actions</span></div>
-            </div>
-            <div class="tl-right">
-              <div class="stage-meter" aria-label="Analytics stages covered"><span class="sm sm-engage on" title="Qualitative">Engage</span><span class="sm sm-describe on" title="Descriptive">Describe</span><span class="sm sm-diagnose on" title="Diagnostic">Diagnose</span><span class="sm sm-predict" title="Predictive — not part of this project">Predict</span><span class="sm sm-prescribe" title="Prescriptive — not part of this project">Prescribe</span></div>
-              <ul class="stage-list"><li class="st st-engage"><span class="st-name">Engage</span><span class="st-text">Why fine-tune at all: volume, a fixed failure taxonomy, plant jargon and data residency.</span></li><li class="st st-describe"><span class="st-name">Describe</span><span class="st-text">Engineer gold labels, filtered teacher labels, synthetic data for rare failure modes, splits by time and plant.</span></li><li class="st st-diagnose"><span class="st-name">Diagnose</span><span class="st-text">Fine-tune must beat zero-shot, few-shot and a hosted model on macro-F1 before it ships, then again after quantisation.</span></li></ul>
-            </div>
-          </div>
-          <div class="card-links"><a href="projects/maintenance-llm-finetuning.html" class="card-link">Read the system design &rarr;</a></div>
-        </div>
-      </article>
       </div>
     </div>
     <div class="tl-year" data-year="2025">
@@ -1128,6 +1106,28 @@
             </div>
           </div>
           <div class="card-links"><a href="projects/ai-compete.html" class="card-link">Read the case study &rarr;</a><a href="https://www.his.se/en/research/virtual-engineering/virtual-production-development/next-generation-factories-the-ai-way-to-sustainable-production/" target="_blank" rel="noopener" class="card-link">Project page &#8599;</a></div>
+        </div>
+      </article>
+      <article class="tl-card" id="p-maint-llm" data-capability="fullstack" data-sector="manufacturing" data-type="research" data-stages="engage describe diagnose">
+        <div class="tl-media"><img src="assets/diagrams/maintllm.svg" alt="Fine-tuning pipeline: curate, QLoRA train, evaluate against baselines, register, quantise and serve with vLLM, producing structured failure records; engineer corrections feed the next round" class="project-card-image" loading="lazy"></div>
+        <div class="tl-body">
+          <header class="tl-head">
+            <div class="tl-title"><h3>Maintenance Language Model &mdash; LLM Fine-Tuning &amp; MLOps</h3><div class="card-meta">2025 &middot; University of Sk&ouml;vde &middot; SMART &amp; AI-COMPETE use case, multi-site manufacturers</div></div>
+            <div class="rt-badges"><span class="rt-badge program">SMART</span><span class="rt-badge program">AI-COMPETE</span><span class="rt-badge">System design</span><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge">Manufacturing</span></div>
+          </header>
+          <p class="tl-problem">Years of failure history sit in work orders written in Swedish shop-floor shorthand that no model was trained on. An open-weights model fine-tuned with QLoRA turns each one into a structured failure record, served with vLLM inside the company&rsquo;s own tenant.</p>
+          <div class="tl-grid">
+            <div class="tl-left">
+              <div class="outcome"><div class="oc"><span class="oc-v">4</span><span class="oc-l">systems compared: 2 prompted baselines, a hosted model, the fine-tune</span></div><div class="oc"><span class="oc-v">1.00</span><span class="oc-l">schema-valid output via guided decoding (gate)</span></div></div>
+              <div class="tl-value"><span class="vlabel biz">Business value</span>Turns an archive nobody can analyse into labelled failure history for resilience models, at a batch cost well below a hosted model, with the data staying in-tenant.</div>
+              <div class="tl-stack"><span class="tl-row-label">Designed with</span><span class="card-tag">PyTorch</span><span class="card-tag">Hugging Face (Transformers, PEFT, TRL)</span><span class="card-tag">Unsloth</span><span class="card-tag">QLoRA</span><span class="card-tag">FlashAttention-2</span><span class="card-tag">DeepSpeed</span><span class="card-tag">Ray Tune</span><span class="card-tag">MLflow</span><span class="card-tag">vLLM</span><span class="card-tag">AWQ / FP8</span><span class="card-tag">Azure ML</span><span class="card-tag">GitHub Actions</span></div>
+            </div>
+            <div class="tl-right">
+              <div class="stage-meter" aria-label="Analytics stages covered"><span class="sm sm-engage on" title="Qualitative">Engage</span><span class="sm sm-describe on" title="Descriptive">Describe</span><span class="sm sm-diagnose on" title="Diagnostic">Diagnose</span><span class="sm sm-predict" title="Predictive — not part of this project">Predict</span><span class="sm sm-prescribe" title="Prescriptive — not part of this project">Prescribe</span></div>
+              <ul class="stage-list"><li class="st st-engage"><span class="st-name">Engage</span><span class="st-text">Why fine-tune at all: volume, a fixed failure taxonomy, plant jargon and data residency.</span></li><li class="st st-describe"><span class="st-name">Describe</span><span class="st-text">Engineer gold labels, filtered teacher labels, synthetic data for rare failure modes, splits by time and plant.</span></li><li class="st st-diagnose"><span class="st-name">Diagnose</span><span class="st-text">Fine-tune must beat zero-shot, few-shot and a hosted model on macro-F1 before it ships, then again after quantisation.</span></li></ul>
+            </div>
+          </div>
+          <div class="card-links"><a href="projects/maintenance-llm-finetuning.html" class="card-link">Read the system design &rarr;</a></div>
         </div>
       </article>
       </div>
