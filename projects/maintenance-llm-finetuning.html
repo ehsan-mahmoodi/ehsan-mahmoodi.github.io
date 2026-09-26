@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maintenance Language Model (LLM Fine-Tuning) | Ehsan Mahmoodi</title>
+  <meta name="description" content="System design for fine-tuning an open-weights LLM with QLoRA to turn Swedish shop-floor maintenance work orders into structured failure records (SMART and AI-COMPETE use case): data curation, Unsloth and PEFT training, baseline evaluation, AWQ quantisation, vLLM multi-LoRA serving and CI/CD on Azure ML."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="page-head">
+  <div class="eyebrow">SMART &amp; AI-COMPETE use case &middot; system design</div>
+  <h1>Teaching an Open-Weights Model to Read Maintenance Work Orders</h1>
+  <p class="lede">
+    Large manufacturers such as the Volvo Penta, Scania and ABB plants in SMART and AI-COMPETE hold years of
+    maintenance work orders. Technicians wrote them in Swedish shop-floor shorthand, full of plant abbreviations and
+    equipment codes. This project fine-tunes an open-weights language model with QLoRA to turn each record into a
+    structured failure record: component, failure mode, cause, action and downtime. It then serves the model with
+    vLLM inside the company&rsquo;s own cloud tenant, with MLOps covering data curation, deployment and monitoring.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">University of Sk&ouml;vde &middot; SMART (KK-stiftelsen) &amp; AI-COMPETE (Vinnova) &middot; 2026 &middot; system design</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose on">Diagnostic</span><span class="gl-stage gl-predict">Predictive</span><span class="gl-stage gl-prescribe">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">PyTorch</span><span class="gl-tech">Hugging Face Transformers, PEFT, TRL</span><span class="gl-tech">Unsloth</span><span class="gl-tech">QLoRA (4-bit NF4)</span><span class="gl-tech">FlashAttention-2</span><span class="gl-tech">DeepSpeed ZeRO-3</span><span class="gl-tech">Ray Tune</span><span class="gl-tech">MLflow</span><span class="gl-tech">vLLM (multi-LoRA, guided JSON)</span><span class="gl-tech">AWQ / FP8</span><span class="gl-tech">Azure ML</span><span class="gl-tech">GitHub Actions</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">System design &mdash; data pipeline, training recipe, evaluation protocol and serving architecture. No benchmark results are claimed yet.</span></div>
+</div>
+
+<div class="callout">
+  <strong>What this page is.</strong> A system design for a use case from the industrial partners of SMART and
+  AI-COMPETE. It is not a report of a deployment at any partner. The comparison tables below describe the planned
+  evaluation and its release gates. They are not measured results.
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; problem formulation</div>
+  <h2>Years of failure history, written in a language no model was trained on</h2>
+  <div class="sub">The data SMART&rsquo;s resilience models need already exists, as free text.</div>
+  <p>
+    Predicting failures and planning recovery needs labelled failure history: which component failed, how, why, what
+    fixed it and how long the line stood still. A large plant&rsquo;s maintenance system holds hundreds of thousands of
+    such records, but the important part is a free-text note like <em>&ldquo;SP2 larm 50204, bytt gripdon, kabel
+    n&ouml;tt vid axel 6, 40 min&rdquo;</em>. It is Swedish and English mixed, with abbreviations that differ from plant
+    to plant.
+  </p>
+  <p>Why fine-tune, rather than prompt a large hosted model or use retrieval:</p>
+  <ul class="plain">
+    <li><strong>Volume.</strong> Backfilling the whole history and then classifying every new record is a
+      high-volume batch job. Per-token API pricing and rate limits dominate the cost at that scale.</li>
+    <li><strong>Consistency.</strong> The output has to follow one failure taxonomy the same way every time. Few-shot
+      prompting drifts. A fine-tuned model learns the taxonomy.</li>
+    <li><strong>Jargon.</strong> Plant abbreviations and equipment codes are not in any pre-training corpus.
+      Retrieval can supply facts, but it cannot teach a model to read a new dialect.</li>
+    <li><strong>Data residency.</strong> Maintenance records name people, suppliers and weaknesses in the line. The
+      model runs inside the company&rsquo;s tenant, on weights the company controls.</li>
+  </ul>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Pipeline &middot; end-to-end MLOps</div>
+  <h2>Curate, train, evaluate, quantise, serve, and learn from corrections</h2>
+  <div class="sub">Every stage is versioned. A model reaches production only through the evaluation gate.</div>
+<figure>
+<svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Fine-tuning pipeline: work orders are curated with gold and teacher labels, a QLoRA adapter is trained, evaluated against baselines at a release gate, quantised and served by vLLM; low-confidence predictions go to engineer review and return as new training data">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnk:#f778ba;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnk:#bf3989;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}.k{fill:var(--pnk)}
+.bx{fill:var(--pnl);stroke:var(--line)}.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<defs><marker id="ar5" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" style="fill:var(--mut)"/></marker></defs>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">From free-text work orders to a served, monitored model</text>
+<g font-size="11" text-anchor="middle">
+<rect class="bx" x="16" y="86" width="124" height="72" rx="8"/>
+<text x="78" y="112" class="t" font-weight="600">Curate</text><text x="78" y="130" class="m" font-size="9.5">PII scrub, dedupe,</text><text x="78" y="144" class="m" font-size="9.5">gold + teacher labels</text>
+<rect class="bx" x="160" y="86" width="124" height="72" rx="8" style="stroke:var(--acc);stroke-width:1.6"/>
+<text x="222" y="112" class="a" font-weight="600">QLoRA train</text><text x="222" y="130" class="m" font-size="9.5">4-bit base, adapter,</text><text x="222" y="144" class="m" font-size="9.5">Ray Tune sweeps</text>
+<rect class="bx" x="304" y="86" width="124" height="72" rx="8" style="stroke:var(--pnk)"/>
+<text x="366" y="112" class="k" font-weight="600">Evaluate</text><text x="366" y="130" class="m" font-size="9.5">vs 3 baselines,</text><text x="366" y="144" class="m" font-size="9.5">release gate</text>
+<rect class="bx" x="448" y="86" width="124" height="72" rx="8"/>
+<text x="510" y="112" class="t" font-weight="600">Register</text><text x="510" y="130" class="m" font-size="9.5">MLflow: data, code,</text><text x="510" y="144" class="m" font-size="9.5">adapter, eval report</text>
+<rect class="bx" x="592" y="86" width="124" height="72" rx="8" style="stroke:var(--amb)"/>
+<text x="654" y="112" class="w" font-weight="600">Quantise + serve</text><text x="654" y="130" class="m" font-size="9.5">AWQ / FP8, vLLM,</text><text x="654" y="144" class="m" font-size="9.5">guided JSON</text>
+<rect class="bx" x="736" y="86" width="108" height="72" rx="8" style="stroke:var(--grn)"/>
+<text x="790" y="112" class="g" font-weight="600">Records</text><text x="790" y="130" class="m" font-size="9.5">failure mode,</text><text x="790" y="144" class="m" font-size="9.5">cause, downtime</text>
+</g>
+<path class="fl" marker-end="url(#ar5)" d="M140 122H158M284 122H302M428 122H446M572 122H590M716 122H734"/>
+<path class="fl" marker-end="url(#ar5)" style="stroke:var(--pnk);stroke-dasharray:4 3" d="M366 158V196H222V160"/>
+<text x="294" y="212" class="k" font-size="10.5" text-anchor="middle">fails a gate &#8594; back to training; nothing ships</text>
+<path class="fl" marker-end="url(#ar5)" style="stroke:var(--grn);stroke-dasharray:4 3" d="M790 158V248H78V160"/>
+<text x="434" y="264" class="g" font-size="10.5" text-anchor="middle">low-confidence records &#8594; engineer review &#8594; corrected labels join the next training round</text>
+<text x="16" y="290" class="m" font-size="10.5">Test sets are split by time and by plant, so a model is scored on months and sites it never saw in training.</text>
+</svg>
+  <figcaption>The review loop turns engineers&rsquo; corrections into training data, so the model improves where it was weakest.</figcaption>
+</figure>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-describe">Stage 1 &middot; dataset curation &amp; synthetic data</div>
+  <h2>Most of the work is the data</h2>
+  <div class="sub">A small, trusted gold set, a larger teacher-labelled set, and targeted synthetic examples for rare failures.</div>
+  <ol class="stages">
+    <li><strong>Clean.</strong> Records are exported from the maintenance system. Names and personal identifiers are
+      removed, near-duplicate notes are collapsed, and each record is tagged with language and plant.</li>
+    <li><strong>Gold labels.</strong> Maintenance engineers label about 2,000 records against the plant&rsquo;s failure
+      taxonomy, modelled on ISO 14224. Double-labelling a sample measures how much the engineers agree with each
+      other, which sets the ceiling a model can honestly reach.</li>
+    <li><strong>Teacher labels.</strong> A large model inside the tenant labels tens of thousands more with detailed
+      instructions. Only labels that are consistent across repeated runs and pass schema checks are kept, and a
+      sample is audited against gold.</li>
+    <li><strong>Synthetic data for rare classes.</strong> Rare but costly failure modes get synthetic work orders,
+      generated from real templates and checked by an engineer, so the model does not learn to ignore them.
+      Synthetic data never enters the test sets.</li>
+    <li><strong>Leakage-proof splits.</strong> The last months of data and one entire plant are held out. A model that
+      only memorised one plant&rsquo;s habits fails visibly.</li>
+  </ol>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Stage 2 &middot; parameter-efficient fine-tuning</div>
+  <h2>A 7&ndash;8B model, one GPU, and a recipe built around memory</h2>
+  <div class="sub">QLoRA makes the training fit one GPU. The rest of the recipe decides whether it fits fast.</div>
+  <div class="two-col">
+    <div>
+      <h3>Training recipe</h3>
+      <ul class="plain">
+        <li>Base model chosen from a shortlist of 7&ndash;8B open-weights models (Llama, Mistral, Qwen families),
+          screened on Swedish text and on a licence that allows commercial use.</li>
+        <li>QLoRA: base weights frozen in 4-bit NF4, with LoRA adapters on attention and MLP projections, trained with
+          TRL&rsquo;s supervised fine-tuning on instruction&ndash;JSON pairs.</li>
+        <li>Loss only on the answer tokens, so the model learns to produce records, not to repeat work orders.</li>
+        <li>Rank, learning rate and data mix swept with Ray Tune. Every run is logged in MLflow with its dataset
+          hash.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Memory and throughput</h3>
+      <ul class="plain">
+        <li><strong>Gradient checkpointing</strong> trades recomputation for activation memory, which allows longer
+          sequences on the same card.</li>
+        <li><strong>FlashAttention-2</strong> and <strong>sequence packing</strong>: short work orders are packed into
+          full sequences, so the GPU is not padding most of the time.</li>
+        <li><strong>Paged 8-bit AdamW</strong> keeps optimiser states from causing out-of-memory spikes.</li>
+        <li><strong>Unsloth</strong> kernels for fast single-GPU iteration. <strong>DeepSpeed ZeRO-3</strong> across
+          several GPUs is used only for a full fine-tune ablation, to check whether LoRA is leaving accuracy
+          behind.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Stage 3 &middot; automated evaluation</div>
+  <h2>A fine-tune has to beat the cheap options, or it should not exist</h2>
+  <div class="sub">Four systems on the same held-out records: time-split and unseen-plant.</div>
+  <table>
+    <thead><tr><th>System</th><th>What it tests</th></tr></thead>
+    <tbody>
+      <tr><td>Base model, zero-shot</td><td>What the open-weights model can do before any training</td></tr>
+      <tr><td>Base model, few-shot with retrieved examples</td><td>Whether good prompting alone closes the gap</td></tr>
+      <tr><td>Large hosted model, few-shot</td><td>The quality bar, and the cost the fine-tune has to undercut</td></tr>
+      <tr class="win"><td>Fine-tuned model (QLoRA)</td><td>The candidate for production</td></tr>
+    </tbody>
+  </table>
+  <table>
+    <thead><tr><th>Metric</th><th>How it is measured</th><th class="num">Release gate (target)</th></tr></thead>
+    <tbody>
+      <tr><td>Failure-mode macro-F1</td><td>Against gold labels; macro so rare modes count as much as common ones</td><td class="num">&ge; large hosted model</td></tr>
+      <tr><td>Field-level accuracy</td><td>Component, cause, action and downtime, exact or normalised match</td><td class="num">&ge; 0.90 of engineer agreement</td></tr>
+      <tr><td>Unseen-plant drop</td><td>Macro-F1 on the held-out plant compared with the seen plants</td><td class="num">&le; 5 points</td></tr>
+      <tr><td>Invented codes</td><td>Equipment or part codes in the output that are not in the input or the asset register</td><td class="num">0</td></tr>
+      <tr><td>Schema validity</td><td>Outputs that parse against the JSON schema</td><td class="num">1.00 (guided decoding)</td></tr>
+      <tr><td>Cost per 1,000 records</td><td>GPU-hours at measured throughput vs the hosted model&rsquo;s token pricing</td><td class="num">well below hosted</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">An LLM judge is used only for the free-text cause summary, and it is calibrated against engineer
+    ratings first. ROUGE and BLEU are reported for completeness, but they do not decide a release, because two
+    correct summaries of a fault can share few words.</p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Stage 4 &middot; quantisation, serving &amp; CI/CD</div>
+  <h2>From adapter to endpoint without a manual step</h2>
+  <div class="sub">A pull request that changes data, code or configuration retrains, re-evaluates and redeploys through the same path.</div>
+  <div class="flow" style="--n:4">
+    <div><strong>Quantise</strong>The adapter is merged and the model quantised to AWQ 4-bit or FP8. The quantised
+      model is re-evaluated, because quantisation can move rare-class F1.</div>
+    <div><strong>Serve</strong>vLLM with continuous batching and guided JSON decoding. Multi-LoRA serving hosts one
+      adapter per plant on one base model.</div>
+    <div><strong>Deploy</strong>GitHub Actions pulls the registered model and deploys to Azure ML managed GPU
+      endpoints. It runs in shadow mode first, then as a canary, and rolls back automatically if it misses a gate.</div>
+    <div><strong>Monitor</strong>Confidence and schema errors are tracked, along with drift in vocabulary as new
+      equipment and abbreviations appear. Low-confidence records go to engineers, and their corrections feed the
+      next round.</div>
+  </div>
+  <p>
+    The same pipeline runs overnight as an offline vLLM batch job to backfill the historical archive. The endpoint
+    handles new work orders as they are closed.
+  </p>
+  <p>
+    Where the output goes: SMART&rsquo;s operational-resilience models get labelled failure history to learn from. The
+    <a href="robot-cell-copilot.html">robot-cell copilot</a> gets structured past incidents to match against, and the
+    <a href="data-analyst-agent.html">data analyst agent</a> can finally answer &ldquo;which failure mode cost us the
+    most downtime last quarter?&rdquo;
+  </p>
+</section>
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>

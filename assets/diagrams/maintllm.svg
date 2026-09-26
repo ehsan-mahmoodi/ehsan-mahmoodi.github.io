@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Fine-tuning pipeline: curate, QLoRA train, evaluate at a release gate, register, quantise and serve with vLLM, structured records; engineer review feeds the next round">
+<style>
+:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}.r{fill:var(--red)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Maintenance LLM &#8212; fine-tuned, gated, served in-tenant</text>
+<g font-size="6.5">
+<rect x="12" y="50" width="56" height="34" rx="5" class="bx"/><text x="40.0" y="65.0" class="t" text-anchor="middle" font-weight="600">Curate</text><text x="40.0" y="75.0" class="m" text-anchor="middle">gold + teacher</text>
+<rect x="76" y="50" width="56" height="34" rx="5" class="bxa"/><text x="104.0" y="65.0" class="a" text-anchor="middle" font-weight="600">QLoRA</text><text x="104.0" y="75.0" class="m" text-anchor="middle">4-bit, adapter</text>
+<rect x="140" y="50" width="56" height="34" rx="5" class="bx"/><text x="168.0" y="65.0" class="r" text-anchor="middle" font-weight="600">Evaluate</text><text x="168.0" y="75.0" class="m" text-anchor="middle">vs baselines</text>
+<rect x="204" y="50" width="56" height="34" rx="5" class="bx"/><text x="232.0" y="65.0" class="t" text-anchor="middle" font-weight="600">Register</text><text x="232.0" y="75.0" class="m" text-anchor="middle">MLflow</text>
+<rect x="268" y="50" width="56" height="34" rx="5" class="bx"/><text x="296.0" y="65.0" class="w" text-anchor="middle" font-weight="600">Serve</text><text x="296.0" y="75.0" class="m" text-anchor="middle">vLLM, AWQ</text>
+<rect x="332" y="50" width="56" height="34" rx="5" class="bx"/><text x="360.0" y="65.0" class="g" text-anchor="middle" font-weight="600">Records</text><text x="360.0" y="75.0" class="m" text-anchor="middle">failure codes</text>
+</g>
+<path class="fl" d="M68 67h8"/><path class="fl" d="M132 67h8"/><path class="fl" d="M196 67h8"/><path class="fl" d="M260 67h8"/><path class="fl" d="M324 67h8"/>
+<path class="fm" d="M168 84v14H104v-14"/>
+<text x="136" y="106" class="r" font-size="6.5" text-anchor="middle">fails gate</text>
+<path class="fm" d="M360 84v28H40v-28"/>
+<text x="200" y="122" class="g" font-size="6.5" text-anchor="middle">engineer corrections &#8594; next training round</text>
+<line x1="12" y1="134" x2="388" y2="134" stroke="var(--line)"/>
+<text x="12" y="149" class="m" font-size="7.5">&#8220;SP2 larm 50204, bytt gripdon, kabel n&#246;tt vid axel 6, 40 min&#8221; &#8594; component, failure</text>
+<text x="12" y="161" class="m" font-size="7.5">mode, cause, action and downtime, as schema-valid JSON.</text>
+<text x="12" y="175" class="a" font-size="7.5" font-weight="600">QLoRA &#183; Unsloth &#183; PEFT/TRL &#183; FlashAttention-2 &#183; Ray &#183; MLflow &#183; vLLM &#183; Azure ML</text>
+</svg>
