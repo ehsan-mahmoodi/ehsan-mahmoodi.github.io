@@ -798,7 +798,7 @@
     <div class="type-card type-agents">
       <h3>Agentic &amp; generative AI</h3>
       <p>Multi-agent systems that negotiate trade-offs, and language-model layers that explain a recommendation.</p>
-      <div class="type-eg"><a href="#p-plant-rag">Plant Knowledge Assistant (Agentic RAG)</a> &middot; <a href="#p-robot-copilot">Robot Cell Troubleshooting Copilot</a> &middot; <a href="#p-planning-copilot">Energy-Aware Planning Copilot</a> &middot; <a href="#p-data-agent">Production Data Analyst Agent</a> &middot; <a href="#p-maint-llm">Maintenance Language Model (fine-tuning)</a> &middot; <a href="#p-genai-platform">Multi-Tenant GenAI Platform</a> &middot; <a href="#p-ai-compete">Multi-Agent AI for Sustainable Manufacturing</a> &middot; <a href="#p-smart">Resilience-Driven Manufacturing</a></div>
+      <div class="type-eg"><a href="#p-plant-rag">Plant Knowledge Assistant (Agentic RAG)</a> &middot; <a href="#p-robot-copilot">Robot Cell Troubleshooting Copilot</a> &middot; <a href="#p-planning-copilot">Energy-Aware Planning Copilot</a> &middot; <a href="#p-data-agent">Production Data Analyst Agent</a> &middot; <a href="#p-maint-llm">Maintenance Language Model (fine-tuning)</a> &middot; <a href="#p-genai-platform">Multi-Tenant GenAI Platform</a> &middot; <a href="#p-llm-toolkit">Context Engineering &amp; LLM Cost Toolkit</a> &middot; <a href="#p-ai-compete">Multi-Agent AI for Sustainable Manufacturing</a> &middot; <a href="#p-smart">Resilience-Driven Manufacturing</a></div>
       <div class="fit-proof"><span class="fp-v">SEK 17.5M</span><span class="fp-l">multi-agent AI programmes with Volvo Penta, Scania, ABB</span></div>
     </div>
     <div class="type-card type-business">
@@ -810,7 +810,7 @@
   </div>
 
   <div class="sector-row">
-    <span class="sector-label">Across sectors</span><button type="button" class="sector-jump" data-sector="manufacturing">Manufacturing<span>13</span></button><button type="button" class="sector-jump" data-sector="energy">Energy<span>4</span></button><button type="button" class="sector-jump" data-sector="healthcare">Healthcare<span>3</span></button><button type="button" class="sector-jump" data-sector="logistics">Logistics &amp; maritime<span>2</span></button><button type="button" class="sector-jump" data-sector="telecom">Telecom &amp; IT<span>3</span></button><button type="button" class="sector-jump" data-sector="construction">Construction<span>1</span></button><button type="button" class="sector-jump" data-sector="public">Public sector<span>1</span></button>
+    <span class="sector-label">Across sectors</span><button type="button" class="sector-jump" data-sector="manufacturing">Manufacturing<span>14</span></button><button type="button" class="sector-jump" data-sector="energy">Energy<span>4</span></button><button type="button" class="sector-jump" data-sector="healthcare">Healthcare<span>3</span></button><button type="button" class="sector-jump" data-sector="logistics">Logistics &amp; maritime<span>2</span></button><button type="button" class="sector-jump" data-sector="telecom">Telecom &amp; IT<span>3</span></button><button type="button" class="sector-jump" data-sector="construction">Construction<span>1</span></button><button type="button" class="sector-jump" data-sector="public">Public sector<span>1</span></button>
   </div>
 
   <div class="chain-head">
@@ -1151,6 +1151,28 @@
             </div>
           </div>
           <div class="card-links"><a href="projects/maintenance-llm-finetuning.html" class="card-link">Read the system design &rarr;</a></div>
+        </div>
+      </article>
+      <article class="tl-card" id="p-llm-toolkit" data-capability="fullstack" data-sector="manufacturing" data-type="research" data-stages="engage diagnose prescribe">
+        <div class="tl-media"><img src="assets/diagrams/llmtoolkit.svg" alt="Optimisation middleware: budget, entity-aware semantic cache, prune and compress, route to small or large model, model call with prompt cache, verifier check with escalation" class="project-card-image" loading="lazy"></div>
+        <div class="tl-body">
+          <header class="tl-head">
+            <div class="tl-title"><h3>Context Engineering &amp; LLM Cost Toolkit</h3><div class="card-meta">2025 &middot; University of Sk&ouml;vde &middot; AI-COMPETE &amp; SMART shared model layer</div></div>
+            <div class="rt-badges"><span class="rt-badge program">AI-COMPETE</span><span class="rt-badge program">SMART</span><span class="rt-badge">System design</span><span class="rt-badge cap-fullstack">Full stack</span><span class="rt-badge">Manufacturing</span></div>
+          </header>
+          <p class="tl-problem">Long prompts full of retrieved documents, tool output and history drive both the cloud bill and the wait. This middleware budgets, prunes, caches and routes every model call, and a saving counts only if the tool&rsquo;s own quality gates still pass.</p>
+          <div class="tl-grid">
+            <div class="tl-left">
+              <div class="outcome"><div class="oc"><span class="oc-v">&ge; 50%</span><span class="oc-l">lower cost per task, quality within 1 point (target)</span></div><div class="oc"><span class="oc-v">0</span><span class="oc-l">cache false hits on the entity-swap test set (gate)</span></div></div>
+              <div class="tl-value"><span class="vlabel biz">Business value</span>Makes AI tools affordable to run across a large company, and faster to use, without trading away the accuracy that makes them trustworthy.</div>
+              <div class="tl-stack"><span class="tl-row-label">Designed with</span><span class="card-tag">Python</span><span class="card-tag">tiktoken</span><span class="card-tag">Custom FastAPI middleware</span><span class="card-tag">LangChain / LangGraph callbacks</span><span class="card-tag">Redis (vector search)</span><span class="card-tag">Prompt caching</span><span class="card-tag">Model routing</span><span class="card-tag">OpenTelemetry</span><span class="card-tag">Grafana</span></div>
+            </div>
+            <div class="tl-right">
+              <div class="stage-meter" aria-label="Analytics stages covered"><span class="sm sm-engage on" title="Qualitative">Engage</span><span class="sm sm-describe" title="Descriptive — not part of this project">Describe</span><span class="sm sm-diagnose on" title="Diagnostic">Diagnose</span><span class="sm sm-predict" title="Predictive — not part of this project">Predict</span><span class="sm sm-prescribe on" title="Prescriptive">Prescribe</span></div>
+              <ul class="stage-list"><li class="st st-engage"><span class="st-name">Engage</span><span class="st-text">Framed as one rule: an optimisation that makes answers worse is not a saving.</span></li><li class="st st-diagnose"><span class="st-name">Diagnose</span><span class="st-text">Traces show tokens, cached tokens, route and cost per tool; replaying logged traffic measures each technique on its own.</span></li><li class="st st-prescribe"><span class="st-name">Prescribe</span><span class="st-text">Token budgets, relevance pruning, entity-aware semantic cache, prefix ordering for prompt caching, small-to-large routing with verified escalation.</span></li></ul>
+            </div>
+          </div>
+          <div class="card-links"><a href="projects/llm-optimization-toolkit.html" class="card-link">Read the system design &rarr;</a></div>
         </div>
       </article>
       </div>
@@ -1692,6 +1714,7 @@ document.querySelectorAll('.sector-jump').forEach(function (b) {
         <span class="sc-tag">Unsloth</span><span class="sc-tag">vLLM serving</span><span class="sc-tag">DeepSpeed</span>
         <span class="sc-tag">Ray</span><span class="sc-tag">LLMOps / MLOps</span>
         <span class="sc-tag">Multi-tenant SaaS architecture</span><span class="sc-tag">Streaming (SSE)</span><span class="sc-tag">Usage metering &amp; rate limiting</span>
+        <span class="sc-tag">Token budgeting &amp; model routing</span><span class="sc-tag">Semantic &amp; prompt caching</span><span class="sc-tag">OpenTelemetry (GenAI)</span>
         <span class="sc-tag">PyTorch</span><span class="sc-tag">MLflow</span>
         <span class="sc-tag">Explainable AI</span>
       </div>

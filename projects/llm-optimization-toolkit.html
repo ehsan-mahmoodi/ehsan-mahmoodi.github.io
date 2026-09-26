@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Context Engineering &amp; LLM Cost Toolkit | Ehsan Mahmoodi</title>
+  <meta name="description" content="System design for a context engineering and LLM optimisation toolkit behind the AI-COMPETE and SMART tools: token budgeting, context pruning and compression, entity-aware semantic caching, provider prompt caching, small/large model routing with verified escalation, and OpenTelemetry cost observability."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+<header class="page-head">
+  <div class="eyebrow">AI-COMPETE &amp; SMART use case &middot; system design</div>
+  <h1>Paying for Fewer Tokens Without Getting Worse Answers</h1>
+  <p class="lede">
+    Every tool on this site sends long prompts to a language model: retrieved documents, tool outputs, conversation
+    history. At the scale of a large manufacturer, those tokens become a real line in the cloud bill and a visible
+    wait for the user. This toolkit is middleware between the applications and the model endpoints. It counts and
+    budgets tokens, prunes and compresses context, answers repeated questions from a cache, and sends each request to
+    the cheapest model that can handle it. A change ships only if each tool&rsquo;s own quality gates still pass.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">University of Sk&ouml;vde &middot; AI-COMPETE (Vinnova) &amp; SMART (KK-stiftelsen) &middot; 2025 &middot; system design</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe">Descriptive</span><span class="gl-stage gl-diagnose on">Diagnostic</span><span class="gl-stage gl-predict">Predictive</span><span class="gl-stage gl-prescribe on">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">tiktoken (Rust core)</span><span class="gl-tech">Custom FastAPI middleware</span><span class="gl-tech">LangChain / LangGraph callbacks</span><span class="gl-tech">Redis (vector search)</span><span class="gl-tech">Provider prompt caching</span><span class="gl-tech">Small-model router</span><span class="gl-tech">OpenTelemetry (GenAI conventions)</span><span class="gl-tech">Grafana</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">System design &mdash; techniques, safety rules for each one, and a replay-based evaluation. No savings figures are claimed yet.</span></div>
+</div>
+
+<div class="callout">
+  <strong>What this page is.</strong> A system design for the shared model layer behind the AI-COMPETE and SMART
+  tools. It is not a report of a deployment at any partner. Figures marked <em>target</em> are release gates. They
+  are not measured results.
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Problem formulation</div>
+  <h2>Most of the tokens in a long prompt are not doing any work</h2>
+  <div class="sub">Cost, latency and context overflow all come from the same place: the prompt.</div>
+  <p>
+    A plant-knowledge answer carries eight retrieved chunks. A data-agent step carries a schema and a result table.
+    A copilot session drags weeks of history. Much of that is repeated, irrelevant or verbose. The model reads all of
+    it, charges for all of it, and takes longer to answer because of it. When a conversation finally exceeds the
+    context window, the application fails at the worst moment.
+  </p>
+  <ul class="plain">
+    <li><strong>Cost.</strong> Input tokens dominate the bill in retrieval-heavy tools, and a large model is often used
+      for questions a small one answers equally well.</li>
+    <li><strong>Latency.</strong> Time to first token grows with prompt length. Users feel it on every turn.</li>
+    <li><strong>Blowouts.</strong> Long sessions and large tool outputs overflow the context window, and naive
+      truncation silently drops the instructions or the evidence.</li>
+  </ul>
+  <p>
+    The constraint that shapes everything below: <strong>an optimisation that makes answers worse is not a saving</strong>.
+    Every technique is measured against the quality gates the tools already have.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Architecture &middot; middleware</div>
+  <h2>Five stages between the application and the model</h2>
+  <div class="sub">Each stage can be switched on per tool, and each is traced.</div>
+<figure>
+<svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Optimisation middleware: a request is counted and budgeted, checked against an entity-aware semantic cache, pruned and compressed, routed to a small or large model with provider prompt caching, and escalated to the large model if a check fails; every stage emits OpenTelemetry spans">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnk:#f778ba;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnk:#bf3989;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}.k{fill:var(--pnk)}
+.bx{fill:var(--pnl);stroke:var(--line)}.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<defs><marker id="ar7" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" style="fill:var(--mut)"/></marker></defs>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">Count, reuse, trim, route, and check</text>
+<g font-size="11" text-anchor="middle">
+<rect class="bx" x="16" y="76" width="118" height="72" rx="8"/>
+<text x="75" y="102" class="t" font-weight="600">Budget</text><text x="75" y="120" class="m" font-size="9.5">count tokens,</text><text x="75" y="134" class="m" font-size="9.5">split the window</text>
+<rect class="bx" x="154" y="76" width="118" height="72" rx="8" style="stroke:var(--grn)"/>
+<text x="213" y="102" class="g" font-weight="600">Semantic cache</text><text x="213" y="120" class="m" font-size="9.5">entity-aware,</text><text x="213" y="134" class="m" font-size="9.5">data-versioned</text>
+<rect class="bx" x="292" y="76" width="118" height="72" rx="8" style="stroke:var(--acc);stroke-width:1.6"/>
+<text x="351" y="102" class="a" font-weight="600">Prune + compress</text><text x="351" y="120" class="m" font-size="9.5">evidence, tools,</text><text x="351" y="134" class="m" font-size="9.5">history</text>
+<rect class="bx" x="430" y="76" width="118" height="72" rx="8" style="stroke:var(--pur)"/>
+<text x="489" y="102" class="p" font-weight="600">Route</text><text x="489" y="120" class="m" font-size="9.5">small or large</text><text x="489" y="134" class="m" font-size="9.5">model</text>
+<rect class="bx" x="568" y="76" width="130" height="72" rx="8"/>
+<text x="633" y="102" class="t" font-weight="600">Model call</text><text x="633" y="120" class="m" font-size="9.5">stable prefix first,</text><text x="633" y="134" class="m" font-size="9.5">provider prompt cache</text>
+<rect class="bx" x="718" y="76" width="126" height="72" rx="8" style="stroke:var(--amb)"/>
+<text x="781" y="102" class="w" font-weight="600">Check</text><text x="781" y="120" class="m" font-size="9.5">tool&#8217;s own verifier</text><text x="781" y="134" class="m" font-size="9.5">passes?</text>
+</g>
+<path class="fl" marker-end="url(#ar7)" d="M134 112H152M272 112H290M410 112H428M548 112H566M698 112H716"/>
+<path class="fl" marker-end="url(#ar7)" style="stroke:var(--grn);stroke-dasharray:4 3" d="M213 76V48H781V74"/>
+<text x="497" y="42" class="g" font-size="10.5" text-anchor="middle">cache hit &#8594; answer returned without a model call</text>
+<path class="fl" marker-end="url(#ar7)" style="stroke:var(--amb);stroke-dasharray:4 3" d="M781 148V194H489V150"/>
+<text x="635" y="210" class="w" font-size="10.5" text-anchor="middle">small model failed the check &#8594; escalate to the large model</text>
+<rect x="16" y="232" width="828" height="30" rx="6" fill="none" style="stroke:var(--line);stroke-dasharray:4 3"/>
+<text x="430" y="251" class="m" font-size="10.5" text-anchor="middle">OpenTelemetry span per stage: tokens in / out / cached, cache hit, route, cost, latency, tenant, tool</text>
+<text x="16" y="288" class="m" font-size="10.5">Safety text, citations and numbers from tools are marked as protected and are never pruned or compressed.</text>
+</svg>
+  <figcaption>The two dashed shortcuts are where the money is: requests that skip the model, and requests that never need the large one.</figcaption>
+</figure>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-prescribe">Technique 1 &middot; token budgeting &amp; context pruning</div>
+  <h2>Decide what the prompt is for, then fit it</h2>
+  <div class="sub">A budget, not truncation. Pruning ranks the content; it does not cut from the end.</div>
+  <ol class="stages">
+    <li><strong>Count exactly.</strong> Every segment of the prompt is counted with the model&rsquo;s own tokenizer
+      (tiktoken, Rust core, microseconds per call). The count is compared with a per-tool budget that reserves room for
+      the answer.</li>
+    <li><strong>Protect what must survive.</strong> System rules, the user&rsquo;s question, safety procedures, citation
+      IDs and numbers produced by tools are marked protected. They are always included in full.</li>
+    <li><strong>Prune evidence by relevance.</strong> Retrieved chunks below a re-ranker score threshold are dropped,
+      near-duplicates are merged, and each kept chunk is trimmed to the sentences that match the question.</li>
+    <li><strong>Compress tool output by shape.</strong> JSON becomes a compact table, nulls and constant columns are
+      removed, and long results are replaced by summary statistics plus a handle to fetch the rest.</li>
+    <li><strong>Summarise history.</strong> Older turns roll into a running summary, and decisions the user confirmed
+      are pinned word for word. Learned token compression (LLMLingua-style) is applied only to low-risk narrative
+      text, and never to protected segments.</li>
+  </ol>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Technique 2 &middot; semantic &amp; prompt caching</div>
+  <h2>A cache that knows &ldquo;line 2&rdquo; is not &ldquo;line 3&rdquo;</h2>
+  <div class="sub">In a factory, the dangerous cache hit is the question that is almost the same.</div>
+  <p>
+    A plain semantic cache compares question embeddings. &ldquo;What was OEE on line 2 last week?&rdquo; and the same
+    question about line 3 are nearly identical vectors, and returning one answer for the other is worse than no
+    cache at all. So the cache key has two parts:
+  </p>
+  <ul class="plain">
+    <li><strong>Entities, matched exactly.</strong> Lines, machines, part numbers, plants and date ranges are extracted
+      and normalised. They must match exactly before similarity is even considered.</li>
+    <li><strong>Meaning, matched by similarity.</strong> Only then is the question embedding compared, in Redis vector
+      search, with a threshold tuned on a labelled set of paraphrases and near-misses.</li>
+    <li><strong>Freshness and scope.</strong> Entries are keyed to the index or data version, so new data invalidates
+      them automatically. They are namespaced by tenant and access group, and personal or session-specific answers
+      are never cached.</li>
+  </ul>
+  <p>
+    Separately, prompts are laid out so the provider&rsquo;s own prompt cache can work: the stable parts (system rules,
+    tool definitions, workspace context) come first, and the parts that change come last. That cuts both the price
+    and the time to first token for the cached prefix on every repeat turn.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-prescribe">Technique 3 &middot; model routing</div>
+  <h2>The large model for hard questions, and only for hard questions</h2>
+  <div class="sub">Route by difficulty, verify the cheap answer, escalate when it fails.</div>
+  <div class="flow" style="--n:3">
+    <div><strong>Classify</strong>A lightweight classifier, trained on logged requests labelled by which model
+      tier was needed, predicts difficulty from the question, the tool and the size of the context.</div>
+    <div><strong>Try small</strong>Routine requests go to a small hosted model or the in-tenant fine-tuned model,
+      each with its own budget and tuned prompt.</div>
+    <div><strong>Verify, then escalate</strong>The tool&rsquo;s own check runs on the small model&rsquo;s answer:
+      citation verification, schema validation or numeric checks. On failure the request goes to the large model, and
+      the case is logged to retrain the router.</div>
+  </div>
+  <p class="muted">
+    Escalation costs time, so the router is tuned for the combination of cost and p95 latency, not cost alone.
+    A router that saves money by escalating half its requests is slower than no router.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Evaluation &middot; replay with quality gates</div>
+  <h2>Every saving is measured against the answer it produced</h2>
+  <div class="sub">Logged traffic is replayed with and without each technique, then scored with each tool&rsquo;s own evaluation.</div>
+  <p>
+    Each technique is evaluated alone and in combination by replaying recorded requests: the plant-knowledge golden
+    set, the data agent&rsquo;s benchmark, and the planning copilot&rsquo;s scenarios. Cost and latency are measured
+    alongside the tool&rsquo;s own quality metrics, and a technique ships only if quality stays within a
+    non-inferiority margin.
+  </p>
+  <table>
+    <thead><tr><th>Metric</th><th>How it is measured</th><th class="num">Release gate (target)</th></tr></thead>
+    <tbody>
+      <tr><td>Quality, per tool</td><td>Tool&rsquo;s own gates (groundedness, execution accuracy, numeric faithfulness)</td><td class="num">within 1 point of baseline</td></tr>
+      <tr><td>Cache false hits</td><td>Entity-swap test set: same question, different line, machine or date</td><td class="num">0 (hard gate)</td></tr>
+      <tr><td>Cost per task</td><td>Provider-billed tokens (incl. cached-token pricing) and GPU seconds, per tool</td><td class="num">&ge; 50% lower</td></tr>
+      <tr><td>Time to first token</td><td>p95, per tool, replayed at production concurrency</td><td class="num">&ge; 30% lower</td></tr>
+      <tr><td>Compression ratio</td><td>Prompt tokens after vs before, by segment type</td><td class="num">reported, not gated</td></tr>
+      <tr><td>Context overflows</td><td>Requests that exceed the model window</td><td class="num">0</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Observability</div>
+  <h2>If the bill goes up, you can see which prompt did it</h2>
+  <div class="sub">Tokenomics is an observability problem before it is an optimisation problem.</div>
+  <div class="flow" style="--n:3">
+    <div><strong>Traces</strong>OpenTelemetry spans following the GenAI semantic conventions: model, tokens in,
+      out and cached, route, cache result and cost, tagged with tenant and tool.</div>
+    <div><strong>Dashboards</strong>Cost per task, cache hit rate, escalation rate and p95 latency per tool in Grafana,
+      with alerts on sudden jumps in prompt size, the usual sign of a regression.</div>
+    <div><strong>Drop-in</strong>Plain Python middleware with adapters for FastAPI and LangChain/LangGraph callbacks.
+      The tools on this site use it without changing their own code.</div>
+  </div>
+  <p>
+    The toolkit sits under the <a href="genai-platform.html">GenAI platform</a>. Its usage ledger and this
+    toolkit&rsquo;s traces share one set of token counts, so the savings show up in the numbers partners actually see.
+  </p>
+</section>
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>

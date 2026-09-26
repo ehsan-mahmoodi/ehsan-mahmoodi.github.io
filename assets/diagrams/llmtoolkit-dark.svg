@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Optimisation middleware: budget, semantic cache, prune and compress, route, model call, check; cache hits skip the model and failed checks escalate">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--amb:#d29922;--red:#f85149;--pnl:#161b22;--bg:#0d1117}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.w{fill:var(--amb)}.r{fill:var(--red)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.4}
+.fm{stroke:var(--mut);fill:none;stroke-width:1;stroke-dasharray:3 3}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">LLM cost toolkit &#8212; fewer tokens, same answers</text>
+<g font-size="6.5">
+<rect x="12" y="54" width="56" height="34" rx="5" class="bx"/><text x="40.0" y="69.0" class="t" text-anchor="middle" font-weight="600">Budget</text><text x="40.0" y="79.0" class="m" text-anchor="middle">count tokens</text>
+<rect x="76" y="54" width="56" height="34" rx="5" class="bx"/><text x="104.0" y="69.0" class="g" text-anchor="middle" font-weight="600">Cache</text><text x="104.0" y="79.0" class="m" text-anchor="middle">entity-aware</text>
+<rect x="140" y="54" width="56" height="34" rx="5" class="bxa"/><text x="168.0" y="69.0" class="a" text-anchor="middle" font-weight="600">Prune</text><text x="168.0" y="79.0" class="m" text-anchor="middle">compress</text>
+<rect x="204" y="54" width="56" height="34" rx="5" class="bx"/><text x="232.0" y="69.0" class="t" text-anchor="middle" font-weight="600">Route</text><text x="232.0" y="79.0" class="m" text-anchor="middle">small / large</text>
+<rect x="268" y="54" width="56" height="34" rx="5" class="bx"/><text x="296.0" y="69.0" class="t" text-anchor="middle" font-weight="600">Model</text><text x="296.0" y="79.0" class="m" text-anchor="middle">prompt cache</text>
+<rect x="332" y="54" width="56" height="34" rx="5" class="bx"/><text x="360.0" y="69.0" class="w" text-anchor="middle" font-weight="600">Check</text><text x="360.0" y="79.0" class="m" text-anchor="middle">verifier</text>
+</g>
+<path class="fl" d="M68 71h8"/><path class="fl" d="M132 71h8"/><path class="fl" d="M196 71h8"/><path class="fl" d="M260 71h8"/><path class="fl" d="M324 71h8"/>
+<path class="fm" d="M104 54v-14H360v14"/>
+<text x="232" y="36" class="g" font-size="6.5" text-anchor="middle">cache hit &#8594; no model call</text>
+<path class="fm" d="M360 88v14H232v-14"/>
+<text x="296" y="112" class="w" font-size="6.5" text-anchor="middle">check fails &#8594; escalate to large model</text>
+<line x1="12" y1="134" x2="388" y2="134" stroke="var(--line)"/>
+<text x="12" y="149" class="m" font-size="7.5">Middleware under every tool: budgets, pruning, caching and routing. A saving ships only if</text>
+<text x="12" y="161" class="m" font-size="7.5">the tool&#8217;s own quality gates still pass. &#8220;Line 2&#8221; never hits the cache for &#8220;line 3&#8221;.</text>
+<text x="12" y="175" class="a" font-size="7.5" font-weight="600">tiktoken &#183; Redis vector cache &#183; prompt caching &#183; model routing &#183; OpenTelemetry</text>
+</svg>
