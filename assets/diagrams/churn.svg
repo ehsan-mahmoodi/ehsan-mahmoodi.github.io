@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 180" width="400" height="180" role="img" aria-label="Customer churn: anonymised behaviour data feeding six models combined into one ranked retention list">
+<style>
+:root{--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--amb:#9a6700;--pur:#8250df;--red:#cf222e;--pnl:#f6f8fa;--bg:#ffffff}
+text{font-family:Inter,system-ui,-apple-system,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}
+.bx{fill:var(--pnl);stroke:var(--line);stroke-width:1}
+.bxa{fill:var(--pnl);stroke:var(--acc);stroke-width:1.4}
+.bxp{fill:var(--pnl);stroke:var(--pur);stroke-width:1.4}
+.bxg{fill:var(--pnl);stroke:var(--grn);stroke-width:1.4}
+.fl{stroke:var(--acc);fill:none;stroke-width:1.2}
+</style>
+<text x="12" y="20" class="t" font-size="11" font-weight="600">Customer churn &#8212; six models, one retention list</text>
+<g font-size="6.5">
+<rect class="bxa" x="12" y="54" width="74" height="46" rx="4"/>
+<text x="49" y="72" class="a" text-anchor="middle" font-weight="600">2M+ customers</text>
+<text x="49" y="82" class="m" text-anchor="middle">behaviour data</text>
+<text x="49" y="91" class="m" text-anchor="middle">anonymised (SQL)</text>
+<rect class="bx" x="110" y="32" width="96" height="18" rx="3"/><text x="158" y="44" class="m" text-anchor="middle">segmentation</text>
+<rect class="bx" x="110" y="56" width="96" height="18" rx="3"/><text x="158" y="68" class="m" text-anchor="middle">rule-based risk scores</text>
+<rect class="bx" x="110" y="80" width="96" height="18" rx="3"/><text x="158" y="92" class="m" text-anchor="middle">classifiers: churn yes / no</text>
+<rect class="bx" x="110" y="104" width="96" height="18" rx="3"/><text x="158" y="116" class="m" text-anchor="middle">time-to-churn (survival)</text>
+<rect class="bxp" x="230" y="62" width="64" height="30" rx="4"/>
+<text x="262" y="75" class="p" text-anchor="middle" font-weight="600">ensemble</text>
+<text x="262" y="85" class="m" text-anchor="middle">6 models</text>
+<rect class="bxg" x="316" y="54" width="72" height="46" rx="4"/>
+<text x="352" y="70" class="g" text-anchor="middle" font-weight="600">ranked risk list</text>
+<text x="352" y="80" class="m" text-anchor="middle">calls &amp; offers</text>
+<text x="352" y="90" class="m" text-anchor="middle">to high-risk only</text>
+</g>
+<path class="fl" d="M86 70 L110 41M86 74 L110 65M86 80 L110 89M86 86 L110 113"/>
+<path class="fl" d="M206 41 L230 70M206 65 L230 74M206 89 L230 80M206 113 L230 84"/>
+<path class="fl" d="M294 77 L316 77"/>
+<line x1="12" y1="140" x2="388" y2="140" stroke="var(--line)"/>
+<text x="12" y="156" class="g" font-size="8" font-weight="600">&#8722;20% churn among individual customers</text>
+<text x="12" y="170" class="m" font-size="7.5">Asiatech, 2020 &#183; business accounts (banks, insurers, government) were the hard cases</text>
+</svg>

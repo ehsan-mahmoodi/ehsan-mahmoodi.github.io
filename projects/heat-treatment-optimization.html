@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sustainable Heat Treatment Optimization | Ehsan Mahmoodi</title>
+  <meta name="description" content="AI-driven austempering process design for Husqvarna: surrogate models (neural network, random forest, XGBoost) predict hardness, tensile and yield strength; multi-objective search and parallel-coordinates analytics find the settings; a GPT-4 analyst on Azure OpenAI via Semantic Kernel explains them."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Machine learning &amp; optimisation case study</div>
+  <h1>Replacing Furnace Trials With a Model Engineers Can Question</h1>
+  <p class="lede">
+    Finding austempering settings for a new ductile-iron component used to take repeated physical trials. For Husqvarna, surrogate models now predict hardness, tensile and yield strength from the process settings, a multi-objective search finds the best trade-offs, and a GPT-4 analyst explains the recommendation to the engineers who have to sign it off.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">Husqvarna AB &middot; 2024</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose">Diagnostic</span><span class="gl-stage gl-predict on">Predictive</span><span class="gl-stage gl-prescribe on">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">Streamlit</span><span class="gl-tech">scikit-learn</span><span class="gl-tech">XGBoost</span><span class="gl-tech">Neural networks</span><span class="gl-tech">Multi-objective optimisation</span><span class="gl-tech">Plotly</span><span class="gl-tech">Azure OpenAI (GPT-4)</span><span class="gl-tech">Semantic Kernel</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">Process iteration moved from the furnace to the screen: fewer physical trials, less scrap, faster sign-off.</span></div>
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; business problem</div>
+  <h2>Every new setting used to mean another furnace trial</h2>
+  <div class="sub">Husqvarna AB &middot; 2024 &middot; austempered ductile iron (ADI) components.</div>
+  <p>
+    Austempering turns ductile iron into a strong, tough material &mdash; but the properties depend on three process
+    settings: the austenitising temperature, the austempering temperature and the austempering time. Finding the right
+    combination for a new component meant iterating physical trials: expensive, slow and resource-hungry. Husqvarna
+    wanted engineers to explore the process window on a screen first, and send only the promising settings to the
+    furnace.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-describe">Data &middot; descriptive analysis</div>
+  <h2>From trial records to model features</h2>
+  <div class="sub">Experimental data from physical austempering trials.</div>
+  <p>
+    Results from past physical trials were collected, cleaned and engineered into features for supervised learning.
+    Engineers can upload new experimental data as CSV in the application, so the models grow with every trial the plant
+    does run.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-predict">Predictive modelling</div>
+  <h2>Surrogate models of the furnace</h2>
+  <div class="sub">Neural network, random forest and XGBoost, trained and compared in the app.</div>
+  <p>
+    Regression models predict hardness (HBW), ultimate tensile strength (UTS) and yield strength (YS) from the three
+    process settings. Engineers choose the surrogate &mdash; neural network, random forest or XGBoost &mdash; and train it
+    inside the application, so the prediction is always tied to the data it was trained on.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-prescribe">Prescriptive optimisation &middot; visual analytics</div>
+  <h2>Search the process window, then choose with the engineer</h2>
+  <div class="sub">Multi-objective search, 2D/3D objective plots and parallel coordinates.</div>
+  <figure>
+    <img src="../assets/08-heat-treatment-optimization.gif" alt="Heat treatment optimisation application: multi-objective optimisation settings, Pareto front and solution-space plots" loading="lazy">
+    <figcaption>Optimisation settings through to the Pareto front and the solution space, in the application.</figcaption>
+  </figure>
+  <ol class="stages">
+    <li><strong>Multi-objective search.</strong> The engineer picks the objectives and whether each is minimised or
+      maximised, sets the population size and number of generations, and the search generates candidate settings across
+      the scaled process window.</li>
+    <li><strong>Visual analytics.</strong> The objective space is shown in 2D and 3D, and parallel coordinates carry the
+      higher-dimensional view.</li>
+    <li><strong>Knowledge discovery.</strong> Interactive filtering on the parallel-coordinates plot narrows the
+      Pareto-optimal settings to the ones that meet the engineer&rsquo;s own constraints.</li>
+  </ol>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Explainable AI &middot; software delivery</div>
+  <h2>An AI analyst that explains the recommendation</h2>
+  <div class="sub">Azure OpenAI (GPT-4) through Semantic Kernel.</div>
+  <p>
+    A prediction nobody trusts changes nothing on the shop floor. An integrated AI analyst &mdash; GPT-4 on Azure OpenAI,
+    orchestrated with Semantic Kernel &mdash; writes a human-readable report on <em>why</em> particular parameter
+    combinations give better mechanical properties, and answers follow-up questions, so the engineer who has to sign
+    off the material can interrogate the result rather than accept it.
+  </p>
+  <div class="flow" style="--n:4">
+    <div><strong>Interface</strong>Streamlit</div>
+    <div><strong>Machine learning</strong>scikit-learn, XGBoost, neural networks</div>
+    <div><strong>Data &amp; visuals</strong>pandas, NumPy, Plotly</div>
+    <div><strong>AI analyst</strong>Azure OpenAI (GPT-4), Semantic Kernel</div>
+  </div>
+  <p class="muted">
+    The application was built for Husqvarna and its source is proprietary; the public repository documents the method
+    and the interface. A manuscript on the work is under review at <em>Engineering Applications of Artificial
+    Intelligence</em>.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Business value</div>
+  <h2>What it&rsquo;s worth</h2>
+  <div class="sub">Fewer furnace trials, and a decision engineers can explain.</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">3</div><div class="l">process settings optimised</div></div>
+    <div class="kpi"><div class="v">3</div><div class="l">properties predicted: HBW, UTS, YS</div></div>
+    <div class="kpi"><div class="v">3</div><div class="l">surrogate model types to compare</div></div>
+    <div class="kpi"><div class="v">GPT-4</div><div class="l">explains each recommendation</div></div>
+  </div>
+  <p>
+    The iteration moves from the furnace to the screen: fewer physical trials, less scrap, and faster material sign-off
+    for new components &mdash; with a platform that engineers who are not machine-learning specialists can use, and an
+    explanation they can take to whoever approves the material.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>

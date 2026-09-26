@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PV Portfolio Siting, Multi-Objective | Ehsan Mahmoodi</title>
+  <meta name="description" content="Choosing a 220 MW solar portfolio from 500 screened sites: energy, capital cost and concentration risk as three objectives, NSGA-II with constrained domination and a repair operator, 120 non-dominated portfolios, and the price of diversification in euros."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Multi-objective optimisation case study &middot; energy</div>
+  <h1>The Price of Not Putting All Your Megawatts Behind One Substation</h1>
+  <p class="lede">
+    Energy, cost and risk pull a solar portfolio in different directions. NSGA-II over 500 screened sites returns 120 non-dominated portfolios instead of one opaque answer &mdash; and the sentence a board can decide on: holding concentration risk at 0.085 rather than 0.133 costs &euro;36M.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">Kish Solar Trading Co. &middot; Nir plant engineering basis (2016&ndash;19) &middot; open-source demonstrator, 2026</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose">Diagnostic</span><span class="gl-stage gl-predict on">Predictive</span><span class="gl-stage gl-prescribe on">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">NumPy</span><span class="gl-tech">pandas</span><span class="gl-tech">matplotlib</span><span class="gl-tech">NSGA-II (own implementation)</span><span class="gl-tech">Constraint handling</span><span class="gl-tech">Location-allocation</span><span class="gl-tech">CLI tool</span><span class="gl-tech">20 tests</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">120 non-dominated portfolios; diversifying the risk costs &euro;36M, stated in one sentence.</span></div>
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Business problem</div>
+  <h2>500 candidate sites. Which 220 MW do you build?</h2>
+  <div class="sub">Engineering basis from the Nir PV plant, Yazd &middot; Kish Solar Trading Co.</div>
+  <p>
+    A developer&rsquo;s pre-study screens a region down to about 500 candidate points, each with irradiation, terrain,
+    land price and distances to the grid and the road network. They now need a 220 MW portfolio within a budget of
+    &euro;190M. Ranking sites by one number does not work, because the criteria disagree by construction: the best
+    irradiation is in the south, far from substations; the cheapest land is far from roads; substations sit near towns,
+    where land costs most.
+  </p>
+  <div class="callout">
+    <strong>What is real and what is synthetic.</strong> The engineering and cost basis is real: the 87% performance ratio
+    and the irradiation range come from the 10 MW Nir PV plant, whose project profile and financial model I authored at
+    Kish Solar Trading Co.; degradation, EPC cost per kW, grid connection cost and land footprint are industry-standard
+    figures, stated as named constants. The 500 candidate sites are synthetic, generated in 2026 with the correlations
+    real geography has &mdash; without them, the three objectives would stop conflicting.
+  </div>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-predict">Predictive model</div>
+  <h2>Three objectives, including the one usually left out</h2>
+  <div class="sub">25-year energy, capital cost, and concentration risk.</div>
+  <table>
+    <thead><tr><th>Objective</th><th>Direction</th><th>Why it is there</th></tr></thead>
+    <tbody>
+      <tr><td>25-year energy yield</td><td>maximise</td><td>the revenue line</td></tr>
+      <tr><td>Total capital cost</td><td>minimise</td><td>EPC, land, grid connection, access road, earthworks</td></tr>
+      <tr><td>Concentration risk</td><td>minimise</td><td>Herfindahl index over substations, plus geographic clustering</td></tr>
+    </tbody>
+  </table>
+  <p>
+    A portfolio that puts 220 MW behind one substation is cheaper <em>and</em> sunnier &mdash; and one transformer failure
+    removes all of it. Without the risk objective the optimiser recommends exactly that, and a lender rejects it.
+    Constraints: capacity within &plusmn;6% of target, the capital budget, spare capacity at each substation, no more than
+    30% behind any one substation, and at least 12 km between selected sites.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-prescribe">Prescriptive optimisation</div>
+  <h2>NSGA-II, written for this problem</h2>
+  <div class="sub">A binary selection vector over 500 sites, in NumPy, with no solver dependency.</div>
+  <ul class="plain">
+    <li><strong>Constrained domination.</strong> A feasible portfolio always beats an infeasible one; between two infeasible
+      ones, the smaller violation wins &mdash; so the population migrates into the feasible region instead of being culled.</li>
+    <li><strong>Repair operator.</strong> A random selection of 500 sites is essentially never within &plusmn;6% of a
+      capacity target, so children are repaired by adding or dropping sites until they land in the band.</li>
+    <li><strong>Crowding distance</strong> keeps the front spread rather than bunched at one end.</li>
+  </ul>
+  <p>From 0 feasible portfolios at generation 0 to the whole population feasible by generation 40, with the risk
+    objective still improving until about generation 140.</p>
+  <figure>
+    <img src="../assets/07-pv-site-selection.jpg" alt="500 screened sites, the Pareto front of cost against energy, the price of diversification, and convergence" loading="lazy">
+    <figcaption>Screened sites, the Pareto front, the price of diversification, and convergence.</figcaption>
+  </figure>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Business value</div>
+  <h2>A sentence a board can decide on</h2>
+  <div class="sub">120 feasible, non-dominated portfolios; four worth putting in front of a board.</div>
+  <table>
+    <thead><tr><th></th><th class="num">Max energy</th><th class="num">Balanced</th><th class="num">Min cost</th><th class="num">Min risk</th></tr></thead>
+    <tbody>
+      <tr><td>Sites</td><td class="num">6</td><td class="num">6</td><td class="num">5</td><td class="num">8</td></tr>
+      <tr><td>Capacity (MW)</td><td class="num">233</td><td class="num">226</td><td class="num">207</td><td class="num">232</td></tr>
+      <tr><td>Lifetime energy (GWh)</td><td class="num">10,091</td><td class="num">9,568</td><td class="num">8,716</td><td class="num">9,618</td></tr>
+      <tr><td>Capex (&euro;M)</td><td class="num">169.5</td><td class="num">159.5</td><td class="num">146.2</td><td class="num">182.5</td></tr>
+      <tr><td>&euro;/MWh</td><td class="num">16.80</td><td class="num">16.67</td><td class="num">16.77</td><td class="num">18.98</td></tr>
+      <tr><td>Risk index</td><td class="num">0.133</td><td class="num">0.113</td><td class="num">0.133</td><td class="num">0.085</td></tr>
+    </tbody>
+  </table>
+  <p>
+    <strong>Holding concentration risk at 0.085 instead of 0.133 costs &euro;36M.</strong> That is a decision a board can
+    take; &ldquo;the optimiser recommends portfolio 47&rdquo; is not.
+  </p>
+  <p class="muted">Python with NumPy, pandas and matplotlib; 20 deterministic tests; a command-line tool that takes any CSV
+    of candidates, so a real pre-study drops straight in. Open source under MIT.</p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>

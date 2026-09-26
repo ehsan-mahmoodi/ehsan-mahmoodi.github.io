@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Churn Prediction &amp; Retention | Ehsan Mahmoodi</title>
+  <meta name="description" content="Predicting which of more than two million telecom customers are about to leave: anonymised behaviour data, segmentation, rule-based scores, classifiers and time-to-churn models in a six-model ensemble, ending in a ranked retention list. Churn fell 20% among individual customers."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Predictive analytics case study</div>
+  <h1>Finding the Customers About to Leave &mdash; Before They Do</h1>
+  <p class="lede">
+    Asiatech had more than two million customers and a retention team that could only call so many of them. This is the path from anonymised behaviour data to a ranked list of the customers most likely to leave &mdash; segmentation, rule-based scores, classifiers and time-to-churn models combined into one ensemble &mdash; and the phone calls and offers that kept them.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">Asiatech &middot; 2020 &middot; telecom customer base</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose on">Diagnostic</span><span class="gl-stage gl-predict on">Predictive</span><span class="gl-stage gl-prescribe on">Prescriptive</span><span class="gl-stage gl-deliver">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">pandas</span><span class="gl-tech">scikit-learn</span><span class="gl-tech">XGBoost</span><span class="gl-tech">LightGBM</span><span class="gl-tech">SQL</span><span class="gl-tech">Power BI</span><span class="gl-tech">Ensemble learning</span><span class="gl-tech">Survival analysis</span><span class="gl-tech">Clustering</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">Churn among individual customers down 20%, across a base of more than two million.</span></div>
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; business problem</div>
+  <h2>Retention needs a list, not a dashboard</h2>
+  <div class="sub">2020, Asiatech.</div>
+  <p>
+    A customer who has already cancelled is expensive to win back. A customer who is <em>about</em> to cancel can often
+    be kept with a phone call or a targeted offer &mdash; but only if someone knows who they are in time, and the
+    retention budget is not spread across people who were never going to leave. The business question was therefore
+    narrow and practical: of more than two million customers, who is most likely to leave next, and in what order
+    should the retention team contact them?
+  </p>
+  <p>
+    The customer base was not one population. Alongside individual subscribers it included large business accounts
+    &mdash; banks, insurance companies and government bodies &mdash; whose decisions follow contracts, procurement cycles
+    and internal politics rather than the usage patterns that give an individual&rsquo;s intentions away.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-describe">Data &amp; privacy &middot; descriptive analysis</div>
+  <h2>Behaviour data, anonymised before it was modelled</h2>
+  <div class="sub">SQL extraction from the company&rsquo;s own databases into Python.</div>
+  <p>
+    Customer behaviour and account history were pulled from the company&rsquo;s databases with SQL and anonymised before
+    any modelling: the models needed to know how a customer behaved, never who they were. Descriptive analysis in
+    pandas established what normal behaviour looks like for different kinds of customer before any model was asked to
+    spot the abnormal.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Diagnostic analysis</div>
+  <h2>Segment first, then score</h2>
+  <div class="sub">Customer segmentation and the business&rsquo;s own warning signs, made explicit.</div>
+  <p>
+    Segmentation grouped customers who behave alike, so that each group could be judged against its own normal rather
+    than against a company-wide average that fits nobody. Alongside it, rule-based risk scores turned what the
+    business already knew about customers who leave into explicit, checkable rules &mdash; a transparent baseline the
+    statistical models had to beat, and one the retention team could understand without a data scientist in the room.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-predict">Predictive modelling</div>
+  <h2>Six models, combined into one ensemble</h2>
+  <div class="sub">Four model families, because no single one saw the whole picture.</div>
+  
+<figure>
+<svg viewBox="0 0 860 300" width="860" height="300" role="img" aria-label="Churn pipeline: anonymised customer data, four model families combined into a six-model ensemble, a ranked risk list, and targeted retention actions">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}
+.bx{fill:var(--pnl);stroke:var(--line)}.ba{fill:var(--pnl);stroke:var(--acc);stroke-width:1.5}
+.bp{fill:var(--pnl);stroke:var(--pur);stroke-width:1.5}.bg{fill:var(--pnl);stroke:var(--grn);stroke-width:1.5}
+.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">From anonymised behaviour data to a call list the retention team can work through</text>
+
+<rect class="ba" x="16" y="92" width="150" height="96" rx="8"/>
+<text x="91" y="116" class="a" font-size="12" font-weight="600" text-anchor="middle">2M+ customers</text>
+<text x="91" y="136" class="m" font-size="10" text-anchor="middle">behaviour &amp; account</text>
+<text x="91" y="150" class="m" font-size="10" text-anchor="middle">history, anonymised</text>
+<text x="91" y="170" class="m" font-size="10" text-anchor="middle">SQL &#8594; pandas</text>
+
+<g font-size="10.5">
+<rect class="bx" x="214" y="52" width="210" height="38" rx="6"/>
+<text x="228" y="68" class="t" font-weight="600">Segmentation</text><text x="228" y="82" class="m" font-size="9.5">groups customers that behave alike</text>
+<rect class="bx" x="214" y="100" width="210" height="38" rx="6"/>
+<text x="228" y="116" class="t" font-weight="600">Rule-based risk scores</text><text x="228" y="130" class="m" font-size="9.5">what the business already knew, made explicit</text>
+<rect class="bx" x="214" y="148" width="210" height="38" rx="6"/>
+<text x="228" y="164" class="t" font-weight="600">Classifiers: churn yes / no</text><text x="228" y="178" class="m" font-size="9.5">scikit-learn, XGBoost, LightGBM</text>
+<rect class="bx" x="214" y="196" width="210" height="38" rx="6"/>
+<text x="228" y="212" class="t" font-weight="600">Time-to-churn</text><text x="228" y="226" class="m" font-size="9.5">survival view: when, not only whether</text>
+</g>
+
+<rect class="bp" x="472" y="112" width="130" height="56" rx="8"/>
+<text x="537" y="136" class="p" font-size="12" font-weight="600" text-anchor="middle">Ensemble</text>
+<text x="537" y="154" class="m" font-size="10" text-anchor="middle">six models, one score</text>
+
+<rect class="bg" x="650" y="92" width="194" height="96" rx="8"/>
+<text x="747" y="116" class="g" font-size="12" font-weight="600" text-anchor="middle">Ranked risk list</text>
+<text x="747" y="136" class="m" font-size="10" text-anchor="middle">Power BI for the retention team</text>
+<text x="747" y="152" class="m" font-size="10" text-anchor="middle">calls and offers to the</text>
+<text x="747" y="166" class="m" font-size="10" text-anchor="middle">customers most likely to leave</text>
+
+<path class="fl" d="M166 128 L214 71M166 134 L214 119M166 146 L214 167M166 152 L214 215"/>
+<path class="fl" d="M424 71 L472 132M424 119 L472 137M424 167 L472 143M424 215 L472 148"/>
+<path class="fl" d="M602 140 L650 140"/>
+
+<line x1="16" y1="258" x2="844" y2="258" stroke="var(--line)"/>
+<text x="16" y="280" class="g" font-size="12" font-weight="600">&#8722;20% churn among individual customers</text>
+<text x="330" y="280" class="m" font-size="10.5">Large business accounts &#8212; banks, insurers, government bodies &#8212; stayed the hard cases.</text>
+</svg>
+  <figcaption>Four model families, combined into one ensemble score, ending in a list a person can act on.</figcaption>
+</figure>
+
+  <ul class="plain">
+    <li><strong>Classifiers</strong> (scikit-learn, XGBoost, LightGBM) answer the yes/no question: is this customer likely to churn?</li>
+    <li><strong>Time-to-churn</strong> models answer the question the call centre actually needs: how soon? A customer
+      likely to leave next month outranks one likely to leave next year.</li>
+    <li><strong>Segmentation</strong> and <strong>rule-based scores</strong> carry the structure and the business knowledge
+      into the ensemble rather than leaving them outside it.</li>
+  </ul>
+  <p>
+    The six models were combined into an ensemble, so that one model&rsquo;s blind spot is covered by another&rsquo;s
+    strength, and were checked against historical outcomes &mdash; customers whose stay-or-leave decision was already
+    known &mdash; before the scores were used to spend retention budget.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-prescribe">Prescriptive &middot; action</div>
+  <h2>From a score to a phone call</h2>
+  <div class="sub">A ranked list, delivered where the retention team already worked.</div>
+  <p>
+    The output was a ranked list of high-risk customers, served to the retention team through Power BI. They contacted
+    those customers by phone and offered promotions or other incentives to stay &mdash; spending the retention budget on
+    the customers most likely to leave, instead of on everyone.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Business value</div>
+  <h2>What it&rsquo;s worth</h2>
+  <div class="sub">Measured where the models were strongest.</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">&minus;20%</div><div class="l">churn among individual customers</div></div>
+    <div class="kpi"><div class="v">2M+</div><div class="l">customers scored</div></div>
+    <div class="kpi"><div class="v">6</div><div class="l">models in the ensemble</div></div>
+    <div class="kpi"><div class="v">4</div><div class="l">model families: classification, survival, segmentation, rules</div></div>
+  </div>
+  <p>
+    Churn among individual customers fell by 20%. The honest limit is the business accounts: a bank or a government
+    body does not leave because its usage pattern shifted, and behaviour data alone predicted them far less well.
+    Stating that plainly is part of the result &mdash; it tells the business where a model is worth trusting and
+    where an account manager&rsquo;s relationship still matters more.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>

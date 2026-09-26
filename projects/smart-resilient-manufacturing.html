@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resilience-Driven Manufacturing (SMART) | Ehsan Mahmoodi</title>
+  <meta name="description" content="SMART, a KK-stiftelsen programme with ABB, Volvo Penta, Daloc, Xylem and IDC West Sweden: operational, energy and socio-technical resilience for manufacturing, with multi-agent AI, simulation and multi-objective scheduling feeding one digital platform. In progress."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Industry&ndash;academia programme &middot; in progress</div>
+  <h1>Factories That Dip Shallowly and Recover Fast</h1>
+  <p class="lede">
+    SMART asks how a factory keeps running when energy prices spike, machines fail or labour conditions shift. Three strands &mdash; operational, energy and socio-technical resilience &mdash; are developed with ABB, Volvo Penta, Daloc, Xylem and IDC West Sweden, and come together in one platform that monitors, predicts and responds to disruption.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">University of Sk&ouml;vde &middot; KK-stiftelsen &middot; Dec 2025 &ndash; Nov 2029</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe">Descriptive</span><span class="gl-stage gl-diagnose on">Diagnostic</span><span class="gl-stage gl-predict on">Predictive</span><span class="gl-stage gl-prescribe on">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">Multi-agent AI</span><span class="gl-tech">Semantic Kernel</span><span class="gl-tech">Azure AI Foundry</span><span class="gl-tech">Azure OpenAI</span><span class="gl-tech">Discrete-event simulation</span><span class="gl-tech">pymoo (multi-objective)</span><span class="gl-tech">Machine learning</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">In progress &mdash; aims at a shallower dip and faster recovery under disruption, without trading away energy cost or safety.</span></div>
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; problem formulation</div>
+  <h2>How does a factory keep running when the ground moves?</h2>
+  <div class="sub">KK-stiftelsen Synergy Programme &middot; December 2025 &ndash; November 2029 &middot; in progress.</div>
+  <p>
+    Energy prices rise, machines break down, labour conditions change suddenly. SMART &mdash; <em>Resilience-Driven
+    Manufacturing: Developing Adaptive Solutions for Sustainable and Robust Production</em> &mdash; asks how Swedish
+    factories can absorb those shocks while staying sustainable and centred on people, in the spirit of Industry 5.0.
+    It is led by the University of Sk&ouml;vde with ABB, Volvo Penta, Daloc, Xylem and IDC West Sweden, and every
+    solution is developed and tested with those partners, on their production problems.
+  </p>
+  <p>
+    A resilient factory is not one that never gets hit. It is one whose output dips shallowly and recovers fast
+    &mdash; so resilience is measured as the depth of the dip and the speed of recovery, not only as uptime.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-predict">Three strands &middot; predictive and prescriptive</div>
+  <h2>Operational, energy and socio-technical resilience</h2>
+  <div class="sub">Three connected work areas feeding one platform.</div>
+  
+<figure>
+<svg viewBox="0 0 860 290" width="860" height="290" role="img" aria-label="SMART: three resilience strands feeding one digital platform that monitors, predicts and responds to disruptions">
+<style>
+:root{--line:#30363d;--ink:#e6edf3;--mut:#8b949e;--acc:#58a6ff;--grn:#3fb950;--pur:#bc8cff;--amb:#d29922;--pnk:#f778ba;--pnl:#161b22}
+html:not([data-theme='dark']){--line:#d0d7de;--ink:#24292f;--mut:#57606a;--acc:#0969da;--grn:#1a7f37;--pur:#8250df;--amb:#9a6700;--pnk:#bf3989;--pnl:#f6f8fa}
+text{font-family:Inter,system-ui,sans-serif}
+.t{fill:var(--ink)}.m{fill:var(--mut)}.a{fill:var(--acc)}.g{fill:var(--grn)}.p{fill:var(--pur)}.w{fill:var(--amb)}.k{fill:var(--pnk)}
+.bx{fill:var(--pnl);stroke:var(--line)}.fl{stroke:var(--mut);fill:none;stroke-width:1.2}
+</style>
+<text x="16" y="26" class="t" font-size="14" font-weight="600">Three kinds of disruption, one platform that answers them</text>
+<rect class="bx" x="16" y="52" width="250" height="118" rx="8" style="stroke:var(--pur)"/>
+<text x="30" y="76" class="p" font-size="12.5" font-weight="600">Operational resilience</text>
+<text x="30" y="98" class="m" font-size="10.5">Equipment failures, demand swings</text>
+<text x="30" y="118" class="t" font-size="10.5">Predictive models &#183; simulation</text>
+<text x="30" y="136" class="t" font-size="10.5">&#183; smart planning tools</text>
+<rect class="bx" x="305" y="52" width="250" height="118" rx="8" style="stroke:var(--grn)"/>
+<text x="319" y="76" class="g" font-size="12.5" font-weight="600">Energy resilience</text>
+<text x="319" y="98" class="m" font-size="10.5">Volatile prices, variable renewables</text>
+<text x="319" y="118" class="t" font-size="10.5">Scheduling on real-time energy</text>
+<text x="319" y="136" class="t" font-size="10.5">prices and renewable availability</text>
+<rect class="bx" x="594" y="52" width="250" height="118" rx="8" style="stroke:var(--pnk)"/>
+<text x="608" y="76" class="k" font-size="12.5" font-weight="600">Socio-technical resilience</text>
+<text x="608" y="98" class="m" font-size="10.5">Humans and robots sharing work</text>
+<text x="608" y="118" class="t" font-size="10.5">Adaptive safety from sensors</text>
+<text x="608" y="136" class="t" font-size="10.5">and machine learning</text>
+<path class="fl" d="M141 170 L141 196 L430 196 M430 170 L430 214 M719 170 L719 196 L430 196"/>
+<rect class="bx" x="250" y="214" width="360" height="54" rx="8" style="stroke:var(--acc);stroke-width:1.6"/>
+<text x="430" y="238" class="a" font-size="12.5" font-weight="600" text-anchor="middle">One digital platform</text>
+<text x="430" y="256" class="m" font-size="10.5" text-anchor="middle">monitor &#183; predict &#183; respond to disruptions</text>
+</svg>
+  <figcaption>The three strands of SMART, each tested with the industrial partners, combine into one platform.</figcaption>
+</figure>
+
+  <ul class="plain">
+    <li><strong>Operational resilience.</strong> Predictive models, simulation and planning tools that let a line prepare
+      for equipment failures and demand changes, and recover quickly when they happen.</li>
+    <li><strong>Energy resilience.</strong> Scheduling that follows real-time energy prices and renewable availability,
+      cutting operating cost and environmental impact together.</li>
+    <li><strong>Socio-technical resilience.</strong> Adaptive safety systems built on sensors and machine learning, so
+      people and robots can share tasks flexibly without accidents.</li>
+  </ul>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-prescribe">My part &middot; multi-agent decision support</div>
+  <h2>Agents that negotiate the schedule</h2>
+  <div class="sub">Multi-objective decisions made by cooperating AI agents, checked against simulation.</div>
+  <p>
+    My work builds the decision layer as multi-agent AI: agents that each own an objective &mdash; throughput,
+    energy cost, recovery after a disruption &mdash; and negotiate a production schedule, with discrete-event
+    simulation to test a decision before the line commits to it, and multi-objective optimisation to expose the
+    trade-offs rather than hide them in one number.
+  </p>
+  <p class="muted">
+    Related publication: <em>Energy-aware batch scheduling with flexible maintenance under spot electricity pricing and
+    onsite renewable generation</em>, Applied Energy (2026) &mdash; the energy-resilience question in its
+    optimisation form. <a href="../index.html#publications">See publications</a>.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Delivery &middot; in progress</div>
+  <h2>Where it is heading</h2>
+  <div class="sub">A platform that monitors, predicts and responds &mdash; built for real production settings.</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">SEK 11M</div><div class="l">KK-stiftelsen Synergy Programme</div></div>
+    <div class="kpi"><div class="v">5</div><div class="l">industrial partners</div></div>
+    <div class="kpi"><div class="v">3</div><div class="l">resilience strands, one platform</div></div>
+    <div class="kpi"><div class="v">2029</div><div class="l">programme end, November</div></div>
+  </div>
+  <p>
+    The project is in progress, so this page describes the problem, the approach and the stack rather than results.
+    The intended value for the partners is the one operations feels: a smaller dip and a faster recovery when the next
+    disruption arrives, without trading away energy cost or worker safety to get it.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>
