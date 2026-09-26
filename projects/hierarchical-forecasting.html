@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hierarchical Demand Forecasting | Ehsan Mahmoodi</title>
+  <meta name="description" content="Hierarchical demand forecasting for an FMCG business with Optimentors: top-down, middle-out and bottom-up forecasts back-tested at every level of the customer-product hierarchy to decide where to forecast, delivered as a Streamlit decision app."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0d1117; color: #e6edf3; line-height: 1.75; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,17,23,0.95); border-bottom: 1px solid #21262d;
+      padding: 14px 0; backdrop-filter: blur(8px);
+    }
+    nav .nav-inner {
+      max-width: 900px; margin: 0 auto; padding: 0 24px;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    nav .logo { font-weight: 700; font-size: 1rem; color: #58a6ff; text-decoration: none; }
+    nav .back { color: #8b949e; text-decoration: none; font-size: 0.88rem; }
+    nav .back:hover { color: #e6edf3; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: transparent; border: 1px solid #30363d; color: #8b949e;
+      width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+      font-size: 0.95rem; line-height: 1; display: inline-flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+      font-family: inherit; padding: 0;
+    }
+    .theme-toggle:hover { border-color: #58a6ff; color: #e6edf3; }
+
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header.page-head { padding: 64px 0 40px; }
+    .eyebrow {
+      display: inline-block; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.74rem; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 18px; letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    header.page-head h1 { font-size: 2.3rem; line-height: 1.22; font-weight: 700; margin-bottom: 14px; }
+    header.page-head .lede { font-size: 1.05rem; color: #c9d1d9; max-width: 720px; }
+
+    .callout {
+      background: #161b22; border: 1px solid #30363d; border-left: 3px solid #d29922;
+      border-radius: 8px; padding: 16px 20px; margin: 28px 0; font-size: 0.88rem; color: #8b949e;
+    }
+    .callout strong { color: #e6edf3; }
+
+    section.blk { padding: 40px 0; border-top: 1px solid #21262d; }
+    section.blk:first-of-type { border-top: none; }
+    .stage-tag {
+      display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.8px;
+      color: #58a6ff; background: #0d1f33; border: 1px solid #1f3d63; border-radius: 4px;
+      padding: 2px 9px; margin-bottom: 10px;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+    h2 + .sub { color: #8b949e; font-size: 0.92rem; margin-bottom: 26px; }
+    h3 { font-size: 1.02rem; font-weight: 600; margin: 26px 0 10px; }
+    p { color: #c9d1d9; font-size: 0.94rem; margin-bottom: 16px; }
+    p.muted { color: #8b949e; font-size: 0.88rem; }
+    ul.plain { list-style: none; margin-bottom: 16px; }
+    ul.plain li {
+      color: #c9d1d9; font-size: 0.92rem; padding-left: 20px;
+      position: relative; margin-bottom: 8px;
+    }
+    ul.plain li::before { content: "\25B8"; position: absolute; left: 0; color: #58a6ff; }
+    ol.stages { counter-reset: stage; list-style: none; margin-bottom: 16px; }
+    ol.stages li {
+      counter-increment: stage; position: relative; padding-left: 34px;
+      margin-bottom: 14px; font-size: 0.92rem; color: #c9d1d9;
+    }
+    ol.stages li::before {
+      content: counter(stage); position: absolute; left: 0; top: 0;
+      width: 22px; height: 22px; border-radius: 6px; background: #161b22; border: 1px solid #30363d;
+      color: #58a6ff; font-size: 0.76rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    }
+    ol.stages li strong { color: #e6edf3; }
+
+    figure { margin: 26px 0; }
+    figure img, figure svg {
+      width: 100%; background: #161b22; border: 1px solid #30363d; border-radius: 10px; display: block;
+    }
+    figcaption { color: #8b949e; font-size: 0.8rem; margin-top: 10px; text-align: center; }
+
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.88rem; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #21262d; }
+    th { color: #8b949e; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; }
+    td { color: #c9d1d9; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    td.pos { color: #3fb950; }
+    td.neg { color: #f85149; }
+    tr.total td { border-top: 1px solid #30363d; font-weight: 600; color: #e6edf3; }
+    tr.win td { background: rgba(63,185,80,0.07); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 26px 0; }
+    .kpi { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 16px; }
+    .kpi .v { font-size: 1.45rem; font-weight: 700; color: #58a6ff; line-height: 1.2; }
+    .kpi .l { font-size: 0.76rem; color: #8b949e; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid #21262d; color: #8b949e; font-size: 0.82rem; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 760px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      header.page-head h1 { font-size: 1.7rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 8px 6px; }
+    }
+
+    /* LIGHT THEME - the default; dark is opt-in via data-theme */
+    html:not([data-theme='dark']) body { background: #ffffff; color: #24292f; }
+    html:not([data-theme='dark']) nav { background: rgba(255,255,255,0.95); border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .logo, html:not([data-theme='dark']) .kpi .v, html:not([data-theme='dark']) footer a { color: #0969da; }
+    html:not([data-theme='dark']) nav .back, html:not([data-theme='dark']) p.muted, html:not([data-theme='dark']) figcaption, html:not([data-theme='dark']) th, html:not([data-theme='dark']) .kpi .l, html:not([data-theme='dark']) h2 + .sub, html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) footer { color: #57606a; }
+    html:not([data-theme='dark']) section.blk { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) p, html:not([data-theme='dark']) td, html:not([data-theme='dark']) ul.plain li, html:not([data-theme='dark']) ol.stages li { color: #24292f; }
+    html:not([data-theme='dark']) .callout, html:not([data-theme='dark']) .kpi, html:not([data-theme='dark']) .eyebrow { background: #f6f8fa; border: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) .callout { border-left: 3px solid #9a6700; }
+    html:not([data-theme='dark']) .callout strong { color: #24292f; }
+    html:not([data-theme='dark']) .eyebrow { color: #0969da; }
+    html:not([data-theme='dark']) .stage-tag { color: #0969da; border-color: #b6d7ff; background: #ddf4ff; }
+    html:not([data-theme='dark']) header.page-head .lede { color: #24292f; }
+    html:not([data-theme='dark']) figure img, html:not([data-theme='dark']) figure svg { background: #f6f8fa; border-color: #d0d7de; }
+    html:not([data-theme='dark']) th, html:not([data-theme='dark']) td { border-bottom: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) tr.total td { border-top: 1px solid #d0d7de; color: #24292f; }
+    html:not([data-theme='dark']) tr.win td { background: rgba(26,127,55,0.08); }
+    html:not([data-theme='dark']) td.pos { color: #1a7f37; }
+    html:not([data-theme='dark']) td.neg { color: #cf222e; }
+    html:not([data-theme='dark']) ul.plain li::before { color: #0969da; }
+    html:not([data-theme='dark']) ol.stages li::before { background: #f6f8fa; border-color: #d0d7de; color: #0969da; }
+    html:not([data-theme='dark']) footer { border-top: 1px solid #d0d7de; }
+    html:not([data-theme='dark']) nav .back:hover { color: #0969da; }
+    html:not([data-theme='dark']) .theme-toggle { border-color: #d0d7de; color: #57606a; }
+    html:not([data-theme='dark']) .theme-toggle:hover { border-color: #0969da; color: #24292f; }
+    html:not([data-theme='dark']) ol.stages li strong { color: #24292f; }
+
+    /* AT A GLANCE (shared by the newer case studies) */
+    :root {
+      --g-line: #d0d7de; --g-panel: #f6f8fa; --g-ink: #24292f; --g-mut: #57606a; --g-acc: #0969da;
+      --c-engage: #bf3989; --c-describe: #1b7c83; --c-diagnose: #9a6700; --c-predict: #8250df;
+      --c-prescribe: #1a7f37; --c-deliver: #0969da;
+    }
+    html[data-theme='dark'] {
+      --g-line: #30363d; --g-panel: #161b22; --g-ink: #e6edf3; --g-mut: #8b949e; --g-acc: #58a6ff;
+      --c-engage: #f778ba; --c-describe: #39c5cf; --c-diagnose: #d29922; --c-predict: #bc8cff;
+      --c-prescribe: #3fb950; --c-deliver: #58a6ff;
+    }
+    .glance {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 12px;
+      padding: 18px 20px; margin: 0 0 8px; display: grid; gap: 14px;
+    }
+    .gl-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+    .gl-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--g-mut); }
+    .gl-items { display: flex; flex-wrap: wrap; gap: 6px; }
+    .gl-stage {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      padding: 3px 9px; border-radius: 4px; border: 1px dashed var(--g-line); color: var(--g-mut); opacity: 0.6;
+    }
+    .gl-stage.on { opacity: 1; border-style: solid; color: #fff; background: var(--c); border-color: var(--c); }
+    html[data-theme='dark'] .gl-stage.on { color: #0d1117; }
+    .gl-engage { --c: var(--c-engage); } .gl-describe { --c: var(--c-describe); } .gl-diagnose { --c: var(--c-diagnose); }
+    .gl-predict { --c: var(--c-predict); } .gl-prescribe { --c: var(--c-prescribe); } .gl-deliver { --c: var(--c-deliver); }
+    .gl-tech {
+      font-size: 0.76rem; padding: 3px 9px; border-radius: 4px; color: var(--g-acc);
+      border: 1px solid var(--g-line); background: transparent;
+    }
+    .gl-result { font-size: 0.92rem; color: var(--g-ink); font-weight: 600; }
+    /* html body raises specificity above the older light-theme .stage-tag rule */
+    html body .stage-tag.st-engage, html body .stage-tag.st-describe, html body .stage-tag.st-diagnose,
+    html body .stage-tag.st-predict, html body .stage-tag.st-prescribe,
+    html body .stage-tag.st-deliver { color: var(--c); border-color: var(--c); background: transparent; }
+    .stage-tag.st-engage { --c: var(--c-engage); } .stage-tag.st-describe { --c: var(--c-describe); }
+    .stage-tag.st-diagnose { --c: var(--c-diagnose); } .stage-tag.st-predict { --c: var(--c-predict); }
+    .stage-tag.st-prescribe { --c: var(--c-prescribe); } .stage-tag.st-deliver { --c: var(--c-deliver); }
+    .flow { display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 10px; margin: 22px 0; }
+    .flow > div {
+      background: var(--g-panel); border: 1px solid var(--g-line); border-radius: 10px; padding: 14px;
+      font-size: 0.84rem; color: var(--g-ink); line-height: 1.5;
+    }
+    .flow strong { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--g-acc); margin-bottom: 4px; }
+    @media (max-width: 760px) {
+      .gl-row { grid-template-columns: 1fr; gap: 4px; }
+      .flow { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script>
+    // Applied before first paint so the page never flashes the wrong theme.
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { /* private mode: fall back to the light default */ }
+    })();
+  </script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="logo">Ehsan Mahmoodi</a>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="../index.html#projects" class="back">&larr; Back to projects</a>
+      <button type="button" id="theme-toggle" class="theme-toggle"
+          aria-label="Switch to dark theme" title="Switch theme">&#9790;</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="page-head">
+  <div class="eyebrow">Real industry case &middot; demand planning &amp; forecasting</div>
+  <h1>At Which Level Should an FMCG Business Forecast?</h1>
+  <p class="lede">
+    Finance plans the total, key account managers plan customers, category teams plan categories, and replenishment
+    planners plan every customer &times; SKU. With Optimentors, we used hierarchical forecasting to show which level of the
+    product&ndash;customer tree each of those numbers should come from. The answer is packaged as a decision app that a
+    planning team can point at its own ERP data.
+  </p>
+</header>
+
+<div class="glance">
+  <div class="gl-row"><span class="gl-label">Context</span><span class="gl-result" style="font-weight:500">Real industry case &middot; Optimentors &middot; FMCG client &middot; 2024</span></div>
+  <div class="gl-row"><span class="gl-label">Analytics stages</span><div class="gl-items"><span class="gl-stage gl-engage on">Qualitative</span><span class="gl-stage gl-describe on">Descriptive</span><span class="gl-stage gl-diagnose on">Diagnostic</span><span class="gl-stage gl-predict on">Predictive</span><span class="gl-stage gl-prescribe on">Prescriptive</span><span class="gl-stage gl-deliver on">Software</span></div></div>
+  <div class="gl-row"><span class="gl-label">Technology</span><div class="gl-items"><span class="gl-tech">Python</span><span class="gl-tech">pandas / NumPy</span><span class="gl-tech">Nixtla statsforecast</span><span class="gl-tech">hierarchicalforecast</span><span class="gl-tech">Streamlit</span><span class="gl-tech">Plotly</span><span class="gl-tech">SQLAlchemy</span></div></div>
+  <div class="gl-row"><span class="gl-label">Result</span><span class="gl-result">Customer &times; SKU forecast accuracy of 82.8% instead of 75.6% from a top-down split, worth about 29% less safety stock at the same service level.</span></div>
+</div>
+
+<section class="blk">
+  <div class="stage-tag st-engage">Stakeholder engagement &middot; business problem</div>
+  <h2>Every planning team needed a different number</h2>
+  <div class="sub">Optimentors &middot; 2024 &middot; FMCG sell-in demand, S&amp;OP process.</div>
+  <p>
+    An FMCG demand plan is read at five or six levels at once. Each team forecasting its own level gives numbers that
+    don&rsquo;t add up, so the S&amp;OP meeting ends up reconciling spreadsheets. The common fix is to forecast the total
+    and split it down by historical mix. That is coherent, but nobody had checked what it costs at the level where
+    stock is actually positioned.
+  </p>
+  <table>
+    <tr><th>Planning level</th><th>Who uses it</th><th>Decision</th></tr>
+    <tr><td>Total business</td><td>Finance, S&amp;OP executive review</td><td>Revenue plan, capacity</td></tr>
+    <tr><td>Customer</td><td>Key account management</td><td>Customer business plans</td></tr>
+    <tr><td>Category &rsaquo; Sub-category &rsaquo; Segment</td><td>Category and brand teams</td><td>Promotions, portfolio, production plan</td></tr>
+    <tr><td>Customer &times; SKU</td><td>Demand and replenishment planners</td><td>Replenishment, safety stock, DRP</td></tr>
+  </table>
+  <p>The question from the business was simple: <strong>at which level should we forecast?</strong></p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-describe">Data &middot; descriptive analysis</div>
+  <h2>0.9 million sell-in lines, one hierarchy</h2>
+  <div class="sub">Daily shipments, June 2023 &ndash; July 2024, bucketed to weeks.</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">910k</div><div class="l">daily sell-in lines</div></div>
+    <div class="kpi"><div class="v">12</div><div class="l">customers</div></div>
+    <div class="kpi"><div class="v">1,970</div><div class="l">SKUs</div></div>
+    <div class="kpi"><div class="v">8,274</div><div class="l">customer &times; SKU series</div></div>
+  </div>
+  <p>
+    Each line carries a five-level path: Customer &rsaquo; Category &rsaquo; Sub-category &rsaquo; Segment &rsaquo; SKU.
+    Aggregating that tree gives about 10,200 series across the levels, each weekly and with partial edge weeks removed.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-diagnose">Diagnostic &middot; forecastability</div>
+  <h2>The top is smooth, the tail is not</h2>
+  <div class="sub">Syntetos&ndash;Boylan demand classes (ADI / CV&sup2;) and an ABC Pareto analysis.</div>
+  <ul class="plain">
+    <li><strong>Every customer series is smooth.</strong> At the aggregate levels, 98&ndash;100% of volume shows a smooth demand pattern.</li>
+    <li><strong>At customer &times; SKU, only 38% of series are smooth.</strong> The rest are intermittent, erratic or lumpy, but they carry just 17% of volume.</li>
+    <li><strong>9% of SKUs make 80% of the volume</strong>, and 75% of SKUs sit in the C tail.</li>
+  </ul>
+  <p>
+    That is the textbook setting where the level you forecast at matters: good signal at the top, noise at the bottom,
+    and the replenishment decision at the bottom.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-predict">Predictive modelling &middot; hierarchical forecasting</div>
+  <h2>Forecast at every level, derive every other level</h2>
+  <div class="sub">Top-down, middle-out and bottom-up, tested against each other.</div>
+  <div class="flow" style="--n:3">
+    <div><strong>Top-down</strong>Forecast the total and split it by the recent 13-week mix.</div>
+    <div><strong>Middle-out</strong>Forecast a middle level, sum it up and split it down.</div>
+    <div><strong>Bottom-up</strong>Forecast every customer &times; SKU and sum.</div>
+  </div>
+  <p>
+    The research phase used Nixtla&rsquo;s <code>statsforecast</code> (AutoARIMA, seasonal na&iuml;ve) and
+    <code>hierarchicalforecast</code>, which provides bottom-up, top-down, MinTrace, optimal combination and ERM
+    reconciliation. For the deliverable, the level-selection logic was rebuilt as a vectorised pandas engine. For each
+    <em>forecast level</em> it produces an exponential-smoothing forecast, then derives every <em>planning level</em>:
+    by summing when the planning level is higher, and by splitting on recent mix when it is lower. The
+    6&nbsp;&times;&nbsp;6 back-test over 8,274 series runs in about three seconds.
+  </p>
+  <figure>
+    <img src="../assets/12-hierarchical-forecasting.gif" alt="Hierarchical demand forecasting app: introduction to top-down, middle-out and bottom-up; recommendation; demand landscape; level-accuracy heatmap; drill-down and planning forecast export" loading="lazy">
+    <figcaption>The decision app, shown on synthetic demo data: method intro, recommendation, forecastability, accuracy heatmap, drill-down and forecast export.</figcaption>
+  </figure>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-prescribe">Prescriptive &middot; level selection</div>
+  <h2>Forecast where you plan. Never split down to SKU.</h2>
+  <div class="sub">8-week hold-out, forecast accuracy = 1 &minus; WAPE, exponential smoothing.</div>
+  <table>
+    <tr><th>Planning level</th><th>Best forecast level</th><th class="num">Accuracy</th><th class="num">Top-down</th><th class="num">Gain</th></tr>
+    <tr><td>Total business</td><td>any</td><td class="num">97.5%</td><td class="num">97.5%</td><td class="num">0.0</td></tr>
+    <tr><td>Customer</td><td>Category</td><td class="num">97.1%</td><td class="num">96.8%</td><td class="num pos">+0.3</td></tr>
+    <tr><td>Category</td><td>Category</td><td class="num">94.8%</td><td class="num">93.7%</td><td class="num pos">+1.1</td></tr>
+    <tr><td>Sub-category</td><td>Sub-category</td><td class="num">91.8%</td><td class="num">88.9%</td><td class="num pos">+2.9</td></tr>
+    <tr><td>Segment</td><td>Segment</td><td class="num">89.7%</td><td class="num">85.8%</td><td class="num pos">+3.9</td></tr>
+    <tr class="win"><td>Customer &times; SKU</td><td>SKU</td><td class="num">82.8%</td><td class="num">75.6%</td><td class="num pos">+7.2</td></tr>
+  </table>
+  <ol class="stages">
+    <li><strong>At the top, the level doesn&rsquo;t matter.</strong> Total-business accuracy is 97.5% whichever level is forecast. Finance can use any coherent plan.</li>
+    <li><strong>The cost of splitting grows as you go down.</strong> Each level of top-down split loses accuracy, from 1 point at category to 7 points at customer &times; SKU.</li>
+    <li><strong>Rule for the planning process:</strong> forecast at the level where the decision is made, and roll up from there. Forecast bias stays within &plusmn;0.5% at every level.</li>
+  </ol>
+</section>
+
+<section class="blk">
+  <div class="stage-tag st-deliver">Software delivery</div>
+  <h2>A decision app a planning team can point at its own data</h2>
+  <div class="sub">Streamlit &middot; schema-agnostic &middot; connects to files or the data warehouse.</div>
+  <ul class="plain">
+    <li><strong>Connectors:</strong> local CSV/Parquet path (large extracts without a browser upload), file upload, or a SQL query against the ERP or data warehouse.</li>
+    <li><strong>Any hierarchy:</strong> map the date, quantity and one to six hierarchy columns in the sidebar.</li>
+    <li><strong>Six views:</strong> method introduction, recommendation per planning level, forecastability landscape, accuracy and bias heatmaps, node drill-down, and a forward forecast exported as CSV for the APS or demand review.</li>
+  </ul>
+  <div class="flow" style="--n:4">
+    <div><strong>Data</strong>ERP / DWH via SQLAlchemy, CSV, Parquet</div>
+    <div><strong>Engine</strong>pandas, NumPy</div>
+    <div><strong>Interface</strong>Streamlit, Plotly</div>
+    <div><strong>Research</strong>Nixtla statsforecast, hierarchicalforecast</div>
+  </div>
+  <p class="muted">
+    All results on this page come from the client&rsquo;s real sell-in data. Client data stays private. The recording and the public repository use a synthetic FMCG demo dataset with the
+    same structure.
+  </p>
+</section>
+
+<section class="blk">
+  <div class="stage-tag">Business value</div>
+  <h2>What it&rsquo;s worth</h2>
+  <div class="sub">One coherent number per team, and less stock where stock is held.</div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">+7.2 pts</div><div class="l">customer &times; SKU accuracy vs top-down</div></div>
+    <div class="kpi"><div class="v">&asymp;29%</div><div class="l">less safety stock, same service level</div></div>
+    <div class="kpi"><div class="v">97.5%</div><div class="l">total-business accuracy</div></div>
+    <div class="kpi"><div class="v">~3 s</div><div class="l">to back-test 8k series</div></div>
+  </div>
+  <p>
+    Safety stock scales with forecast error. Cutting customer &times; SKU WAPE from 24.4% to 17.2% means roughly 29% less
+    buffer stock for the same service level, and the S&amp;OP meeting starts from one coherent plan rather than
+    reconciling spreadsheets.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <p>
+    Case study by Ehsan Mahmoodi &middot;
+    <a href="../index.html#projects">Back to projects</a> &middot;
+    <a href="../index.html#contact">Get in touch</a>
+  </p>
+</footer>
+
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+
+  function paint(dark) {
+    if (dark) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+    if (btn) {
+      btn.innerHTML = dark ? '&#9728;' : '&#9790;';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+  }
+
+  paint(root.getAttribute('data-theme') === 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') !== 'dark';
+      paint(dark);
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  }
+})();
+</script>
+</body>
+</html>
